@@ -83,6 +83,10 @@ const i18n = {
     gen_3: 'Generation III',
     gen_4: 'Generation IV',
     gen_5: 'Generation V',
+    gen_6: 'Generation VI',
+    gen_7: 'Generation VII',
+    gen_8: 'Generation VIII',
+    gen_9: 'Generation IX',
     all_gens_label: 'Alle Gens',
     gen_1_progress: 'Gen 1 — {pct}%',
     all_gens_progress: 'Alle Gens — {pct}%',
@@ -276,6 +280,10 @@ const i18n = {
     gen_3: 'Generation III',
     gen_4: 'Generation IV',
     gen_5: 'Generation V',
+    gen_6: 'Generation VI',
+    gen_7: 'Generation VII',
+    gen_8: 'Generation VIII',
+    gen_9: 'Generation IX',
     all_gens_label: 'All Gens',
     gen_1_progress: 'Gen 1 — {pct}%',
     all_gens_progress: 'All Gens — {pct}%',
@@ -3906,9 +3914,20 @@ function openPokedexModal(initialTab = 'normal') {
 
   const BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
 
-  const GEN_HEADERS = { 1: getText('gen_1'), 152: getText('gen_2'), 252: getText('gen_3'), 387: getText('gen_4'), 494: getText('gen_5') };
-
-  const GEN_RANGES = { 1: [1,151], 152: [152,251], 252: [252,386], 387: [387,493], 494: [494,649] };
+  const DEX_GENERATIONS = [
+    { key: 'gen1', label: getText('gen_1'), min: 1, max: 151 },
+    { key: 'gen2', label: getText('gen_2'), min: 152, max: 251 },
+    { key: 'gen3', label: getText('gen_3'), min: 252, max: 386 },
+    { key: 'gen4', label: getText('gen_4'), min: 387, max: 493 },
+    { key: 'gen5', label: getText('gen_5'), min: 494, max: 649 },
+    { key: 'gen6', label: getText('gen_6'), min: 650, max: 721 },
+    { key: 'gen7', label: getText('gen_7'), min: 722, max: 809 },
+    { key: 'gen8', label: getText('gen_8'), min: 810, max: 905 },
+    { key: 'gen9', label: getText('gen_9'), min: 906, max: 1025 },
+  ];
+  const NATIONAL_DEX_TOTAL = DEX_GENERATIONS[DEX_GENERATIONS.length - 1].max;
+  const GEN_HEADERS = Object.fromEntries(DEX_GENERATIONS.map(gen => [gen.min, gen.label]));
+  const GEN_RANGES = Object.fromEntries(DEX_GENERATIONS.map(gen => [gen.min, [gen.min, gen.max]]));
 
   function buildGenCounts(dex, isCaughtFn) {
     const counts = {};
@@ -3922,9 +3941,9 @@ function openPokedexModal(initialTab = 'normal') {
 
   function buildNormalGrid() {
     const dex = getPokedex();
-    const caughtCount = Array.from({length: 649}, (_, i) => i + 1).filter(id => dex[id]?.caught).length;
+    const caughtCount = Array.from({length: NATIONAL_DEX_TOTAL}, (_, i) => i + 1).filter(id => dex[id]?.caught).length;
     const genCounts = buildGenCounts(dex, (d, id) => !!d[id]?.caught);
-    const grid = Array.from({ length: 649 }, (_, i) => {
+    const grid = Array.from({ length: NATIONAL_DEX_TOTAL }, (_, i) => {
       const id = i + 1;
       const gc = genCounts[id];
       const header = GEN_HEADERS[id] ? `<div class="dex-gen-header">${GEN_HEADERS[id]}<span class="gen-count">${gc.caught}/${gc.total}</span></div>` : '';
@@ -3955,9 +3974,9 @@ function openPokedexModal(initialTab = 'normal') {
   function buildShinyGrid() {
     const dex = getShinyDex();
     const BASE_SHINY = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/';
-    const count = Array.from({length: 649}, (_, i) => i + 1).filter(id => dex[id]).length;
+    const count = Array.from({length: NATIONAL_DEX_TOTAL}, (_, i) => i + 1).filter(id => dex[id]).length;
     const genCounts = buildGenCounts(dex, (d, id) => !!d[id]);
-    const grid = Array.from({ length: 649 }, (_, i) => {
+    const grid = Array.from({ length: NATIONAL_DEX_TOTAL }, (_, i) => {
       const id = i + 1;
       const gc = genCounts[id];
       const header = GEN_HEADERS[id] ? `<div class="dex-gen-header">${GEN_HEADERS[id]}<span class="gen-count">${gc.caught}/${gc.total}</span></div>` : '';
@@ -3988,6 +4007,20 @@ function openPokedexModal(initialTab = 'normal') {
 
   const modal = document.createElement('div');
   modal.id = 'pokedex-modal';
+  const progressGroupsHtml = DEX_GENERATIONS.map(gen => {
+    const total = gen.max - gen.min + 1;
+    return `
+            <div class="dex-progress-group">
+              <div class="dex-progress-meta">
+                <div class="dex-progress-title">${gen.label}</div>
+                <span id="dex-progress-label-${gen.key}" class="dex-progress-label">0/${total} - 0%</span>
+              </div>
+              <div class="dex-progress-track">
+                <div id="dex-progress-bar-${gen.key}" class="dex-progress-bar dex-progress-bar-${gen.key}"></div>
+              </div>
+            </div>`;
+  }).join('');
+
   modal.innerHTML = `
     <div class="dex-modal-box">
       <div class="dex-modal-header">
@@ -4001,55 +4034,11 @@ function openPokedexModal(initialTab = 'normal') {
       <div class="dex-progress-area">
         <div class="dex-progress-row dex-progress-row-top">
           <div class="dex-progress-grid">
-            <div class="dex-progress-group">
-              <div class="dex-progress-meta">
-                <div class="dex-progress-title">${getText('gen_1')}</div>
-                <span id="dex-progress-label-gen1" class="dex-progress-label">0/151 - 0%</span>
-              </div>
-              <div class="dex-progress-track">
-                <div id="dex-progress-bar-gen1" class="dex-progress-bar dex-progress-bar-gen1"></div>
-              </div>
-            </div>
-            <div class="dex-progress-group">
-              <div class="dex-progress-meta">
-                <div class="dex-progress-title">${getText('gen_2')}</div>
-                <span id="dex-progress-label-gen2" class="dex-progress-label">0/100 - 0%</span>
-              </div>
-              <div class="dex-progress-track">
-                <div id="dex-progress-bar-gen2" class="dex-progress-bar dex-progress-bar-gen2"></div>
-              </div>
-            </div>
-            <div class="dex-progress-group">
-              <div class="dex-progress-meta">
-                <div class="dex-progress-title">${getText('gen_3')}</div>
-                <span id="dex-progress-label-gen3" class="dex-progress-label">0/135 - 0%</span>
-              </div>
-              <div class="dex-progress-track">
-                <div id="dex-progress-bar-gen3" class="dex-progress-bar dex-progress-bar-gen3"></div>
-              </div>
-            </div>
-            <div class="dex-progress-group">
-              <div class="dex-progress-meta">
-                <div class="dex-progress-title">${getText('gen_4')}</div>
-                <span id="dex-progress-label-gen4" class="dex-progress-label">0/107 - 0%</span>
-              </div>
-              <div class="dex-progress-track">
-                <div id="dex-progress-bar-gen4" class="dex-progress-bar dex-progress-bar-gen4"></div>
-              </div>
-            </div>
-            <div class="dex-progress-group">
-              <div class="dex-progress-meta">
-                <div class="dex-progress-title">${getText('gen_5')}</div>
-                <span id="dex-progress-label-gen5" class="dex-progress-label">0/156 - 0%</span>
-              </div>
-              <div class="dex-progress-track">
-                <div id="dex-progress-bar-gen5" class="dex-progress-bar dex-progress-bar-gen5"></div>
-              </div>
-            </div>
+            ${progressGroupsHtml}
             <div class="dex-progress-group dex-progress-group-wide">
               <div class="dex-progress-meta">
                 <div class="dex-progress-title">${getText('all_gens_label')}</div>
-                <span id="dex-progress-label-all" class="dex-progress-label">0/649 - 0%</span>
+                <span id="dex-progress-label-all" class="dex-progress-label">0/${NATIONAL_DEX_TOTAL} - 0%</span>
               </div>
               <div class="dex-progress-track">
                 <div id="dex-progress-bar-all" class="dex-progress-bar dex-progress-bar-all"></div>
@@ -4074,15 +4063,9 @@ function openPokedexModal(initialTab = 'normal') {
     const dexData = isShiny ? getShinyDex() : getPokedex();
     const isCaught = id => isShiny ? !!dexData[id] : !!dexData[id]?.caught;
 
-    const allTotal = 649;
+    const allTotal = NATIONAL_DEX_TOTAL;
     const allPct = Math.floor(count / allTotal * 100);
-    const progressConfigs = [
-      { key: 'gen1', min: 1, max: 151 },
-      { key: 'gen2', min: 152, max: 251 },
-      { key: 'gen3', min: 252, max: 386 },
-      { key: 'gen4', min: 387, max: 493 },
-      { key: 'gen5', min: 494, max: 649 },
-    ];
+    const progressConfigs = DEX_GENERATIONS;
 
     document.getElementById('dex-count-label').textContent = getText('pokedex_count', {count, total: allTotal});
     progressConfigs.forEach(({ key, min, max }) => {

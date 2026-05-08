@@ -3363,9 +3363,9 @@ h1, h2, .pixel-font {
 .dex-progress-grid {
   flex: 1 1 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px 12px;
-  min-width: min(100%, 560px);
+  min-width: min(100%, 880px);
 }
 .dex-progress-group {
   display: flex;
@@ -3457,6 +3457,18 @@ h1, h2, .pixel-font {
 }
 .dex-progress-bar-gen5 {
   background: linear-gradient(90deg, rgba(109,236,219,0.96), rgba(67,185,210,0.96));
+}
+.dex-progress-bar-gen6 {
+  background: linear-gradient(90deg, rgba(255,166,120,0.96), rgba(255,94,170,0.96));
+}
+.dex-progress-bar-gen7 {
+  background: linear-gradient(90deg, rgba(255,214,98,0.96), rgba(255,136,71,0.96));
+}
+.dex-progress-bar-gen8 {
+  background: linear-gradient(90deg, rgba(124,203,255,0.96), rgba(83,122,255,0.96));
+}
+.dex-progress-bar-gen9 {
+  background: linear-gradient(90deg, rgba(171,120,255,0.96), rgba(255,95,158,0.96));
 }
 .dex-empty-note {
   margin-bottom: 14px;
