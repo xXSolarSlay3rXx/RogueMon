@@ -1,7 +1,8 @@
 // ui.js - Screen transitions and UI helpers
 
 // ---- Language System ----
-let currentLanguage = localStorage.getItem('poke_language') || 'de';
+let currentLanguage = 'en';
+localStorage.setItem('poke_language', 'en');
 
 const i18n = {
   de: {
@@ -401,10 +402,10 @@ function getText(key, args = {}) {
 }
 
 function setLanguage(lang) {
-  currentLanguage = lang;
-  localStorage.setItem('poke_language', lang);
+  currentLanguage = 'en';
+  localStorage.setItem('poke_language', 'en');
   if (typeof syncStoredPokemonLocalizations === 'function') {
-    syncStoredPokemonLocalizations(lang);
+    syncStoredPokemonLocalizations('en');
   }
   updateUILanguage();
 }
@@ -416,17 +417,8 @@ function updateUILanguage() {
     el.textContent = getText(key);
   });
   
-  // Update language button active state
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    const lang = btn.id === 'lang-de' ? 'de' : 'en';
-    if (lang === currentLanguage) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-
-  document.documentElement.lang = currentLanguage;
+  document.querySelector('.lang-selector')?.remove();
+  document.documentElement.lang = 'en';
 
   if (typeof renderTeamBar === 'function' && typeof state !== 'undefined' && state?.team) {
     renderTeamBar(state.team);
