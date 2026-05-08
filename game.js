@@ -488,7 +488,14 @@ async function showStoryRegionSelect() {
   if (!container) return 1;
 
   const regionIds = Object.keys(STORY_REGION_CONFIGS).map(Number).sort((a, b) => a - b);
-  container.innerHTML = regionIds.map(regionId => {
+  const futureRegions = [
+    { regionId: 6, label: 'Gen 6', name: 'Kalos', descKey: 'region_gen_6_desc' },
+    { regionId: 7, label: 'Gen 7', name: 'Alola', descKey: 'region_gen_7_desc' },
+    { regionId: 8, label: 'Gen 8', name: 'Galar', descKey: 'region_gen_8_desc' },
+    { regionId: 9, label: 'Gen 9', name: 'Paldea', descKey: 'region_gen_9_desc' },
+  ];
+
+  const storyCards = regionIds.map(regionId => {
     const region = getStoryRegionConfig(regionId);
     const unlocked = isStoryRegionUnlocked(regionId);
     const stateLabel = unlocked ? getText('region_unlocked') : getText('region_locked');
@@ -511,7 +518,23 @@ async function showStoryRegionSelect() {
       <div class="story-region-card-desc">${getText(descKey)}</div>
       ${unlockText}
     </div>`;
-  }).join('');
+  });
+
+  const teaserCards = futureRegions.map(region => `
+    <div class="story-region-card coming-soon" data-region-id="${region.regionId}" role="presentation" tabindex="-1">
+      <div class="story-region-card-top">
+        <div>
+          <div class="story-region-card-label">${region.label}</div>
+          <div class="story-region-card-name">${region.name}</div>
+        </div>
+        <div class="story-region-card-state">${getText('coming_soon')}</div>
+      </div>
+      <div class="story-region-card-desc">${getText(region.descKey)}</div>
+      <div class="story-region-card-unlock">${getText('coming_soon_note')}</div>
+    </div>
+  `);
+
+  container.innerHTML = [...storyCards, ...teaserCards].join('');
 
   return await new Promise(resolve => {
     if (backBtn) backBtn.onclick = () => resolve(null);

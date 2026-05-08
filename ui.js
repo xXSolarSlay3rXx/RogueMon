@@ -222,11 +222,17 @@ const i18n = {
     unlock_gen_3: 'Defeat the Gen 2 Elite Four and Champion to unlock Gen 3.',
     unlock_gen_4: 'Defeat the Gen 3 Elite Four and Champion to unlock Gen 4.',
     unlock_gen_5: 'Defeat the Gen 4 Elite Four and Champion to unlock Gen 5.',
+    coming_soon: 'Coming Soon',
+    coming_soon_note: 'This generation is planned for a future update.',
     region_gen_1_desc: '8 Gym Leaders, Elite Four and Champion.',
     region_gen_2_desc: 'New starters, new gyms and a new league.',
     region_gen_3_desc: 'Hoenn starters, 8 new badges and the Hoenn League.',
     region_gen_4_desc: 'Sinnoh starters, 8 new badges and the Sinnoh League.',
     region_gen_5_desc: 'Unova starters, 8 new badges and the Unova League.',
+    region_gen_6_desc: 'Kalos-themed run, new starters and league content are on the way.',
+    region_gen_7_desc: 'Alola-inspired progression and new regional content are on the way.',
+    region_gen_8_desc: 'Galar-themed badges, battles and league content are on the way.',
+    region_gen_9_desc: 'Paldea content and a future generation expansion are on the way.',
     
     // Trainer Select
     choose_trainer: 'Choose your Trainer',

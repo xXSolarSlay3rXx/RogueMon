@@ -487,6 +487,24 @@ h1, h2, .pixel-font {
   border-color: rgba(255,255,255,0.12);
 }
 
+.story-region-card.coming-soon {
+  opacity: 0.88;
+  border-style: dashed;
+  border-color: rgba(255, 212, 111, 0.34);
+  background:
+    linear-gradient(180deg, rgba(18, 25, 45, 0.96), rgba(28, 20, 44, 0.94));
+}
+
+.story-region-card.coming-soon .story-region-card-state {
+  border-color: rgba(255, 212, 111, 0.34);
+  color: #fff0c2;
+  background: rgba(255, 212, 111, 0.10);
+}
+
+.story-region-card.coming-soon .story-region-card-name {
+  color: #ffe39e;
+}
+
 .story-region-card-top {
   display: flex;
   justify-content: space-between;
