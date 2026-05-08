@@ -256,6 +256,22 @@ h1, h2, .pixel-font {
   cursor: not-allowed;
 }
 
+.btn-pokedex-launch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-pokedex-launch-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  image-rendering: auto;
+  border-radius: 4px;
+  flex: 0 0 auto;
+}
+
 
 
 /* ---- Starter Screen ---- */

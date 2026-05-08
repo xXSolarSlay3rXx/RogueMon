@@ -36,6 +36,17 @@ function updateUILanguage() {
   } else if (document.getElementById('starter-screen')?.classList.contains('active') && typeof showStarterSelect === 'function') {
     showStarterSelect();
   }
+  refreshTitleScreenPokedexButton();
+}
+
+function refreshTitleScreenPokedexButton() {
+  const titleDexBtn = document.querySelector('#title-screen .button-row .btn-secondary');
+  if (!titleDexBtn) return;
+  titleDexBtn.classList.add('btn-pokedex-launch');
+  titleDexBtn.innerHTML = `
+    <img src="ui/pokedex.png" alt="Pokedex icon" class="btn-pokedex-launch-icon">
+    <span>Pokédex</span>
+  `;
 }
 
 let currentMobileMapPanel = 'team';
@@ -433,6 +444,7 @@ async function initGame() {
   if (typeof syncToCloud === 'function') syncToCloud();
   document.getElementById('btn-new-run').onclick = () => startNewRun(false);
   document.getElementById('btn-hard-run').onclick = () => startNewRun(true);
+  refreshTitleScreenPokedexButton();
   refreshEndlessButton();
   refreshContinueButtons();
 }
