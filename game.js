@@ -38,6 +38,41 @@ function updateUILanguage() {
   }
 }
 
+let currentMobileMapPanel = 'team';
+
+function setMobileMapPanel(panel = 'team') {
+  currentMobileMapPanel = panel;
+  const mapScreen = document.getElementById('map-screen');
+  if (!mapScreen) return;
+
+  mapScreen.classList.remove('mobile-panel-team', 'mobile-panel-items', 'mobile-panel-guide');
+  mapScreen.classList.add(`mobile-panel-${panel}`);
+
+  document.querySelectorAll('.mobile-map-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mobilePanel === panel);
+  });
+}
+
+function syncMobileMapPanel() {
+  const mapScreen = document.getElementById('map-screen');
+  if (!mapScreen) return;
+
+  const isMobile = window.innerWidth <= 768;
+  const tabs = mapScreen.querySelector('.mobile-map-tabs');
+  if (tabs) {
+    tabs.style.display = isMobile ? 'grid' : 'none';
+  }
+  if (!isMobile) return;
+
+  const guideBtn = mapScreen.querySelector('.mobile-map-tab[data-mobile-panel="guide"]');
+  const hasGuide = !!state?.isEndlessMode || !!getSettings?.().easyMode;
+  if (guideBtn) guideBtn.style.display = hasGuide ? '' : 'none';
+  if (currentMobileMapPanel === 'guide' && !hasGuide) {
+    currentMobileMapPanel = 'team';
+  }
+  setMobileMapPanel(currentMobileMapPanel || 'team');
+}
+
 // Seeded PRNG (mulberry32) — use rng() instead of Math.random() for all game logic
 let _rngSeed = 0;
 function rng() {
@@ -988,6 +1023,7 @@ function showMapScreen() {
   saveRun();
 
   updateEasyModeIndicator();
+  syncMobileMapPanel();
 
   if (!localStorage.getItem('poke_tutorial_seen')) {
     showTutorialOverlay();
@@ -3015,6 +3051,7 @@ function showEndlessMapScreen() {
   const bg = endlessState.currentMapBg || 'ui/mapsNormalMode/map1.png';
   mapContainer.style.backgroundImage = `url('${bg}')`;
   renderMap(state.map, mapContainer, onEndlessNodeClick);
+  syncMobileMapPanel();
 }
 
 async function onEndlessNodeClick(node) {
