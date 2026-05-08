@@ -1,0 +1,94 @@
+{
+  "data.js": {
+    "same": true,
+    "local_size": 84514,
+    "remote_size": 84514,
+    "local_hash": "3f9a0d34ee82d104c4e76e7eef11ebd0ef4548b30f5f7075b71e4f5d22010af9",
+    "remote_hash": "3f9a0d34ee82d104c4e76e7eef11ebd0ef4548b30f5f7075b71e4f5d22010af9"
+  },
+  "map.js": {
+    "same": true,
+    "local_size": 21183,
+    "remote_size": 21183,
+    "local_hash": "80ebe02cab6b0e53bd386c7d2edce43db96ce3939eca81dbc3474332da775a0a",
+    "remote_hash": "80ebe02cab6b0e53bd386c7d2edce43db96ce3939eca81dbc3474332da775a0a"
+  },
+  "battle.js": {
+    "same": true,
+    "local_size": 21862,
+    "remote_size": 21862,
+    "local_hash": "3de2e64b6967540ece08f86ef2de95be6e9c351a085ae4915412f555979c2aad",
+    "remote_hash": "3de2e64b6967540ece08f86ef2de95be6e9c351a085ae4915412f555979c2aad"
+  },
+  "endless.js": {
+    "same": true,
+    "local_size": 43531,
+    "remote_size": 43531,
+    "local_hash": "15c2745a588526dcd161b4ef1225617eb9e2b80d728da5051f13617d18d6c8a0",
+    "remote_hash": "15c2745a588526dcd161b4ef1225617eb9e2b80d728da5051f13617d18d6c8a0"
+  },
+  "ui.js": {
+    "same": true,
+    "local_size": 179280,
+    "remote_size": 179280,
+    "local_hash": "be79f9ebeac074eea0994415cd45da76d26ba5e28d81d5affce4c46fd43f6102",
+    "remote_hash": "be79f9ebeac074eea0994415cd45da76d26ba5e28d81d5affce4c46fd43f6102"
+  },
+  "game.js": {
+    "same": true,
+    "local_size": 103775,
+    "remote_size": 103775,
+    "local_hash": "0454685b3864d8ebc1200dbc8d24dc0d8fd215e69c70966a9da7ae481d3a2785",
+    "remote_hash": "0454685b3864d8ebc1200dbc8d24dc0d8fd215e69c70966a9da7ae481d3a2785"
+  },
+  "style.css": {
+    "same": true,
+    "local_size": 82534,
+    "remote_size": 82534,
+    "local_hash": "abfdbee82871fa74023ef55e952e4a0101fa48b12b0a443a6e977c70076fbd91",
+    "remote_hash": "abfdbee82871fa74023ef55e952e4a0101fa48b12b0a443a6e977c70076fbd91"
+  },
+  "index.html": {
+    "same": false,
+    "local_size": 14497,
+    "remote_size": 16543,
+    "local_hash": "2bd596d5054b006e5ad327020219970932d82d36d4404f3d7ac04ec1825f49f4",
+    "remote_hash": "0f005ccee85483dba9bfcccb1dd75e1e5700aa3c88132f0562e70ed0f60f4ef2"
+  },
+  "asset_references": {
+    "sprite_or_ui_references": [
+      "sprites/Poke Center.png",
+      "sprites/blaine.png",
+      "sprites/brock.png",
+      "sprites/catchPokemon.png",
+      "sprites/champ.png",
+      "sprites/erika.png",
+      "sprites/giovanni.png",
+      "sprites/grass.png",
+      "sprites/itemIcon.png",
+      "sprites/koga.png",
+      "sprites/legendaryEncounter.png",
+      "sprites/lock.png",
+      "sprites/lt. surge.png",
+      "sprites/misteryTrainer.png",
+      "sprites/misty.png",
+      "sprites/moveTutor.png",
+      "sprites/questionMark.png",
+      "sprites/sabrina.png",
+      "sprites/tradeIcon.png",
+      "ui/achievements.png",
+      "ui/battleBase.png",
+      "ui/mapsBattleTower/finalBoss.png",
+      "ui/mapsNormalMode/map1.png",
+      "ui/pokedex.png",
+      "ui/regions/Einall_S2W2.png",
+      "ui/regions/HGSS_Kanto.jpg",
+      "ui/regions/Johtoart.jpg",
+      "ui/regions/ORAS_Hoenn_Map.jpg",
+      "ui/settings.png"
+    ],
+    "missing_local_files": [],
+    "count_references": 29,
+    "missing_count": 0
+  }
+}
