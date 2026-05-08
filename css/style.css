@@ -2323,14 +2323,16 @@ h1, h2, .pixel-font {
   }
   #team-bar .poke-card { width: auto; }
   #team-bar .team-slot {
-    width: 66px;
-    min-width: 66px;
-    padding: 12px 0 7px;
-    gap: 3px;
+    width: 72px;
+    min-width: 72px;
+    padding: 10px 4px 9px;
+    gap: 5px;
     border-radius: 18px;
+    justify-content: flex-start;
+    min-height: 112px;
   }
   #team-bar .team-slot::before {
-    top: 10px;
+    top: 8px;
     width: 50px;
     height: 50px;
     box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
@@ -2340,11 +2342,18 @@ h1, h2, .pixel-font {
     height: 36px;
   }
   #team-bar .team-slot-name {
-    max-width: 58px;
+    max-width: 64px;
+    min-height: 20px;
     font-size: 7px;
+    line-height: 1.25;
+    white-space: normal;
+    word-break: break-word;
+    overflow: visible;
+    text-overflow: clip;
   }
   #team-bar .team-slot-lv {
     font-size: 7px;
+    line-height: 1.15;
   }
   #team-bar .team-slot-item {
     font-size: 10px;
@@ -5275,9 +5284,24 @@ h1, h2, .pixel-font {
     overflow-x: auto;
     padding-bottom: 0;
   }
-  #team-bar .team-slot { flex: 0 0 66px; width: 66px; min-width: 66px; }
-  #team-bar .team-slot-name { max-width: 58px; font-size: 7px; }
-  #team-bar .team-slot-lv { font-size: 7px; }
+  #team-bar .team-slot {
+    flex: 0 0 72px;
+    width: 72px;
+    min-width: 72px;
+    min-height: 112px;
+    padding: 10px 4px 9px;
+  }
+  #team-bar .team-slot-name {
+    max-width: 64px;
+    min-height: 20px;
+    font-size: 7px;
+    line-height: 1.25;
+    white-space: normal;
+    word-break: break-word;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  #team-bar .team-slot-lv { font-size: 7px; line-height: 1.15; }
   #team-bar .team-sprite { width: 32px; height: 32px; }
   #team-bar .team-slot-item { font-size: 9px; }
 
