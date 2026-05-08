@@ -4233,16 +4233,153 @@ h1, h2, .pixel-font {
 }
 @media (max-width: 900px) {
   .battle-field {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: start;
   }
   .battle-side {
-    padding: 16px;
-  }
-  .battle-pokemon {
-    grid-template-columns: 1fr auto;
+    padding: 12px;
+    gap: 8px;
+    min-width: 0;
   }
   .battle-controls {
     justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  #battle-screen {
+    height: 100dvh;
+    overflow: hidden;
+    padding: max(6px, env(safe-area-inset-top)) 6px max(8px, env(safe-area-inset-bottom));
+    gap: 6px;
+  }
+
+  .battle-header {
+    gap: 4px;
+  }
+
+  .battle-header h2,
+  #battle-title {
+    font-size: 12px;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  #battle-subtitle {
+    font-size: 8px;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .battle-controls {
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .battle-controls .btn-primary {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 10px;
+    font-size: 8px;
+  }
+
+  .battle-field {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .battle-side {
+    min-height: 0;
+    padding: 8px;
+    gap: 6px;
+    border-radius: 16px;
+  }
+
+  .battle-side-label {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .battle-trainer {
+    width: 42px;
+    height: 42px;
+  }
+
+  #player-side,
+  #enemy-side {
+    gap: 8px;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+
+  .battle-pokemon {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 6px;
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .battle-poke-visual {
+    width: 44px;
+    height: 44px;
+  }
+
+  .battle-base {
+    width: 34px;
+    height: 10px;
+    bottom: 4px;
+  }
+
+  .battle-poke-visual img,
+  .battle-poke-visual .sprite,
+  .battle-pokemon .sprite {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .battle-stages {
+    right: 4px;
+    bottom: 2px;
+    gap: 3px;
+  }
+
+  .battle-stages img,
+  .battle-stages .stage-icon {
+    width: 10px;
+    height: 10px;
+  }
+
+  .battle-pokemon .poke-name,
+  .battle-pokemon .battle-poke-name,
+  .battle-pokemon .hp-text {
+    font-size: 8px;
+    line-height: 1.35;
+  }
+
+  .battle-pokemon .hp-type,
+  .battle-pokemon .hp-value,
+  .battle-pokemon .poke-level,
+  .battle-pokemon .battle-poke-level {
+    font-size: 7px;
+    line-height: 1.3;
+  }
+
+  .hp-bar {
+    height: 10px;
+  }
+
+  .battle-trait-bar {
+    gap: 2px;
+    padding-bottom: 2px;
+  }
+
+  .trait-badge {
+    font-size: 6px;
+    padding: 2px 4px;
   }
 }
 
@@ -5043,24 +5180,24 @@ h1, h2, .pixel-font {
 
 @media (max-width: 768px) {
   #battle-screen {
-    padding: max(8px, env(safe-area-inset-top)) 8px max(14px, env(safe-area-inset-bottom));
-    overflow-y: auto;
+    padding: max(6px, env(safe-area-inset-top)) 6px max(8px, env(safe-area-inset-bottom));
+    overflow: hidden;
   }
 
   .battle-header {
-    gap: 6px;
+    gap: 4px;
     text-align: center;
   }
 
   .battle-controls {
     width: 100%;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-wrap: nowrap;
+    gap: 6px;
   }
 
   .battle-controls .btn-primary {
-    flex: 1 1 140px;
+    flex: 1 1 0;
     min-width: 0;
   }
 }
