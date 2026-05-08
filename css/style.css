@@ -1442,11 +1442,107 @@ h1, h2, .pixel-font {
   z-index: 500;
   pointer-events: none;
   display: none;
-  width: 200px;
+  width: 236px;
 }
 #team-hover-card .poke-card {
   margin: 0;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  position: relative;
+  width: 100%;
+  padding: 14px 14px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(139, 232, 255, 0.26);
+  background:
+    radial-gradient(circle at top, rgba(139, 232, 255, 0.14), transparent 36%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+  box-shadow:
+    0 0 0 1px rgba(8, 16, 32, 0.95),
+    0 18px 34px rgba(0,0,0,0.48),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  color: #e8f4ff;
+}
+#team-hover-card .poke-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent 18%);
+}
+#team-hover-card .poke-name,
+#team-hover-card .move-name {
+  color: #f4fbff;
+}
+#team-hover-card .poke-level,
+#team-hover-card .stat-lbl,
+#team-hover-card .stat-val,
+#team-hover-card .hp-text,
+#team-hover-card .move-power-badge {
+  color: #a9c8e8;
+}
+#team-hover-card .poke-level {
+  font-size: 11px;
+}
+#team-hover-card .poke-types {
+  margin-top: 2px;
+}
+#team-hover-card .type-badge {
+  border-radius: 999px;
+  box-shadow: none;
+}
+#team-hover-card .poke-stats-bars {
+  margin-top: 8px;
+  gap: 4px;
+}
+#team-hover-card .stat-row {
+  gap: 6px;
+}
+#team-hover-card .stat-bar-bg {
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+#team-hover-card .stat-bar-fill {
+  opacity: 0.55;
+}
+#team-hover-card .stat-buff-overlay {
+  background: linear-gradient(90deg, rgba(89, 181, 255, 0.85), rgba(130, 236, 255, 0.95));
+}
+#team-hover-card .poke-hp {
+  margin-top: 8px;
+}
+#team-hover-card .hp-bar-bg {
+  height: 9px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  border: 1px solid rgba(139, 232, 255, 0.12);
+}
+#team-hover-card .hp-bar-fill {
+  border-radius: 999px;
+}
+#team-hover-card .poke-move {
+  margin-top: 10px;
+  padding: 10px 10px 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(139, 232, 255, 0.14);
+  background: rgba(6, 12, 24, 0.68);
+}
+#team-hover-card .move-header {
+  gap: 4px;
+}
+#team-hover-card .move-cat-badge,
+#team-hover-card .move-power-badge {
+  border-radius: 999px;
+}
+#team-hover-card .move-cat-badge {
+  border: 1px solid rgba(255,255,255,0.08);
+}
+#team-hover-card .poke-sprite-wrap {
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 2px;
+}
+#team-hover-card .poke-sprite {
+  filter: drop-shadow(0 0 18px rgba(139, 232, 255, 0.16));
 }
 
 /* ---- Map Screen ---- */
