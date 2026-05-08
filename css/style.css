@@ -561,14 +561,35 @@ h1, h2, .pixel-font {
     grid-template-columns: 1fr;
   }
   #starter-choices {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    align-items: start;
   }
   #starter-screen .poke-card {
-    max-width: 100%;
+    max-width: none;
+    min-width: 0;
+    padding: 10px 8px;
+    border-radius: 12px;
   }
   #starter-screen .poke-sprite-wrap {
-    width: 88px;
-    height: 88px;
+    width: 56px;
+    height: 56px;
+  }
+  #starter-screen .poke-name {
+    font-size: 8px;
+    line-height: 1.25;
+    min-height: 20px;
+  }
+  #starter-screen .type-badge {
+    font-size: 6px;
+    padding: 2px 4px;
+  }
+  #starter-screen .starter-description,
+  #starter-screen .poke-level,
+  #starter-screen .poke-hp,
+  #starter-screen .poke-stats-bars,
+  #starter-screen .poke-move {
+    display: none;
   }
 
   .story-region-grid {
@@ -5229,7 +5250,8 @@ h1, h2, .pixel-font {
     min-width: 0;
     gap: 6px;
   }
-  .map-left-rail { order: 3; }
+  .map-right-rail { order: 3; }
+  .map-left-rail { order: 4; }
   .map-stage {
     order: 1;
     flex: 0 0 auto;
@@ -5245,7 +5267,6 @@ h1, h2, .pixel-font {
     width: min(390px, 100%);
     gap: 6px;
   }
-  .map-right-rail { order: 4; }
   #map-container {
     min-height: 0;
     width: 100%;
@@ -5283,22 +5304,41 @@ h1, h2, .pixel-font {
   #easy-mode-indicator,
   .map-panel-right,
   .map-panel-region {
-    display: none;
+    display: none !important;
   }
 
   #map-screen.mobile-panel-team .map-panel-left,
   #map-screen.mobile-panel-team .hud-bottom-row {
-    display: block;
+    display: block !important;
   }
 
   #map-screen.mobile-panel-items .map-panel-right {
-    display: block;
+    display: block !important;
   }
 
   #map-screen.mobile-panel-guide .map-panel-traits,
   #map-screen.mobile-panel-guide #easy-mode-indicator,
   #map-screen.mobile-panel-guide .map-panel-region {
-    display: block;
+    display: block !important;
+  }
+
+  #map-screen.mobile-panel-items .map-right-rail,
+  #map-screen.mobile-panel-guide .map-left-rail,
+  #map-screen.mobile-panel-team .map-left-rail {
+    width: min(390px, 100%);
+  }
+
+  #map-screen.mobile-panel-items .map-panel-right {
+    min-height: 96px;
+  }
+
+  #map-screen.mobile-panel-guide #easy-mode-indicator {
+    order: 1;
+  }
+
+  #map-screen.mobile-panel-guide .map-panel-traits,
+  #map-screen.mobile-panel-guide .map-panel-region {
+    order: 2;
   }
 
   #map-screen.mobile-panel-guide .map-panel-traits {
