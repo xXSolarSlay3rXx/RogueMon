@@ -4345,6 +4345,27 @@ h1, h2, .pixel-font {
   font-size: 10px;
   color: #edf6ff;
 }
+.battle-poke-meta {
+  min-width: 0;
+}
+.battle-poke-name {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+.battle-poke-name-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.battle-poke-level {
+  flex: 0 0 auto;
+  color: #9fdcff;
+  font-size: 9px;
+}
 .poke-hp {
   margin-top: 4px;
   font-size: 10px;
@@ -4468,28 +4489,29 @@ h1, h2, .pixel-font {
   }
 
   .battle-pokemon {
-    grid-template-columns: 44px minmax(0, 1fr);
-    gap: 6px;
-    padding: 8px;
-    border-radius: 12px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 7px;
+    padding: 7px 8px;
+    border-radius: 10px;
+    align-items: center;
   }
 
   .battle-poke-visual {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
   }
 
   .battle-base {
-    width: 34px;
-    height: 10px;
-    bottom: 4px;
+    width: 30px;
+    height: 8px;
+    bottom: 2px;
   }
 
   .battle-poke-visual img,
   .battle-poke-visual .sprite,
   .battle-pokemon .sprite {
-    width: 34px !important;
-    height: 34px !important;
+    width: 28px !important;
+    height: 28px !important;
   }
 
   .battle-stages {
@@ -4507,8 +4529,33 @@ h1, h2, .pixel-font {
   .battle-pokemon .poke-name,
   .battle-pokemon .battle-poke-name,
   .battle-pokemon .hp-text {
-    font-size: 8px;
-    line-height: 1.35;
+    font-size: 7px;
+    line-height: 1.2;
+  }
+
+  .battle-pokemon .battle-poke-meta {
+    min-width: 0;
+  }
+
+  .battle-pokemon .battle-poke-name {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .battle-pokemon .battle-poke-name-text {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .battle-pokemon .battle-poke-level {
+    margin-top: 0;
+    font-size: 6px;
+    line-height: 1;
   }
 
   .battle-pokemon .hp-type,
@@ -4520,7 +4567,7 @@ h1, h2, .pixel-font {
   }
 
   .hp-bar {
-    height: 10px;
+    height: 8px;
   }
 
   .battle-trait-bar {

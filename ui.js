@@ -843,8 +843,11 @@ function renderBattleField(pTeam, eTeam) {
           <img src="ui/battleBase.png" class="battle-base" alt="">
           <img src="${p.spriteUrl||''}" alt="${displayName}" class="battle-sprite" onerror="this.src=''">
         </div>
-        <div>
-          <div class="battle-poke-name">${displayName} Lv${p.level}</div>
+        <div class="battle-poke-meta">
+          <div class="battle-poke-name">
+            <span class="battle-poke-name-text">${displayName}</span>
+            <span class="battle-poke-level">Lv${p.level}</span>
+          </div>
           <div class="poke-hp">${renderHpBar(p.currentHp, p.maxHp)}</div>
           <div class="battle-stages"></div>
         </div>
@@ -861,8 +864,11 @@ function renderBattleField(pTeam, eTeam) {
           <img src="ui/battleBase.png" class="battle-base" alt="">
           <img src="${p.spriteUrl||''}" alt="${displayName}" class="battle-sprite" onerror="this.src=''">
         </div>
-        <div>
-          <div class="battle-poke-name">${displayName} Lv${p.level}</div>
+        <div class="battle-poke-meta">
+          <div class="battle-poke-name">
+            <span class="battle-poke-name-text">${displayName}</span>
+            <span class="battle-poke-level">Lv${p.level}</span>
+          </div>
           <div class="poke-hp">${renderHpBar(p.currentHp, p.maxHp)}</div>
           <div class="battle-stages"></div>
         </div>
