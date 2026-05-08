@@ -243,10 +243,19 @@ function _renderRogueMonCloudModal() {
         <span>RogueMon Cloud</span>
         <button class="ach-modal-close" onclick="_closeRogueMonCloudModal()">x</button>
       </div>
+      <div class="settings-section-title">Info</div>
+      <div class="settings-cloud-body">
+        <div class="settings-cloud-copy">
+          Cloudsave is optional. You can play RogueMon normally without an account.
+        </div>
+        <div class="settings-cloud-copy">
+          Use RogueMon Cloud only if you want to save progress online and continue on another device later.
+        </div>
+      </div>
       <div class="settings-section-title">Server</div>
       <div class="settings-cloud-body">
         <div class="settings-cloud-copy">
-          Connect RogueMon to your own save server. Leave it empty to keep cloud sync disabled.
+          Connect RogueMon to a save server. Leave it empty if you do not want cloud sync.
         </div>
         <input id="roguemon-cloud-server-input" class="settings-cloud-input" type="text" placeholder="/api or http://localhost:8787" value="${status.serverUrl}">
         <div class="settings-cloud-actions">
@@ -261,6 +270,9 @@ function _renderRogueMonCloudModal() {
           <div><strong>Last Sync:</strong> ${lastSyncText}</div>
         </div>
         ${status.enabled ? `
+          <div class="settings-cloud-copy">
+            No account is needed for offline play. Create one only if you want online save sync.
+          </div>
           <input id="roguemon-cloud-username" class="settings-cloud-input" type="text" placeholder="Username" value="${status.username || ''}">
           <input id="roguemon-cloud-password" class="settings-cloud-input" type="password" placeholder="${status.signedIn ? 'New password only if you sign in again' : 'Password'}">
           <div id="roguemon-cloud-error" class="settings-cloud-error" hidden></div>
