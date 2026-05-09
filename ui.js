@@ -224,6 +224,7 @@ const i18n = {
     unlock_gen_5: 'Defeat the Gen 4 Elite Four and Champion to unlock Gen 5.',
     coming_soon: 'Coming Soon',
     coming_soon_note: 'This generation is planned for a future update.',
+    endless_coming_soon_desc: 'A reworked version of this mode is on the way.',
     region_gen_1_desc: '8 Gym Leaders, Elite Four and Champion.',
     region_gen_2_desc: 'New starters, new gyms and a new league.',
     region_gen_3_desc: 'Hoenn starters, 8 new badges and the Hoenn League.',

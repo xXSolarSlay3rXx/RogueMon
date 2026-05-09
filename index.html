@@ -27,7 +27,11 @@
   <button id="btn-continue-endless" class="btn-primary" data-i18n="btn_continue_endless">Continue Endless</button>
   <button id="btn-new-run" class="btn-primary" data-i18n="btn_new_run">New Game</button>
   <button id="btn-hard-run" class="btn-primary" data-i18n="btn_hard_run">Nuzlocke Mode</button>
-  <div class="lock-wrap"><button id="btn-endless-run" class="btn-primary btn-disabled" disabled="" data-i18n="btn_endless_run">Endless Mode</button><div class="locked-overlay"><img src="sprites/lock.png" alt="Locked button" class="lock-icon"></div></div>
+  <div class="lock-wrap coming-soon-wrap">
+    <button id="btn-endless-run" class="btn-primary btn-disabled" disabled="" data-i18n="btn_endless_run">Endless Mode</button>
+    <div class="locked-overlay coming-soon-overlay"><span class="locked-badge" data-i18n="coming_soon">Coming Soon</span></div>
+    <p class="locked-note" data-i18n="endless_coming_soon_desc">A reworked version of this mode is on the way.</p>
+  </div>
   <div class="button-row">
     <button onclick="openPokedexModal()" class="btn-secondary">📖 Pokédex</button>
     <button onclick="openAchievementsModal()" class="btn-secondary">🏆 Achievements</button>

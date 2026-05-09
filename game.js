@@ -240,13 +240,8 @@ function getSavedStoryRunSummary() {
 function refreshContinueButtons() {
   const continueEndlessBtn = document.getElementById('btn-continue-endless');
   if (continueEndlessBtn) {
-    if (localStorage.getItem('poke_endless_state') && localStorage.getItem('poke_current_run')) {
-      continueEndlessBtn.style.display = '';
-      continueEndlessBtn.onclick = () => continueEndlessRun();
-    } else {
-      continueEndlessBtn.style.display = 'none';
-      continueEndlessBtn.onclick = null;
-    }
+    continueEndlessBtn.style.display = 'none';
+    continueEndlessBtn.onclick = null;
   }
 
   const continueBtn = document.getElementById('btn-continue-run');
@@ -275,54 +270,14 @@ function refreshEndlessButton() {
   const endlessBtn = document.getElementById('btn-endless-run');
   if (!endlessBtn) return;
 
-  const unlocked = hasUnlockedEndlessMode();
-  const existingWrapper = endlessBtn.closest('.lock-wrap');
-
-  if (unlocked) {
-    endlessBtn.onclick = () => showEndlessStageSelect();
-    endlessBtn.disabled = false;
-    endlessBtn.removeAttribute('disabled');
-    endlessBtn.classList.remove('btn-disabled');
-    endlessBtn.style.opacity = '';
-    endlessBtn.style.pointerEvents = '';
-
-    if (existingWrapper) {
-      const parent = existingWrapper.parentNode;
-      if (parent) {
-        if (endlessBtn.style.marginTop === '0' || endlessBtn.style.marginTop === '0px') {
-          endlessBtn.style.marginTop = existingWrapper.style.marginTop || '';
-        }
-        parent.insertBefore(endlessBtn, existingWrapper);
-        existingWrapper.remove();
-      }
-    }
-    return;
-  }
-
   endlessBtn.onclick = null;
   endlessBtn.disabled = true;
   endlessBtn.setAttribute('disabled', '');
   endlessBtn.classList.add('btn-disabled');
   endlessBtn.style.opacity = '0.45';
   endlessBtn.style.pointerEvents = 'none';
-
-  if (!existingWrapper) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'lock-wrap';
-    wrapper.style.marginTop = endlessBtn.style.marginTop || '6px';
-    endlessBtn.style.marginTop = '0';
-    const parent = endlessBtn.parentNode;
-    if (parent) {
-      parent.insertBefore(wrapper, endlessBtn);
-      wrapper.appendChild(endlessBtn);
-      const lockOverlay = document.createElement('div');
-      lockOverlay.className = 'locked-overlay';
-      lockOverlay.innerHTML = '<img src="sprites/lock.png" alt="Locked button" class="lock-icon">';
-      lockOverlay.addEventListener('mousemove', e => _itemTooltip.show(getText('unlock_after_win'), e.clientX + 14, e.clientY - 8));
-      lockOverlay.addEventListener('mouseleave', () => _itemTooltip.hide());
-      wrapper.appendChild(lockOverlay);
-    }
-  }
+  const note = endlessBtn.closest('.lock-wrap')?.querySelector('.locked-note');
+  if (note) note.textContent = getText('endless_coming_soon_desc');
 }
 
 // ---- Run persistence ----

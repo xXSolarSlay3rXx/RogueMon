@@ -1034,6 +1034,12 @@ h1, h2, .pixel-font {
   display: block;
   margin-top: 6px;
 }
+.coming-soon-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
 .btn-disabled {
   margin-top: 0;
   opacity: 0.45;
@@ -1045,13 +1051,35 @@ h1, h2, .pixel-font {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   cursor: not-allowed;
 }
-.lock-icon {
-  height: 36px;
-  width: auto;
-  image-rendering: pixelated;
+.coming-soon-overlay {
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 8px 10px;
+}
+.locked-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 5px 10px 4px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(24, 39, 74, 0.96), rgba(13, 22, 44, 0.98));
+  border: 1px solid rgba(139, 232, 255, 0.25);
+  color: #dff7ff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  letter-spacing: 0.4px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+}
+.locked-note {
+  max-width: 280px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 10px;
+  line-height: 1.6;
+  margin: 0;
 }
 .button-row {
   display: flex;
