@@ -563,11 +563,44 @@ h1, h2, .pixel-font {
     padding: 2px 4px;
   }
   #starter-screen .starter-description,
-  #starter-screen .poke-level,
-  #starter-screen .poke-hp,
-  #starter-screen .poke-stats-bars,
   #starter-screen .poke-move {
     display: none;
+  }
+  #starter-screen .poke-level {
+    display: block;
+    font-size: 8px;
+    line-height: 1.2;
+  }
+  #starter-screen .poke-hp {
+    display: block;
+    width: 100%;
+    margin-top: 2px;
+  }
+  #starter-screen .hp-text {
+    font-size: 6px;
+  }
+  #starter-screen .poke-stats-bars {
+    display: flex;
+    width: 100%;
+    gap: 2px;
+    margin-top: 2px;
+  }
+  #starter-screen .stat-row {
+    gap: 2px;
+  }
+  #starter-screen .stat-row:nth-child(n+4) {
+    display: none;
+  }
+  #starter-screen .stat-lbl {
+    width: 14px;
+    font-size: 5px;
+  }
+  #starter-screen .stat-bar-bg {
+    height: 4px;
+  }
+  #starter-screen .stat-val {
+    width: 12px;
+    font-size: 5px;
   }
 
   .story-region-grid {
@@ -5430,47 +5463,82 @@ h1, h2, .pixel-font {
     padding-inline: 8px;
   }
   #catch-choices {
-    width: min(100%, 420px);
-    grid-template-columns: 1fr;
-    gap: 12px;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
   #catch-screen .poke-choice-wrap {
     width: 100%;
   }
   #catch-screen .poke-card {
     width: 100%;
-    padding: 14px 12px 12px;
-    border-radius: 18px;
-    gap: 6px;
+    padding: 10px 7px 9px;
+    border-radius: 14px;
+    gap: 4px;
   }
   #catch-screen .poke-sprite-wrap,
   #catch-screen .poke-sprite {
-    width: 72px;
-    height: 72px;
+    width: 48px;
+    height: 48px;
   }
   #catch-screen .poke-name {
-    font-size: 8px;
-    line-height: 1.35;
+    font-size: 7px;
+    line-height: 1.25;
+    min-height: 18px;
   }
   #catch-screen .poke-level {
-    font-size: 10px;
+    font-size: 8px;
   }
   #catch-screen .poke-stats-bars {
+    display: flex;
+    width: 100%;
+    gap: 2px;
+    margin-top: 1px;
+  }
+  #catch-screen .stat-row {
+    gap: 2px;
+  }
+  #catch-screen .stat-row:nth-child(n+4) {
     display: none;
   }
+  #catch-screen .stat-lbl {
+    width: 14px;
+    font-size: 5px;
+  }
+  #catch-screen .stat-bar-bg {
+    height: 4px;
+  }
+  #catch-screen .stat-val {
+    width: 12px;
+    font-size: 5px;
+  }
+  #catch-screen .poke-hp {
+    width: 100%;
+    margin-top: 1px;
+  }
+  #catch-screen .hp-text {
+    font-size: 6px;
+  }
   #catch-screen .poke-move {
-    margin-top: 2px;
-    padding: 8px 7px;
+    margin-top: 1px;
+    padding: 6px 5px;
   }
   #catch-screen .move-name {
-    font-size: 8px;
-    line-height: 1.35;
+    font-size: 6px;
+    line-height: 1.25;
     text-align: center;
   }
   #catch-screen .move-cat-badge,
   #catch-screen .move-power-badge,
   #catch-screen .type-badge {
-    font-size: 7px;
+    font-size: 5px;
+    padding: 2px 4px;
+  }
+  #catch-screen .move-power-badge {
+    display: none;
+  }
+  #catch-screen .move-header {
+    gap: 3px;
   }
   #catch-screen .trait-preview-row {
     border-radius: 10px;
