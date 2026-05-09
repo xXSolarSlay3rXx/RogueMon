@@ -43,28 +43,6 @@ body {
               linear-gradient(180deg, #04060f 0%, #090c1f 30%, #120c29 55%, #120d26 100%);
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 120'%3E%3Cpath fill='%23ffffff' fill-opacity='0.28' d='M24 112 C26 66 64 36 100 36 C112 28 128 28 140 36 C164 32 180 48 184 68 C200 68 208 88 196 104 C196 112 204 124 200 136 C192 148 176 154 156 152 C132 148 116 140 104 124 C92 116 80 116 68 124 C60 132 56 144 48 148 C36 152 28 136 24 120 Z M36 40 L32 20 L48 20 L52 40 Z M144 36 L148 20 L164 20 L160 40 Z'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 130'%3E%3Cpath fill='%23ffffff' fill-opacity='0.24' d='M22 112 C26 76 52 50 88 44 C104 36 124 36 136 44 C148 34 170 28 188 28 C206 28 214 38 216 54 C224 54 224 68 216 82 C224 88 228 100 228 116 C228 132 212 148 192 156 C172 164 148 166 130 156 C116 148 104 136 92 120 C84 108 76 108 60 116 C44 124 38 142 22 150 C14 154 12 140 16 120 Z M156 44 C152 36 144 28 136 28 C132 44 144 52 154 56 C164 60 172 52 164 44 Z'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Cpath fill='%23ffffff' fill-opacity='0.26' d='M24 108 C28 76 48 50 76 46 C88 36 104 36 116 46 C128 36 144 32 160 36 C172 36 180 44 184 56 C196 60 208 76 208 92 C208 108 196 124 184 132 C168 140 152 140 136 132 C124 128 112 116 100 104 C88 92 72 92 60 100 C48 108 36 124 28 132 C20 136 20 120 24 108 Z M92 36 C88 28 80 24 72 24 C68 36 76 44 86 48 C96 52 108 44 98 36 Z'/%3E%3C/svg%3E"),
-    radial-gradient(circle at 12% 10%, rgba(255,255,255,0.22), transparent 4%),
-    radial-gradient(circle at 22% 8%, rgba(255,255,255,0.14), transparent 3%),
-    radial-gradient(circle at 78% 18%, rgba(255,255,255,0.16), transparent 4%),
-    radial-gradient(circle at 65% 6%, rgba(255,255,255,0.10), transparent 3%),
-    radial-gradient(circle at 35% 22%, rgba(255,180,90,0.18), transparent 12%),
-    radial-gradient(circle at 55% 25%, rgba(110,140,255,0.12), transparent 10%);
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-  background-size: 280px 150px, 230px 140px, 200px 120px, auto, auto, auto, auto, auto, auto;
-  background-position: 14% 18%, 78% 16%, 56% 18%, 12% 10%, 22% 8%, 78% 18%, 65% 6%, 35% 22%, 55% 25%;
-  opacity: 0.95;
-}
-
-
 h1, h2, .pixel-font {
   font-family: 'Press Start 2P', monospace;
   line-height: 1.6;
