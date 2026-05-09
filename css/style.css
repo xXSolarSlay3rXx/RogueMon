@@ -5366,6 +5366,14 @@ h1, h2, .pixel-font {
     display: block !important;
   }
 
+  #map-screen.mobile-panel-items .map-right-rail {
+    order: 3;
+  }
+
+  #map-screen.mobile-panel-items .map-stage {
+    order: 4;
+  }
+
   #map-screen.mobile-panel-guide .hud-bottom-row,
   #map-screen.mobile-panel-guide .map-panel-traits,
   #map-screen.mobile-panel-guide #easy-mode-indicator,
