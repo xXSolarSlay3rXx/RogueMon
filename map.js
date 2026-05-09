@@ -531,6 +531,21 @@ const _mapTooltip = (() => {
   };
 })();
 
+function getPreviewAdjustedLevel(level, isBoss = false) {
+  if (typeof getAdjustedEnemyLevel === 'function') {
+    return getAdjustedEnemyLevel(level, isBoss);
+  }
+  const safeLevel = Math.max(1, Number(level) || 1);
+  return Math.max(2, safeLevel + (isBoss ? -2 : -1));
+}
+
+function renderMapTooltipTeam(entries, isBoss = false) {
+  return (entries || []).map(p => {
+    const previewLevel = getPreviewAdjustedLevel(p.level, isBoss);
+    return `<div class="map-tooltip-team-row"><span class="map-tooltip-mon-name">${p.name}</span><span class="map-tooltip-mon-level">Lv${previewLevel}</span></div>`;
+  }).join('');
+}
+
 function renderMap(map, container, onNodeClick) {
   container.innerHTML = '';
   const theme = getMapTheme(map.mapIndex ?? 0);
@@ -749,10 +764,10 @@ function renderMap(map, container, onNodeClick) {
       if (trainerData?.speciesIds?.length) {
         const BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
         const imgs = trainerData.speciesIds.map(id =>
-          `<img src="${BASE}${id}.png" style="width:28px;height:28px;image-rendering:pixelated;" onerror="this.style.display='none'">`
+          `<img src="${BASE}${id}.png" class="map-tooltip-sprite" onerror="this.style.display='none'">`
         ).join('');
         const name = trainerData.archetype?.name || '???';
-        hoverLabel = `<div style="font-size:7px;margin-bottom:3px;text-align:center;">${name}</div><div style="display:flex;flex-wrap:wrap;gap:2px;justify-content:center;">${imgs}</div>`;
+        hoverLabel = `<div class="map-tooltip-title">${name}</div><div class="map-tooltip-sprite-row">${imgs}</div>`;
       }
     }
     g.addEventListener('mouseenter', e => { if (_hoverEnabled) _mapTooltip.show(hoverLabel, e.clientX, e.clientY); });
@@ -842,13 +857,11 @@ function getNodeLabel(node) {
       : (typeof GYM_LEADERS !== 'undefined' ? GYM_LEADERS : []);
     if (mi >= 0 && mi < leaders.length) {
       const leader = leaders[mi];
-      const teamHtml = leader.team.map(p =>
-        `<div style="color:#ccc;font-size:9px;">${p.name} <span style="color:#aaa;">Lv${p.level}</span></div>`
-      ).join('');
-      return `<div style="font-weight:bold;margin-bottom:4px;">${leader.name} — ${leader.type} Gym</div>${teamHtml}`;
+      const teamHtml = renderMapTooltipTeam(leader.team, true);
+      return `<div class="map-tooltip-title">${leader.name} - ${leader.type} Gym</div><div class="map-tooltip-team">${teamHtml}</div>`;
     }
     if (mi === 8) {
-      return '<div style="font-weight:bold;">Elite Four &amp; Champion</div>';
+      return '<div class="map-tooltip-title">Elite Four &amp; Champion</div>';
     }
     return 'Gym Leader';
   }
@@ -866,3 +879,4 @@ function getNodeLabel(node) {
   };
   return labels[node.type] || node.type;
 }
+

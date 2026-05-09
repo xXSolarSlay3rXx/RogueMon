@@ -1428,22 +1428,66 @@ h1, h2, .pixel-font {
 #map-node-tooltip {
   position: fixed;
   pointer-events: none;
-  background: #0e0b06;
-  border: 2px solid #c8b070;
-  box-shadow: 0 0 0 1px #000, 3px 3px 0 0 #000;
-  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(139,232,255,0.12), transparent 42%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+  border: 1px solid rgba(139,232,255,0.28);
+  border-radius: 14px;
+  box-shadow: 0 16px 30px rgba(0,0,0,0.34), inset 0 0 18px rgba(139,232,255,0.05);
+  color: #eaf5ff;
   font-family: 'Press Start 2P', monospace;
   font-size: 8px;
-  line-height: 1.9;
-  padding: 8px 12px;
+  line-height: 1.6;
+  padding: 10px 12px;
   white-space: normal;
-  max-width: 200px;
+  max-width: 220px;
   z-index: 200;
   opacity: 0;
   transition: opacity 0.1s;
   transform: translate(-50%, calc(-100% - 12px));
 }
 #map-node-tooltip.visible { opacity: 1; }
+
+.map-tooltip-title {
+  color: #f4fbff;
+  margin-bottom: 6px;
+  line-height: 1.45;
+}
+
+.map-tooltip-team {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.map-tooltip-team-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.map-tooltip-mon-name {
+  color: #d8ebff;
+}
+
+.map-tooltip-mon-level {
+  color: #9fdcff;
+  flex: 0 0 auto;
+}
+
+.map-tooltip-sprite-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.map-tooltip-sprite {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
+}
 
 /* ---- Tutorial overlay ---- */
 #tutorial-overlay {

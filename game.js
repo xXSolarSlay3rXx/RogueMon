@@ -873,10 +873,11 @@ function getAdjustedEnemyLevel(level, isBoss = false) {
 
 async function resolveConfiguredTeamPreview(teamEntries, fallbackType = 'Normal') {
   return Promise.all((teamEntries || []).map(async entry => {
+    const previewLevel = getAdjustedEnemyLevel(entry.level, true);
     if (Array.isArray(entry.types) && entry.types.length) {
       return {
         name: entry.name || 'Pokemon',
-        level: entry.level || 0,
+        level: previewLevel || 0,
         types: entry.types,
       };
     }
@@ -885,14 +886,14 @@ async function resolveConfiguredTeamPreview(teamEntries, fallbackType = 'Normal'
       if (species) {
         return {
           name: entry.name || species.name,
-          level: entry.level || 0,
+          level: previewLevel || 0,
           types: species.types || [fallbackType],
         };
       }
     }
     return {
       name: entry.name || 'Pokemon',
-      level: entry.level || 0,
+      level: previewLevel || 0,
       types: [fallbackType],
     };
   }));
