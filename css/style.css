@@ -4231,6 +4231,157 @@ h1, h2, .pixel-font {
 .trainer-card:hover,
 .trainer-card:focus   { border-color: #181410; box-shadow: 4px 4px 0 0 #181410; }
 
+/* ---- RogueMon catch screen override ---- */
+#catch-screen {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: 12px;
+}
+#catch-screen h2 {
+  color: #7ef6d3;
+  text-shadow: 0 0 14px rgba(126, 246, 211, 0.18);
+  margin-bottom: 2px;
+}
+#catch-screen .screen-caption {
+  color: #b8c8ec;
+  font-size: 10px;
+  margin-bottom: 6px;
+}
+#catch-choices {
+  width: min(100%, 980px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+#catch-screen .poke-choice-wrap {
+  width: 100%;
+}
+#catch-screen .poke-card {
+  width: 100%;
+  min-height: 100%;
+  padding: 16px 14px 14px;
+  gap: 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(139, 232, 255, 0.24);
+  background:
+    radial-gradient(circle at top, rgba(139, 232, 255, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+  color: #edf5ff;
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 18px 36px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+#catch-screen .poke-card[data-type="grass"] {
+  border-color: rgba(94, 224, 154, 0.28);
+  background:
+    radial-gradient(circle at top, rgba(94, 224, 154, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+}
+#catch-screen .poke-card[data-type="fire"] {
+  border-color: rgba(255, 138, 117, 0.3);
+  background:
+    radial-gradient(circle at top, rgba(255, 138, 117, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+}
+#catch-screen .poke-card[data-type="water"] {
+  border-color: rgba(95, 186, 255, 0.3);
+  background:
+    radial-gradient(circle at top, rgba(95, 186, 255, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+}
+#catch-screen .poke-card[role="button"]:hover,
+#catch-screen .poke-card[tabindex]:hover {
+  border-color: rgba(139, 232, 255, 0.7);
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 22px 44px rgba(0, 0, 0, 0.4),
+    0 0 26px rgba(139, 232, 255, 0.18);
+  transform: translateY(-6px) scale(1.01);
+}
+#catch-screen .poke-card.selected {
+  border-color: rgba(255, 217, 127, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 0 26px rgba(255, 217, 127, 0.2),
+    0 18px 36px rgba(0, 0, 0, 0.34);
+}
+#catch-screen .poke-sprite-wrap {
+  width: 88px;
+  height: 88px;
+  margin-bottom: 2px;
+}
+#catch-screen .poke-sprite {
+  width: 88px;
+  height: 88px;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+}
+#catch-screen .dex-caught-badge {
+  top: 0;
+  left: 0;
+}
+#catch-screen .poke-name,
+#catch-screen .move-name {
+  color: #f5fbff;
+  -webkit-text-stroke: 0;
+}
+#catch-screen .poke-level,
+#catch-screen .stat-lbl,
+#catch-screen .stat-val,
+#catch-screen .move-power-badge,
+#catch-screen .move-desc,
+#catch-screen .screen-caption {
+  color: #a9bddc;
+}
+#catch-screen .poke-types {
+  margin-top: 2px;
+}
+#catch-screen .type-badge,
+#catch-screen .move-cat-badge,
+#catch-screen .move-power-badge {
+  border-radius: 999px;
+}
+#catch-screen .poke-stats-bars {
+  margin-top: 6px;
+  gap: 4px;
+}
+#catch-screen .stat-bar-bg {
+  background: rgba(255,255,255,0.08);
+}
+#catch-screen .poke-hp {
+  width: 100%;
+  margin-top: 2px;
+}
+#catch-screen .hp-bar-bg {
+  background: rgba(255,255,255,0.08);
+}
+#catch-screen .poke-move {
+  margin-top: 6px;
+  border-radius: 14px;
+  border: 1px solid rgba(139, 232, 255, 0.16);
+  background: rgba(255,255,255,0.04);
+  padding: 10px 8px;
+}
+#catch-screen .move-header {
+  gap: 5px;
+}
+#catch-screen .trait-preview-row {
+  background: linear-gradient(180deg, rgba(10,16,30,0.96), rgba(13,21,38,0.96));
+  border: 1px solid rgba(139, 232, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: none;
+}
+#catch-screen .trait-preview-row-up {
+  border-color: rgba(255, 217, 127, 0.6);
+  box-shadow: 0 0 0 1px rgba(255, 217, 127, 0.25);
+}
+#catch-screen #btn-skip-catch {
+  min-width: 220px;
+}
+
 /* ---- HUD panels ---- */
 .hud-box,
 .map-header {
@@ -5247,13 +5398,56 @@ h1, h2, .pixel-font {
     min-width: 0;
   }
 
-  #catch-choices {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+  #catch-screen {
+    padding-inline: 8px;
   }
-  .poke-choice-wrap { width: auto; }
-  .poke-choice-wrap .poke-card { width: 100%; }
+  #catch-choices {
+    width: min(100%, 420px);
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  #catch-screen .poke-choice-wrap {
+    width: 100%;
+  }
+  #catch-screen .poke-card {
+    width: 100%;
+    padding: 14px 12px 12px;
+    border-radius: 18px;
+    gap: 6px;
+  }
+  #catch-screen .poke-sprite-wrap,
+  #catch-screen .poke-sprite {
+    width: 72px;
+    height: 72px;
+  }
+  #catch-screen .poke-name {
+    font-size: 8px;
+    line-height: 1.35;
+  }
+  #catch-screen .poke-level {
+    font-size: 10px;
+  }
+  #catch-screen .poke-stats-bars {
+    display: none;
+  }
+  #catch-screen .poke-move {
+    margin-top: 2px;
+    padding: 8px 7px;
+  }
+  #catch-screen .move-name {
+    font-size: 8px;
+    line-height: 1.35;
+    text-align: center;
+  }
+  #catch-screen .move-cat-badge,
+  #catch-screen .move-power-badge,
+  #catch-screen .type-badge {
+    font-size: 7px;
+  }
+  #catch-screen .trait-preview-row {
+    border-radius: 10px;
+    padding: 5px 6px;
+  }
 
   #item-choices {
     display: grid;
