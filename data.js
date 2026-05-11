@@ -307,8 +307,8 @@ const JOHTO_GYM_LEADERS = [
     sprite: 'sprites/johto/falkner.png',
     badgeImage: 'ui/badges/johto/arena1.png',
     team: [
-      { speciesId: 16, name: 'Pidgey', level: 9, heldItem: { id: 'sharp_beak', name: 'Sharp Beak', icon: '🦅' } },
-      { speciesId: 17, name: 'Pidgeotto', level: 13, heldItem: { id: 'sharp_beak', name: 'Sharp Beak', icon: '🦅' } },
+      { speciesId: 16, name: 'Pidgey', level: 8, heldItem: { id: 'sharp_beak', name: 'Sharp Beak', icon: '🦅' } },
+      { speciesId: 17, name: 'Pidgeotto', level: 12, heldItem: { id: 'sharp_beak', name: 'Sharp Beak', icon: '🦅' } },
     ]
   },
   {
@@ -316,9 +316,9 @@ const JOHTO_GYM_LEADERS = [
     sprite: 'sprites/johto/bugsy.png',
     badgeImage: 'ui/badges/johto/arena2.png',
     team: [
-      { speciesId: 11, name: 'Metapod', level: 15, heldItem: { id: 'eviolite', name: 'Eviolite', icon: '💎' } },
-      { speciesId: 14, name: 'Kakuna', level: 15, heldItem: { id: 'eviolite', name: 'Eviolite', icon: '💎' } },
-      { speciesId: 123, name: 'Scyther', level: 17, heldItem: { id: 'silver_powder', name: 'Silver Powder', icon: '🐛' } },
+      { speciesId: 11, name: 'Metapod', level: 14, heldItem: { id: 'eviolite', name: 'Eviolite', icon: '💎' } },
+      { speciesId: 14, name: 'Kakuna', level: 14, heldItem: { id: 'eviolite', name: 'Eviolite', icon: '💎' } },
+      { speciesId: 123, name: 'Scyther', level: 16, heldItem: { id: 'silver_powder', name: 'Silver Powder', icon: '🐛' } },
     ]
   },
   {
@@ -326,8 +326,8 @@ const JOHTO_GYM_LEADERS = [
     sprite: 'sprites/johto/whitney.png',
     badgeImage: 'ui/badges/johto/arena3.png',
     team: [
-      { speciesId: 35, name: 'Clefairy', level: 20, heldItem: { id: 'eviolite', name: 'Eviolite', icon: '💎' } },
-      { speciesId: 241, name: 'Miltank', level: 22, heldItem: { id: 'silk_scarf', name: 'Silk Scarf', icon: '🤍' } },
+      { speciesId: 35, name: 'Clefairy', level: 19, heldItem: { id: 'eviolite', name: 'Eviolite', icon: '💎' } },
+      { speciesId: 241, name: 'Miltank', level: 21, heldItem: { id: 'silk_scarf', name: 'Silk Scarf', icon: '🤍' } },
     ]
   },
   {
