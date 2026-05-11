@@ -259,11 +259,11 @@ function getNodeOffset(nodeId, mapIndex, range) {
 
 function generateMap(mapIndex, nuzlockeMode = false) {
   // Layer sizes: start(1), catch/battle(2), 3,4,3,4,3,2, boss(1)
-  const CONTENT_SIZES = [3, 4, 3, 4, 3, 2]; // layers 2–7
+  const CONTENT_SIZES = [3, 4, 3, 4, 3, 2]; // layers 2Ã¢â‚¬â€œ7
   const bossLayerIdx  = 2 + CONTENT_SIZES.length; // = 8
   const bossId        = `n${bossLayerIdx}_0`;
 
-  // ── Helpers ──────────────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Helpers Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   const assignTrainerSprite = (node, nodeId) => {
     const availableKeys = TRAINER_SPRITE_KEYS.filter(k => {
@@ -282,7 +282,7 @@ function generateMap(mapIndex, nuzlockeMode = false) {
     return node;
   };
 
-  // Pick a weighted-random node type; ci = content layer index (0–5)
+  // Pick a weighted-random node type; ci = content layer index (0Ã¢â‚¬â€œ5)
   const pickType = (ci) => {
     const w = { ...NODE_WEIGHTS[Math.min(ci, NODE_WEIGHTS.length - 1)] };
     if (!(typeof state !== 'undefined' && state.isEndlessMode) && ci >= 2) {
@@ -317,10 +317,10 @@ function generateMap(mapIndex, nuzlockeMode = false) {
       if (M === 1) {
         left = right = 0;
       } else if (M < N && i === 0) {
-        // Leftmost node on a shrinking layer → only the leftmost node below
+        // Leftmost node on a shrinking layer Ã¢â€ â€™ only the leftmost node below
         left = right = 0;
       } else if (M < N && i === N - 1) {
-        // Rightmost node on a shrinking layer → only the rightmost node below
+        // Rightmost node on a shrinking layer Ã¢â€ â€™ only the rightmost node below
         left = right = M - 1;
       } else {
         const pos = i * (M - 1) / (N - 1);
@@ -336,7 +336,7 @@ function generateMap(mapIndex, nuzlockeMode = false) {
     return edges;
   };
 
-  // ── Build layers ─────────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Build layers Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   const layers = [];
 
@@ -349,7 +349,7 @@ function generateMap(mapIndex, nuzlockeMode = false) {
     makeNode('n1_1', nuzlockeMode ? NODE_TYPES.CATCH : NODE_TYPES.BATTLE, 1, 1),
   ]);
 
-  // Layers 2–7: random content nodes
+  // Layers 2Ã¢â‚¬â€œ7: random content nodes
   for (let ci = 0; ci < CONTENT_SIZES.length; ci++) {
     const l    = ci + 2;
     const size = CONTENT_SIZES[ci];
@@ -367,14 +367,14 @@ function generateMap(mapIndex, nuzlockeMode = false) {
   // Boss layer
   layers.push([makeNode(bossId, NODE_TYPES.BOSS, bossLayerIdx, 0, { mapIndex })]);
 
-  // ── Build edges ──────────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Build edges Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   const edges = [];
   for (let l = 0; l < layers.length - 1; l++) {
     edges.push(...makeLayerEdges(layers[l], layers[l + 1]));
   }
 
-  // ── Flatten & initialise nodes ───────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Flatten & initialise nodes Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   const nodes = {};
   for (const layer of layers) {
@@ -402,7 +402,7 @@ function advanceFromNode(map, nodeId) {
   node.visited = true;
   node.accessible = false;
 
-  // Lock sibling nodes in the same layer — the unchosen branches are gone
+  // Lock sibling nodes in the same layer Ã¢â‚¬â€ the unchosen branches are gone
   for (const n of Object.values(map.nodes)) {
     if (n.layer === node.layer && n.id !== nodeId && n.accessible) {
       n.accessible = false;
@@ -477,7 +477,7 @@ function getNodeSprite(node) {
     [NODE_TYPES.LEGENDARY]: `${spriteRoot}/legendaryEncounter.png`,
     [NODE_TYPES.QUESTION]:  `${spriteRoot}/questionMark.png`,
     [NODE_TYPES.POKECENTER]: `${spriteRoot}/Poke Center.png`,
-    [NODE_TYPES.MOVE_TUTOR]: `${spriteRoot}/moveTutor.png`,
+    [NODE_TYPES.MOVE_TUTOR]: regionKey === 'johto' ? `${spriteRoot}/oldGuy.png` : `${spriteRoot}/moveTutor.png`,
   };
   if (ICON_SPRITES[node.type]) return ICON_SPRITES[node.type];
   if (node.type === NODE_TYPES.TRAINER) {
@@ -535,7 +535,7 @@ function getNodeSprite(node) {
   return null;
 }
 
-// Rendering — top-to-bottom layout
+// Rendering Ã¢â‚¬â€ top-to-bottom layout
 const _mapTooltip = (() => {
   let el = null;
   return {
@@ -730,7 +730,7 @@ function renderMap(map, container, onNodeClick) {
         anim.setAttribute('repeatCount', 'indefinite');
         shadow.appendChild(anim);
 
-        // Three rows of rectangles snapped to px grid — narrow/wide/narrow
+        // Three rows of rectangles snapped to px grid Ã¢â‚¬â€ narrow/wide/narrow
         const rows = [
           Math.round(iw * 0.35 / px) * px,
           Math.round(iw * 0.55 / px) * px,
@@ -754,7 +754,7 @@ function renderMap(map, container, onNodeClick) {
         check.setAttribute('dominant-baseline', 'central');
         check.setAttribute('font-size', '16');
         check.setAttribute('fill', '#fff');
-        check.textContent = '✓';
+        check.textContent = 'Ã¢Å“â€œ';
         g.appendChild(check);
       }
 
@@ -782,7 +782,7 @@ function renderMap(map, container, onNodeClick) {
       text.setAttribute('dominant-baseline', 'central');
       text.setAttribute('font-size', '14');
       text.setAttribute('fill', isInaccessible ? storyTheme.dimText : storyTheme.text);
-      text.textContent = isCurrent ? '✓' : getNodeIcon(node);
+      text.textContent = isCurrent ? 'Ã¢Å“â€œ' : getNodeIcon(node);
       g.appendChild(text);
     }
 
@@ -862,21 +862,21 @@ function getNodeColor(node, storyTheme = null) {
 }
 
 function getNodeIcon(node) {
-  if (node.visited) return '✓';
+  if (node.visited) return 'Ã¢Å“â€œ';
   const icons = {
-    [NODE_TYPES.START]:      '★',
-    [NODE_TYPES.BATTLE]:     '⚔',
-    [NODE_TYPES.CATCH]:      '⬟',
-    [NODE_TYPES.ITEM]:       '✦',
+    [NODE_TYPES.START]:      'Ã¢Ëœâ€¦',
+    [NODE_TYPES.BATTLE]:     'Ã¢Å¡â€',
+    [NODE_TYPES.CATCH]:      'Ã¢Â¬Å¸',
+    [NODE_TYPES.ITEM]:       'Ã¢Å“Â¦',
     [NODE_TYPES.QUESTION]:   '?',
-    [NODE_TYPES.BOSS]:       '♛',
+    [NODE_TYPES.BOSS]:       'Ã¢â„¢â€º',
     [NODE_TYPES.POKECENTER]: '+',
-    [NODE_TYPES.TRAINER]:    '⚑',
-    [NODE_TYPES.LEGENDARY]:  '⚝',
-    [NODE_TYPES.MOVE_TUTOR]: '♪',
-    [NODE_TYPES.TRADE]:      '⇄',
+    [NODE_TYPES.TRAINER]:    'Ã¢Å¡â€˜',
+    [NODE_TYPES.LEGENDARY]:  'Ã¢Å¡Â',
+    [NODE_TYPES.MOVE_TUTOR]: 'Ã¢â„¢Âª',
+    [NODE_TYPES.TRADE]:      'Ã¢â€¡â€ž',
   };
-  return icons[node.type] || '●';
+  return icons[node.type] || 'Ã¢â€”Â';
 }
 
 function getNodeLabel(node) {
@@ -898,15 +898,15 @@ function getNodeLabel(node) {
   }
   const labels = {
     [NODE_TYPES.START]:      'Start',
-    [NODE_TYPES.BATTLE]:     'Wild Battle — +1 level',
+    [NODE_TYPES.BATTLE]:     'Wild Battle Ã¢â‚¬â€ +1 level',
     [NODE_TYPES.CATCH]:      'Catch Pokemon',
     [NODE_TYPES.ITEM]:       'Item',
     [NODE_TYPES.QUESTION]:   'Random Event',
     [NODE_TYPES.POKECENTER]: 'Pokemon Center',
-    [NODE_TYPES.TRAINER]:    `Trainer Battle — +2 levels${node.trainerSprite && TRAINER_SPRITE_NAMES[node.trainerSprite] ? ' — ' + TRAINER_SPRITE_NAMES[node.trainerSprite] : ''}`,
+    [NODE_TYPES.TRAINER]:    `Trainer Battle Ã¢â‚¬â€ +2 levels${node.trainerSprite && TRAINER_SPRITE_NAMES[node.trainerSprite] ? ' Ã¢â‚¬â€ ' + TRAINER_SPRITE_NAMES[node.trainerSprite] : ''}`,
     [NODE_TYPES.LEGENDARY]:  'Legendary Pokemon',
     [NODE_TYPES.MOVE_TUTOR]: 'Move Tutor',
-    [NODE_TYPES.TRADE]:      'Trade — swap a Pokémon for one 3 levels higher',
+    [NODE_TYPES.TRADE]:      'Trade Ã¢â‚¬â€ swap a PokÃƒÂ©mon for one 3 levels higher',
   };
   return labels[node.type] || node.type;
 }
