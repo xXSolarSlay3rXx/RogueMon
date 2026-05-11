@@ -596,7 +596,9 @@ function renderMap(map, container, onNodeClick) {
   svg.style.overflow = 'hidden';
 
   const layerCount = map.layers.length;
-  const padY = 28;
+  // Keep tall trainer/boss sprites away from the clipped top/bottom edge
+  // when the map viewport is compressed by side panels or mobile chrome.
+  const padY = Math.max(42, Math.min(64, Math.round(H * 0.085)));
 
   const positions = {};
   for (let l = 0; l < map.layers.length; l++) {
@@ -606,7 +608,7 @@ function renderMap(map, container, onNodeClick) {
     for (let c = 0; c < layer.length; c++) {
       const baseX = layer.length === 1 ? W / 2 : W / 2 + (c - (layer.length - 1) / 2) * nodeGap;
       const jitterX = getNodeOffset(layer[c].id, map.mapIndex ?? 0, Math.min(nodeGap * 0.18, 28));
-      const jitterY = getNodeOffset(`${layer[c].id}-y`, map.mapIndex ?? 0, Math.min(padY * 0.45, 18));
+      const jitterY = getNodeOffset(`${layer[c].id}-y`, map.mapIndex ?? 0, Math.min(padY * 0.3, 14));
       positions[layer[c].id] = { x: baseX + jitterX, y: y + jitterY };
     }
   }
