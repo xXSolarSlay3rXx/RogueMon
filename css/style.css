@@ -3705,6 +3705,7 @@ h1, h2, .pixel-font {
   max-height: 86vh;
   display: flex;
   flex-direction: column;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid rgba(139,232,255,0.22);
   border-radius: 20px;
@@ -3909,10 +3910,14 @@ h1, h2, .pixel-font {
 }
 .dex-grid {
   display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
   grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
   gap: 10px;
   padding: 12px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   background: rgba(6,10,22,0.95);
 }
 .dex-gen-header {
