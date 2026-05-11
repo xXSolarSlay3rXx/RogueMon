@@ -2176,10 +2176,198 @@ h1, h2, .pixel-font {
 }
 
 /* ---- Swap Screen ---- */
-#swap-screen { gap: 16px; }
-#swap-screen h2 { font-size: clamp(10px, 2.5vw, 14px); color: var(--accent2); text-align: center; }
-.swap-prompt { text-align: center; color: var(--text-dim); font-size: 12px; margin: 0; }
-#swap-choices { display: grid; grid-template-columns: repeat(3, auto); gap: 12px; justify-content: center; }
+#swap-screen {
+  gap: 16px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: 12px;
+}
+#swap-screen h2 {
+  font-size: clamp(10px, 2.5vw, 14px);
+  color: var(--accent2);
+  text-align: center;
+}
+#swap-incoming {
+  width: min(100%, 320px);
+  margin: 0 auto;
+}
+#swap-incoming > div {
+  width: 100%;
+}
+.swap-prompt {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12px;
+  margin: 0;
+}
+#swap-choices {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+#swap-screen .poke-card {
+  width: 100%;
+  min-height: 100%;
+  padding: 16px 14px 14px;
+  gap: 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(139, 232, 255, 0.24);
+  background:
+    radial-gradient(circle at top, rgba(139, 232, 255, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+  color: #edf5ff;
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 18px 36px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+#swap-screen .poke-card[role="button"]:hover,
+#swap-screen .poke-card[tabindex]:hover {
+  border-color: rgba(139, 232, 255, 0.7);
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 22px 44px rgba(0, 0, 0, 0.4),
+    0 0 26px rgba(139, 232, 255, 0.18);
+  transform: translateY(-6px) scale(1.01);
+}
+#swap-screen .poke-card.selected {
+  border-color: rgba(255, 217, 127, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 0 26px rgba(255, 217, 127, 0.2),
+    0 18px 36px rgba(0, 0, 0, 0.34);
+}
+#swap-screen .poke-name,
+#swap-screen .move-name {
+  color: #f4fbff;
+}
+#swap-screen .poke-level,
+#swap-screen .poke-stats,
+#swap-screen .stat-lbl,
+#swap-screen .stat-val,
+#swap-screen .hp-text,
+#swap-screen .move-power-badge,
+#swap-screen .move-desc {
+  color: #a9c8e8;
+}
+#swap-screen .poke-types {
+  margin-top: 2px;
+}
+#swap-screen .type-badge {
+  border-radius: 999px;
+  box-shadow: none;
+}
+#swap-screen .poke-stats-bars {
+  margin-top: 8px;
+  gap: 4px;
+}
+#swap-screen .stat-row {
+  gap: 6px;
+}
+#swap-screen .stat-bar-bg {
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+#swap-screen .stat-bar-fill {
+  opacity: 0.55;
+}
+#swap-screen .stat-buff-overlay {
+  background: linear-gradient(90deg, rgba(89, 181, 255, 0.85), rgba(130, 236, 255, 0.95));
+}
+#swap-screen .poke-hp {
+  margin-top: 8px;
+}
+#swap-screen .hp-bar-bg {
+  height: 9px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  border: 1px solid rgba(139, 232, 255, 0.12);
+}
+#swap-screen .hp-bar-fill {
+  border-radius: 999px;
+}
+#swap-screen .poke-move {
+  margin-top: 10px;
+  padding: 10px 10px 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(139, 232, 255, 0.14);
+  background: rgba(6, 12, 24, 0.68);
+}
+#swap-screen .move-header {
+  gap: 4px;
+}
+#swap-screen .move-cat-badge,
+#swap-screen .move-power-badge {
+  border-radius: 999px;
+}
+#swap-screen .move-cat-badge {
+  border: 1px solid rgba(255,255,255,0.08);
+}
+#swap-screen .poke-sprite-wrap {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 2px;
+}
+#swap-screen .poke-sprite {
+  width: 88px;
+  height: 88px;
+  filter: drop-shadow(0 0 18px rgba(139, 232, 255, 0.16));
+}
+@media (max-width: 768px) {
+  #swap-screen {
+    min-height: 100dvh;
+    padding:
+      max(10px, env(safe-area-inset-top))
+      10px
+      max(18px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: stretch;
+  }
+
+  #swap-choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-bottom: 6px;
+  }
+
+  #swap-screen .poke-card {
+    padding: 14px 10px 12px;
+    border-radius: 16px;
+  }
+
+  #swap-screen .poke-sprite-wrap,
+  #swap-screen .poke-sprite {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+@media (max-width: 520px) {
+  #swap-screen {
+    gap: 12px;
+  }
+
+  #swap-incoming {
+    width: min(100%, 280px);
+  }
+
+  #swap-choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  #swap-screen .poke-card {
+    min-width: 0;
+    padding: 12px 8px 10px;
+  }
+}
 
 /* ---- Trade Screen ---- */
 #trade-screen { gap: 10px; }
