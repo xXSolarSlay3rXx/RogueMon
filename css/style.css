@@ -539,33 +539,33 @@ h1, h2, .pixel-font {
     grid-template-columns: 1fr;
   }
   #starter-choices {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px;
     align-items: start;
+    max-width: 320px;
+    margin: 0 auto;
   }
-  #starter-screen .starter-card-wrapper:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    max-width: 220px;
-    justify-self: center;
+  #starter-screen .starter-card-wrapper {
+    width: 100%;
   }
   #starter-screen .poke-card {
-    max-width: none;
+    max-width: none !important;
     min-width: 0;
-    padding: 10px 8px;
+    padding: 14px 12px;
     border-radius: 12px;
   }
   #starter-screen .poke-sprite-wrap {
-    width: 56px;
-    height: 56px;
+    width: 72px;
+    height: 72px;
   }
   #starter-screen .poke-name {
-    font-size: 8px;
+    font-size: 10px;
     line-height: 1.25;
-    min-height: 20px;
+    min-height: 24px;
   }
   #starter-screen .type-badge {
-    font-size: 6px;
-    padding: 2px 4px;
+    font-size: 7px;
+    padding: 2px 5px;
   }
   #starter-screen .starter-description,
   #starter-screen .poke-move {
@@ -573,46 +573,46 @@ h1, h2, .pixel-font {
   }
   #starter-screen .poke-level {
     display: block;
-    font-size: 8px;
+    font-size: 9px;
     line-height: 1.2;
   }
   #starter-screen .poke-hp {
     display: block;
     width: 100%;
-    margin-top: 2px;
+    margin-top: 4px;
   }
   #starter-screen .hp-text {
-    font-size: 6px;
+    font-size: 7px;
   }
   #starter-screen .poke-stats-bars {
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 3px;
+    gap: 4px;
     margin-top: 4px;
   }
   #starter-screen .stat-row {
     display: grid;
-    grid-template-columns: 12px minmax(0, 1fr) 14px;
+    grid-template-columns: 18px minmax(0, 1fr) 22px;
     align-items: center;
-    gap: 3px;
+    gap: 4px;
     min-width: 0;
-    line-height: 1;
+    line-height: 1.15;
   }
   #starter-screen .stat-row:nth-child(n+4) {
     display: none;
   }
   #starter-screen .stat-lbl {
     width: auto;
-    font-size: 5px;
+    font-size: 6px;
   }
   #starter-screen .stat-bar-bg {
-    height: 4px;
+    height: 5px;
     min-width: 0;
   }
   #starter-screen .stat-val {
     width: auto;
-    font-size: 5px;
+    font-size: 6px;
     text-align: right;
     white-space: nowrap;
   }
@@ -627,18 +627,8 @@ h1, h2, .pixel-font {
 }
 
 @media (max-width: 420px) {
-  #starter-choices {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  #starter-screen .starter-card-wrapper:last-child:nth-child(odd) {
-    grid-column: auto;
-    max-width: none;
-    justify-self: stretch;
-  }
-
   #starter-screen .poke-card {
-    max-width: 260px;
+    max-width: 300px !important;
     margin: 0 auto;
   }
 }
