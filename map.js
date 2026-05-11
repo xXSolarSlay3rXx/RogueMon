@@ -215,6 +215,33 @@ function getStoryRegionNodeTheme(regionKey = 'kanto') {
         [NODE_TYPES.TRADE]: '#3f7f8e',
       },
     },
+    kalos: {
+      aura: '#ffd7ef',
+      edge: '#eab8ff',
+      clickableGlowOuter: '#fff2fb',
+      clickableGlowInner: '#ffd7ef',
+      clickableStroke: '#fff4fd',
+      bossRing: '#ffe79c',
+      bossGlow: '#ffb7de',
+      spriteShadow: '#ffe9f8',
+      inactiveStroke: '#5f5970',
+      dimStroke: '#443d55',
+      text: '#fff7fe',
+      dimText: '#d6c5d8',
+      colors: {
+        [NODE_TYPES.START]: '#6c4f8a',
+        [NODE_TYPES.BATTLE]: '#88445f',
+        [NODE_TYPES.CATCH]: '#4f886c',
+        [NODE_TYPES.ITEM]: '#5c6fa2',
+        [NODE_TYPES.QUESTION]: '#8a6a53',
+        [NODE_TYPES.BOSS]: '#8b4ea0',
+        [NODE_TYPES.POKECENTER]: '#4a8aa3',
+        [NODE_TYPES.TRAINER]: '#7c5872',
+        [NODE_TYPES.LEGENDARY]: '#9a7e4b',
+        [NODE_TYPES.MOVE_TUTOR]: '#6f6ea8',
+        [NODE_TYPES.TRADE]: '#4f7e93',
+      },
+    },
   };
   return themes[regionKey] || themes.kanto;
 }

@@ -26,11 +26,13 @@ const i18n = {
     unlock_gen_3: 'Besiege Top Vier und Champion von Gen 2, um Gen 3 freizuschalten.',
     unlock_gen_4: 'Besiege Top Vier und Champion von Gen 3, um Gen 4 freizuschalten.',
     unlock_gen_5: 'Besiege Top Vier und Champion von Gen 4, um Gen 5 freizuschalten.',
+    unlock_gen_6: 'Besiege Top Vier und Champion von Gen 5, um Gen 6 freizuschalten.',
     region_gen_1_desc: '8 Arenaleiter, Top Vier und Champion.',
     region_gen_2_desc: 'Neue Starter, neue Arenen und eine neue Liga.',
     region_gen_3_desc: 'Hoenn-Starter, 8 neue Orden und die Hoenn-Liga.',
     region_gen_4_desc: 'Sinnoh-Starter, 8 neue Orden und die Sinnoh-Liga.',
     region_gen_5_desc: 'Einall-Starter, 8 neue Orden und die Einall-Liga.',
+    region_gen_6_desc: 'Kalos-Starter, 8 neue Orden und die Kalos-Liga.',
     
     // Trainer Select
     choose_trainer: 'Wähle deinen Trainer',
@@ -230,7 +232,8 @@ const i18n = {
     region_gen_3_desc: 'Hoenn starters, 8 new badges and the Hoenn League.',
     region_gen_4_desc: 'Sinnoh starters, 8 new badges and the Sinnoh League.',
     region_gen_5_desc: 'Unova starters, 8 new badges and the Unova League.',
-    region_gen_6_desc: 'Kalos-themed run, new starters and league content are on the way.',
+    unlock_gen_6: 'Beat the Gen 5 Elite Four and Champion to unlock Gen 6.',
+    region_gen_6_desc: 'Kalos starters, 8 new badges and the Kalos League.',
     region_gen_7_desc: 'Alola-inspired progression and new regional content are on the way.',
     region_gen_8_desc: 'Galar-themed badges, battles and league content are on the way.',
     region_gen_9_desc: 'Paldea content and a future generation expansion are on the way.',
@@ -3831,6 +3834,7 @@ function openAchievementsModal() {
     { label: 'Hoenn', ids: ['story_region_3', 'story_trio_3'] },
     { label: 'Sinnoh', ids: ['story_region_4', 'story_trio_4'] },
     { label: 'Einall', ids: ['story_region_5', 'story_trio_5'] },
+    { label: 'Kalos', ids: ['story_region_6', 'story_trio_6'] },
     { label: 'Run Challenges', ids: ['solo_run', 'nuzlocke_win', 'three_birds', 'no_pokecenter', 'no_items', 'type_quartet', 'all_shiny_win', 'back_to_back', 'back_3_back', 'elite_10', 'elite_100'] },
   ];
 
@@ -3843,7 +3847,7 @@ function openAchievementsModal() {
   ];
 
   const generalGroups = [
-    { label: 'Pokedex', ids: ['pokedex_complete', 'pokedex_gen2', 'pokedex_gen3', 'pokedex_gen4', 'pokedex_gen5'] },
+    { label: 'Pokedex', ids: ['pokedex_complete', 'pokedex_gen2', 'pokedex_gen3', 'pokedex_gen4', 'pokedex_gen5', 'pokedex_gen6'] },
     { label: 'Shiny Dex', ids: ['shinydex_complete', 'shinydex_all', 'shinydex_100', 'shinydex_200', 'shinydex_300', 'shinydex_400', 'shinydex_500', 'shinydex_600'] },
     { label: 'Training', ids: ['max_stats_1', 'max_stats_2', 'max_stats_3', 'max_stats_4', 'max_stats_all'] },
   ];
@@ -3855,6 +3859,7 @@ function openAchievementsModal() {
     Hoenn: { icon: 'ui/region-achievements/hoenn.svg', accent: 'hoenn' },
     Sinnoh: { icon: 'ui/region-achievements/sinnoh.svg', accent: 'sinnoh' },
     Einall: { icon: 'ui/region-achievements/einall.svg', accent: 'einall' },
+    Kalos: { accent: 'kalos' },
     'Run Challenges': { accent: 'challenges' },
     Pokedex: { accent: 'pokedex' },
     'Shiny Dex': { accent: 'shiny' },

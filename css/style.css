@@ -3497,6 +3497,13 @@ h1, h2, .pixel-font {
   color: #d4fff7;
   background: rgba(12, 27, 29, 0.94);
 }
+.ach-subsection--kalos {
+  border-color: rgba(255, 184, 226, 0.18);
+}
+.ach-subsection--kalos .ach-subsection-header {
+  color: #ffe6f7;
+  background: rgba(33, 17, 36, 0.94);
+}
 .ach-subsection--challenges .ach-subsection-header {
   color: #ffe0ac;
 }

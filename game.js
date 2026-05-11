@@ -444,7 +444,6 @@ async function showStoryRegionSelect() {
 
   const regionIds = Object.keys(STORY_REGION_CONFIGS).map(Number).sort((a, b) => a - b);
   const futureRegions = [
-    { regionId: 6, label: 'Gen 6', name: 'Kalos', descKey: 'region_gen_6_desc' },
     { regionId: 7, label: 'Gen 7', name: 'Alola', descKey: 'region_gen_7_desc' },
     { regionId: 8, label: 'Gen 8', name: 'Galar', descKey: 'region_gen_8_desc' },
     { regionId: 9, label: 'Gen 9', name: 'Paldea', descKey: 'region_gen_9_desc' },
@@ -454,8 +453,8 @@ async function showStoryRegionSelect() {
     const region = getStoryRegionConfig(regionId);
     const unlocked = isStoryRegionUnlocked(regionId);
     const stateLabel = unlocked ? getText('region_unlocked') : getText('region_locked');
-    const unlockKeyMap = { 2: 'unlock_gen_2', 3: 'unlock_gen_3', 4: 'unlock_gen_4', 5: 'unlock_gen_5' };
-    const descKeyMap = { 1: 'region_gen_1_desc', 2: 'region_gen_2_desc', 3: 'region_gen_3_desc', 4: 'region_gen_4_desc', 5: 'region_gen_5_desc' };
+    const unlockKeyMap = { 2: 'unlock_gen_2', 3: 'unlock_gen_3', 4: 'unlock_gen_4', 5: 'unlock_gen_5', 6: 'unlock_gen_6' };
+    const descKeyMap = { 1: 'region_gen_1_desc', 2: 'region_gen_2_desc', 3: 'region_gen_3_desc', 4: 'region_gen_4_desc', 5: 'region_gen_5_desc', 6: 'region_gen_6_desc' };
     const unlockKey = unlockKeyMap[regionId] || '';
     const descKey = descKeyMap[regionId] || 'region_gen_1_desc';
     const unlockText = !unlocked && unlockKey ? `<div class="story-region-card-unlock">${getText(unlockKey)}</div>` : '';
@@ -1631,6 +1630,7 @@ function checkDexAchievements() {
     ['pokedex_gen3', 252, 386],
     ['pokedex_gen4', 387, 493],
     ['pokedex_gen5', 494, 649],
+    ['pokedex_gen6', 650, 721],
   ];
   for (const [id, min, max] of genRanges) {
     if (isGenDexComplete(min, max)) {

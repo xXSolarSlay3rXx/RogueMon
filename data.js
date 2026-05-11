@@ -871,6 +871,142 @@ const UNOVA_ELITE_4 = [
   },
 ];
 
+const KALOS_GYM_LEADERS = [
+  {
+    name: 'Viola', badge: 'Bug Badge', type: 'Bug', moveTier: 0,
+    sprite: 'sprites/aceTrainer.png',
+    badgeImage: 'ui/badges/Kalos/arena1.png',
+    team: [
+      { speciesId: 283, name: 'Surskit', level: 12, heldItem: { id: 'silver_powder', name: 'Silver Powder', icon: '🐛' } },
+      { speciesId: 666, name: 'Vivillon', level: 14, heldItem: { id: 'silver_powder', name: 'Silver Powder', icon: '🐛' } },
+    ]
+  },
+  {
+    name: 'Grant', badge: 'Cliff Badge', type: 'Rock', moveTier: 0,
+    sprite: 'sprites/aceTrainer.png',
+    badgeImage: 'ui/badges/Kalos/arena2.png',
+    team: [
+      { speciesId: 698, name: 'Amaura', level: 18, heldItem: { id: 'hard_stone', name: 'Hard Stone', icon: '🪨' } },
+      { speciesId: 696, name: 'Tyrunt', level: 20, heldItem: { id: 'hard_stone', name: 'Hard Stone', icon: '🪨' } },
+    ]
+  },
+  {
+    name: 'Korrina', badge: 'Rumble Badge', type: 'Fighting', moveTier: 1,
+    sprite: 'sprites/aceTrainer.png',
+    badgeImage: 'ui/badges/Kalos/arena3.png',
+    team: [
+      { speciesId: 619, name: 'Mienfoo', level: 23, heldItem: { id: 'black_belt', name: 'Black Belt', icon: '🥋' } },
+      { speciesId: 67, name: 'Machoke', level: 24, heldItem: { id: 'black_belt', name: 'Black Belt', icon: '🥋' } },
+      { speciesId: 701, name: 'Hawlucha', level: 25, heldItem: { id: 'sharp_beak', name: 'Sharp Beak', icon: '🦅' } },
+    ]
+  },
+  {
+    name: 'Ramos', badge: 'Plant Badge', type: 'Grass', moveTier: 1,
+    sprite: 'sprites/aceTrainer.png',
+    badgeImage: 'ui/badges/Kalos/arena4.png',
+    team: [
+      { speciesId: 189, name: 'Jumpluff', level: 30, heldItem: { id: 'miracle_seed', name: 'Miracle Seed', icon: '🌱' } },
+      { speciesId: 70, name: 'Weepinbell', level: 31, heldItem: { id: 'miracle_seed', name: 'Miracle Seed', icon: '🌱' } },
+      { speciesId: 673, name: 'Gogoat', level: 32, heldItem: { id: 'miracle_seed', name: 'Miracle Seed', icon: '🌱' } },
+    ]
+  },
+  {
+    name: 'Clemont', badge: 'Voltage Badge', type: 'Electric', moveTier: 1,
+    sprite: 'sprites/aceTrainer.png',
+    badgeImage: 'ui/badges/Kalos/arena5.png',
+    team: [
+      { speciesId: 587, name: 'Emolga', level: 35, heldItem: { id: 'magnet', name: 'Magnet', icon: '🧲' } },
+      { speciesId: 82, name: 'Magneton', level: 35, heldItem: { id: 'magnet', name: 'Magnet', icon: '🧲' } },
+      { speciesId: 695, name: 'Heliolisk', level: 37, heldItem: { id: 'magnet', name: 'Magnet', icon: '🧲' } },
+    ]
+  },
+  {
+    name: 'Valerie', badge: 'Fairy Badge', type: 'Fairy', moveTier: 2,
+    sprite: 'sprites/aceTrainer.png',
+    badgeImage: 'ui/badges/Kalos/arena6.png',
+    team: [
+      { speciesId: 303, name: 'Mawile', level: 40, heldItem: { id: 'pixie_plate', name: 'Pixie Plate', icon: '🧚' } },
+      { speciesId: 122, name: 'Mr. Mime', level: 41, heldItem: { id: 'twisted_spoon', name: 'Twisted Spoon', icon: '🥄' } },
+      { speciesId: 700, name: 'Sylveon', level: 42, heldItem: { id: 'pixie_plate', name: 'Pixie Plate', icon: '🧚' } },
+    ]
+  },
+  {
+    name: 'Olympia', badge: 'Psychic Badge', type: 'Psychic', moveTier: 2,
+    sprite: 'sprites/aceTrainer.png',
+    badgeImage: 'ui/badges/Kalos/arena7.png',
+    team: [
+      { speciesId: 561, name: 'Sigilyph', level: 44, heldItem: { id: 'twisted_spoon', name: 'Twisted Spoon', icon: '🥄' } },
+      { speciesId: 199, name: 'Slowking', level: 45, heldItem: { id: 'twisted_spoon', name: 'Twisted Spoon', icon: '🥄' } },
+      { speciesId: 678, name: 'Meowstic', level: 46, heldItem: { id: 'wise_glasses', name: 'Wise Glasses', icon: '🔬' } },
+    ]
+  },
+  {
+    name: 'Wulfric', badge: 'Iceberg Badge', type: 'Ice', moveTier: 2,
+    sprite: 'sprites/aceTrainer.png',
+    badgeImage: 'ui/badges/Kalos/arena8.png',
+    team: [
+      { speciesId: 460, name: 'Abomasnow', level: 48, heldItem: { id: 'never_melt_ice', name: 'Never-Melt Ice', icon: '❄️' } },
+      { speciesId: 615, name: 'Cryogonal', level: 48, heldItem: { id: 'never_melt_ice', name: 'Never-Melt Ice', icon: '❄️' } },
+      { speciesId: 713, name: 'Avalugg', level: 50, heldItem: { id: 'never_melt_ice', name: 'Never-Melt Ice', icon: '❄️' } },
+    ]
+  },
+];
+
+const KALOS_ELITE_4 = [
+  {
+    name: 'Malva', title: 'Elite Four', type: 'Fire',
+    sprite: 'sprites/misteryTrainer.png',
+    team: [
+      { speciesId: 668, name: 'Pyroar', level: 53, heldItem: { id: 'charcoal', name: 'Charcoal', icon: '🔥' } },
+      { speciesId: 324, name: 'Torkoal', level: 53, heldItem: { id: 'charcoal', name: 'Charcoal', icon: '🔥' } },
+      { speciesId: 609, name: 'Chandelure', level: 55, heldItem: { id: 'charcoal', name: 'Charcoal', icon: '🔥' } },
+      { speciesId: 663, name: 'Talonflame', level: 56, heldItem: { id: 'sharp_beak', name: 'Sharp Beak', icon: '🦅' } },
+    ]
+  },
+  {
+    name: 'Siebold', title: 'Elite Four', type: 'Water',
+    sprite: 'sprites/misteryTrainer.png',
+    team: [
+      { speciesId: 693, name: 'Clawitzer', level: 54, heldItem: { id: 'mystic_water', name: 'Mystic Water', icon: '💧' } },
+      { speciesId: 121, name: 'Starmie', level: 54, heldItem: { id: 'mystic_water', name: 'Mystic Water', icon: '💧' } },
+      { speciesId: 130, name: 'Gyarados', level: 55, heldItem: { id: 'mystic_water', name: 'Mystic Water', icon: '💧' } },
+      { speciesId: 689, name: 'Barbaracle', level: 56, heldItem: { id: 'hard_stone', name: 'Hard Stone', icon: '🪨' } },
+    ]
+  },
+  {
+    name: 'Wikstrom', title: 'Elite Four', type: 'Steel',
+    sprite: 'sprites/misteryTrainer.png',
+    team: [
+      { speciesId: 707, name: 'Klefki', level: 54, heldItem: { id: 'metal_coat', name: 'Metal Coat', icon: '⚙️' } },
+      { speciesId: 476, name: 'Probopass', level: 54, heldItem: { id: 'metal_coat', name: 'Metal Coat', icon: '⚙️' } },
+      { speciesId: 212, name: 'Scizor', level: 55, heldItem: { id: 'metal_coat', name: 'Metal Coat', icon: '⚙️' } },
+      { speciesId: 681, name: 'Aegislash', level: 57, heldItem: { id: 'spell_tag', name: 'Spell Tag', icon: '👻' } },
+    ]
+  },
+  {
+    name: 'Drasna', title: 'Elite Four', type: 'Dragon',
+    sprite: 'sprites/misteryTrainer.png',
+    team: [
+      { speciesId: 691, name: 'Dragalge', level: 54, heldItem: { id: 'dragon_fang', name: 'Dragon Fang', icon: '🐉' } },
+      { speciesId: 621, name: 'Druddigon', level: 54, heldItem: { id: 'dragon_fang', name: 'Dragon Fang', icon: '🐉' } },
+      { speciesId: 334, name: 'Altaria', level: 55, heldItem: { id: 'dragon_fang', name: 'Dragon Fang', icon: '🐉' } },
+      { speciesId: 715, name: 'Noivern', level: 57, heldItem: { id: 'dragon_fang', name: 'Dragon Fang', icon: '🐉' } },
+    ]
+  },
+  {
+    name: 'Diantha', title: 'Champion', type: 'Fairy',
+    sprite: 'sprites/misteryTrainer.png',
+    team: [
+      { speciesId: 701, name: 'Hawlucha', level: 58, heldItem: { id: 'sharp_beak', name: 'Sharp Beak', icon: '🦅' } },
+      { speciesId: 697, name: 'Tyrantrum', level: 58, heldItem: { id: 'hard_stone', name: 'Hard Stone', icon: '🪨' } },
+      { speciesId: 699, name: 'Aurorus', level: 58, heldItem: { id: 'never_melt_ice', name: 'Never-Melt Ice', icon: '❄️' } },
+      { speciesId: 711, name: 'Gourgeist', level: 57, heldItem: { id: 'spell_tag', name: 'Spell Tag', icon: '👻' } },
+      { speciesId: 706, name: 'Goodra', level: 59, heldItem: { id: 'dragon_fang', name: 'Dragon Fang', icon: '🐉' } },
+      { speciesId: 282, name: 'Gardevoir', level: 61, heldItem: { id: 'pixie_plate', name: 'Pixie Plate', icon: '🧚' } },
+    ]
+  },
+];
+
 // Item pool
 const ITEM_POOL = [
   { id: 'charcoal',           name: 'Charcoal',           desc: '+50% Fire move damage',                                              icon: '🔥', minRegion: 1 },
@@ -1572,6 +1708,34 @@ const STORY_REGION_CONFIGS = {
     mapBackgroundPosition: 'center',
     mysteryTrainerSprite: 'sprites/Einall/misteryTrainer.png',
   },
+  6: {
+    id: 6,
+    key: 'kalos',
+    label: 'Gen 6',
+    name: 'Kalos',
+    starterIds: [650, 653, 656],
+    gyms: KALOS_GYM_LEADERS,
+    eliteFour: KALOS_ELITE_4,
+    encounterMinGenId: 650,
+    encounterMaxGenId: 721,
+    easyModeImages: [],
+    badgeDisplay: 'sprite',
+    mapBackgroundImage: 'ui/regions/Kalos.jpg',
+    mapBackgroundImages: [
+      'ui/mapsNormalMode/Kalos/map1.png',
+      'ui/mapsNormalMode/Kalos/map2.png',
+      'ui/mapsNormalMode/Kalos/map3.png',
+      'ui/mapsNormalMode/Kalos/map4.png',
+      'ui/mapsNormalMode/Kalos/map5.png',
+      'ui/mapsNormalMode/Kalos/map6.png',
+      'ui/mapsNormalMode/Kalos/map7.png',
+      'ui/mapsNormalMode/Kalos/map8.png',
+      'ui/mapsNormalMode/Kalos/map9.png',
+    ],
+    mapBackgroundSize: 'cover',
+    mapBackgroundPosition: 'center',
+    mysteryTrainerSprite: 'sprites/misteryTrainer.png',
+  },
 };
 
 function getStoryRegionConfig(regionId = 1) {
@@ -2045,6 +2209,7 @@ const ACHIEVEMENTS = [
   { id: 'pokedex_gen3', name: 'Hoenn Completionist', desc: 'Catch all Gen 3 Pokémon across any number of runs', icon: '📘', category: 'general' },
   { id: 'pokedex_gen4', name: 'Sinnoh Completionist', desc: 'Catch all Gen 4 Pokémon across any number of runs', icon: '📙', category: 'general' },
   { id: 'pokedex_gen5', name: 'Unova Completionist',  desc: 'Catch all Gen 5 Pokémon across any number of runs', icon: '📕', category: 'general' },
+  { id: 'pokedex_gen6', name: 'Kalos Completionist',  desc: 'Catch all Gen 6 Pokémon across any number of runs', icon: '📒', category: 'general' },
   { id: 'max_stats_1',   name: 'First Peak',       desc: 'Max out 1 stat on a single Pokémon',        icon: '📈', category: 'general' },
   { id: 'max_stats_2',   name: 'Double Peak',      desc: 'Max out 2 stats on a single Pokémon',       icon: '📊', category: 'general' },
   { id: 'max_stats_3',   name: 'Triple Peak',      desc: 'Max out 3 stats on a single Pokémon',       icon: '🔝', category: 'general' },
@@ -2080,6 +2245,7 @@ const ACHIEVEMENT_OVERRIDES = {
   pokedex_gen3: { name: 'Hoenn Archive' },
   pokedex_gen4: { name: 'Sinnoh Archive' },
   pokedex_gen5: { name: 'Unova Archive' },
+  pokedex_gen6: { name: 'Kalos Archive' },
 };
 
 ACHIEVEMENTS.forEach(achievement => {
@@ -2094,11 +2260,13 @@ ACHIEVEMENTS.push(
   { id: 'story_region_3', name: 'Hoenn Crown', desc: 'Defeat the Hoenn League in story mode', icon: '🌊', category: 'normal' },
   { id: 'story_region_4', name: 'Sinnoh Crown', desc: 'Defeat the Sinnoh League in story mode', icon: '💎', category: 'normal' },
   { id: 'story_region_5', name: 'Unova Crown', desc: 'Defeat the Unova League in story mode', icon: '🏅', category: 'normal' },
+  { id: 'story_region_6', name: 'Kalos Crown', desc: 'Defeat the Kalos League in story mode', icon: '✨', category: 'normal' },
   { id: 'story_trio_1', name: 'Kanto Trio Run', desc: 'Win Kanto story runs with Bulbasaur, Charmander, and Squirtle across any number of runs', icon: '🌈', category: 'normal' },
   { id: 'story_trio_2', name: 'Johto Trio Run', desc: 'Win Johto story runs with Chikorita, Cyndaquil, and Totodile across any number of runs', icon: '🍃', category: 'normal' },
   { id: 'story_trio_3', name: 'Hoenn Trio Run', desc: 'Win Hoenn story runs with Treecko, Torchic, and Mudkip across any number of runs', icon: '⚔️', category: 'normal' },
   { id: 'story_trio_4', name: 'Sinnoh Trio Run', desc: 'Win Sinnoh story runs with Turtwig, Chimchar, and Piplup across any number of runs', icon: '⛰️', category: 'normal' },
   { id: 'story_trio_5', name: 'Unova Trio Run', desc: 'Win Unova story runs with Snivy, Tepig, and Oshawott across any number of runs', icon: '🌀', category: 'normal' },
+  { id: 'story_trio_6', name: 'Kalos Trio Run', desc: 'Win Kalos story runs with Chespin, Fennekin, and Froakie across any number of runs', icon: '🗼', category: 'normal' },
 );
 
 function getUnlockedAchievements() {
