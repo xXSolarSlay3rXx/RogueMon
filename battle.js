@@ -23,7 +23,7 @@ function applyStageChange(pokemon, stat, delta, side, idx, log) {
     name: pokemon.nickname || pokemon.name, stat, change: delta, newStage });
 }
 
-// Apply a status condition (poison/freeze) — no-op if already has one
+// Apply a status condition (poison/freeze) â€” no-op if already has one
 function applyStatus(pokemon, status, side, idx, log) {
   if (pokemon.status) return;
   pokemon.status = status;
@@ -61,7 +61,7 @@ function calcDamage(attacker, defender, move, items, defItems = []) {
     if (hasItem(items, 'choice_band'))   damage = Math.floor(damage * 1.4);
   }
 
-  // Adaptability Band: +50% if every Pokémon on the team shares a type
+  // Adaptability Band: +50% if every PokÃ©mon on the team shares a type
   if (hasItem(items, 'metronome')) {
     const team = typeof state !== 'undefined' ? state.team : [];
     if (team.length > 0) {
@@ -78,7 +78,7 @@ function calcDamage(attacker, defender, move, items, defItems = []) {
 
   // Crit chance: 6.25% base, +20% with scope_lens or razor_claw
   let critChance = 0.0625;
-  if (hasItem(items, 'scope_lens')) critChance = 0.20;
+  if (hasItem(items, 'scope_lens') || hasItem(items, 'razor_claw')) critChance = 0.20;
   const crit = rng() < critChance;
   if (crit) damage = Math.floor(damage * 1.5);
 
@@ -145,7 +145,7 @@ function getTypeBoostItem(moveType, items) {
 }
 
 function runBattle(playerTeam, enemyTeam, bagItems, enemyItems, onLog, traitsConfig = null) {
-  const items = bagItems; // bag — only used for Lucky Egg check in level gain
+  const items = bagItems; // bag â€” only used for Lucky Egg check in level gain
   const pTeam = playerTeam.map(p => initBattleState({ ...p }));
   const eTeam = enemyTeam.map(p => initBattleState({
     ...p,
@@ -297,7 +297,7 @@ function runBattle(playerTeam, enemyTeam, bagItems, enemyItems, onLog, traitsCon
       else if (typeEff === 0) effText = ' No effect!';
       else if (typeEff < 1)  effText = ' Not very effective...';
 
-      addLog(`${side === 'player' ? '' : '(enemy) '}${aName} used ${move.name} → ${tName} took ${damage} dmg.${effText}`,
+      addLog(`${side === 'player' ? '' : '(enemy) '}${aName} used ${move.name} â†’ ${tName} took ${damage} dmg.${effText}`,
              side === 'player' ? 'log-player' : 'log-enemy');
 
       // Push attack event FIRST so whenAttacked hooks (Flying dodge etc.) appear after it in the log
@@ -308,7 +308,7 @@ function runBattle(playerTeam, enemyTeam, bagItems, enemyItems, onLog, traitsCon
         attackerHpAfter: attacker.currentHp, targetHpAfter: target.currentHp,
       });
 
-      // whenAttacked hook — events pushed here appear after the attack event in the log
+      // whenAttacked hook â€” events pushed here appear after the attack event in the log
       if (target.currentHp > 0 && traitsConfig?.whenAttacked) {
         traitsConfig.whenAttacked(target, tIdx, tSide, attacker, aIdx, side, damage, detailedLog);
       }

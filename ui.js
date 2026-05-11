@@ -8,18 +8,18 @@ const i18n = {
   de: {
     // Title Screen
     game_title: 'RogueMon',
-    game_subtitle: 'Roguelike Pokémon Adventure',
-    game_tagline: 'Sammle, kämpfe und werde der Champion!',
+    game_subtitle: 'Roguelike PokÃ©mon Adventure',
+    game_tagline: 'Sammle, kÃ¤mpfe und werde der Champion!',
     btn_new_run: 'Neues Spiel',
     btn_hard_run: 'Nuzlocke Mode',
     btn_endless_run: 'Endless Mode',
     btn_continue_run: 'Spiel Fortsetzen',
     btn_continue_endless: 'Endless Fortsetzen',
-    btn_back_title: 'Zurück',
+    btn_back_title: 'ZurÃ¼ck',
 
     // Region Select
-    choose_region: 'Wähle deine Generation',
-    choose_region_description: 'Wähle die Region für deinen nächsten Run. Schließe die aktuelle Liga ab, um die nächste Generation freizuschalten.',
+    choose_region: 'WÃ¤hle deine Generation',
+    choose_region_description: 'WÃ¤hle die Region fÃ¼r deinen nÃ¤chsten Run. SchlieÃŸe die aktuelle Liga ab, um die nÃ¤chste Generation freizuschalten.',
     region_unlocked: 'Frei',
     region_locked: 'Gesperrt',
     unlock_gen_2: 'Besiege Top Vier und Champion von Gen 1, um Gen 2 freizuschalten.',
@@ -35,27 +35,27 @@ const i18n = {
     region_gen_6_desc: 'Kalos-Starter, 8 neue Orden und die Kalos-Liga.',
     
     // Trainer Select
-    choose_trainer: 'Wähle deinen Trainer',
+    choose_trainer: 'WÃ¤hle deinen Trainer',
     trainer_boy: 'Junge',
-    trainer_girl: 'Mädchen',
+    trainer_girl: 'MÃ¤dchen',
     
     // Starter Select
-    choose_starter: 'Wähle deinen Starter',
-    starter_intro: 'Beginne dein Abenteuer mit einem dieser Pokémon!',
-    starter_description: 'Wähle deinen Partner für diesen Durchlauf. Jeder Champion hat ein anderes Element und Kampfstil — wähle den, der zu deiner Strategie passt.',
-    starter_bulbasaur: 'Bisaknosp — Pflanze/Gift • Die mystische Knolle auf seinem Rücken speichert Energie und macht es zum perfekten Begleiter für Wachstum und Balance.',
-    starter_charmander: 'Glumanda — Feuer • Ein loyaler Feuer-Typ mit einer brennenden inneren Flamme. Es entzündet sich mit Leidenschaft und entwickelt sich zu einem mächtigen Drachen.',
-    starter_squirtle: 'Schiggy — Wasser • Geschützt durch seinen harten Panzer ist dieser Wasser-Typ zuverlässig und anpassungsfähig, formt eine Bindung, die jede Herausforderung übersteht.',
-    starter_chikorita: 'Endivie — Pflanze • Ruhig, standhaft und defensiv stark. Ein sicherer Start für Trainer, die Kontrolle und Ausdauer mögen.',
-    starter_cyndaquil: 'Feurigel — Feuer • Klein, schnell und explosiv. Perfekt für aggressive Runs mit viel Tempo und Druck.',
-    starter_totodile: 'Karnimani — Wasser • Wild, robust und offensiv. Es beißt sich durch harte Kämpfe und bleibt auch im Late Game gefährlich.',
-    starter_treecko: 'Geckarbor â€” Pflanze â€¢ Schnell, prÃ¤zise und elegant. Ideal fÃ¼r clevere Runs mit Tempo und sicherem Druck.',
-    starter_torchic: 'Flemmli â€” Feuer â€¢ Klein am Anfang, aber mit starkem Scaling. Perfekt fÃ¼r offensiven Schneeball im Run.',
-    starter_mudkip: 'Hydropi â€” Wasser â€¢ Robust, vielseitig und extrem verlÃ¤sslich. Ein Starter, der fast jedes Matchup sauber tragen kann.',
+    choose_starter: 'WÃ¤hle deinen Starter',
+    starter_intro: 'Beginne dein Abenteuer mit einem dieser PokÃ©mon!',
+    starter_description: 'WÃ¤hle deinen Partner fÃ¼r diesen Durchlauf. Jeder Champion hat ein anderes Element und Kampfstil â€” wÃ¤hle den, der zu deiner Strategie passt.',
+    starter_bulbasaur: 'Bisaknosp â€” Pflanze/Gift â€¢ Die mystische Knolle auf seinem RÃ¼cken speichert Energie und macht es zum perfekten Begleiter fÃ¼r Wachstum und Balance.',
+    starter_charmander: 'Glumanda â€” Feuer â€¢ Ein loyaler Feuer-Typ mit einer brennenden inneren Flamme. Es entzÃ¼ndet sich mit Leidenschaft und entwickelt sich zu einem mÃ¤chtigen Drachen.',
+    starter_squirtle: 'Schiggy â€” Wasser â€¢ GeschÃ¼tzt durch seinen harten Panzer ist dieser Wasser-Typ zuverlÃ¤ssig und anpassungsfÃ¤hig, formt eine Bindung, die jede Herausforderung Ã¼bersteht.',
+    starter_chikorita: 'Endivie â€” Pflanze â€¢ Ruhig, standhaft und defensiv stark. Ein sicherer Start fÃ¼r Trainer, die Kontrolle und Ausdauer mÃ¶gen.',
+    starter_cyndaquil: 'Feurigel â€” Feuer â€¢ Klein, schnell und explosiv. Perfekt fÃ¼r aggressive Runs mit viel Tempo und Druck.',
+    starter_totodile: 'Karnimani â€” Wasser â€¢ Wild, robust und offensiv. Es beiÃŸt sich durch harte KÃ¤mpfe und bleibt auch im Late Game gefÃ¤hrlich.',
+    starter_treecko: 'Geckarbor Ã¢â‚¬â€ Pflanze Ã¢â‚¬Â¢ Schnell, prÃƒÂ¤zise und elegant. Ideal fÃƒÂ¼r clevere Runs mit Tempo und sicherem Druck.',
+    starter_torchic: 'Flemmli Ã¢â‚¬â€ Feuer Ã¢â‚¬Â¢ Klein am Anfang, aber mit starkem Scaling. Perfekt fÃƒÂ¼r offensiven Schneeball im Run.',
+    starter_mudkip: 'Hydropi Ã¢â‚¬â€ Wasser Ã¢â‚¬Â¢ Robust, vielseitig und extrem verlÃƒÂ¤sslich. Ein Starter, der fast jedes Matchup sauber tragen kann.',
     
-    starter_turtwig: 'Chelast â€” Pflanze â€¢ Robust und geduldig. Ein defensiv starker Starter, der im langen Run immer besser wird.',
-    starter_chimchar: 'Panflam â€” Feuer â€¢ Schnell, frech und offensiv. Ideal, wenn du von Anfang an Druck machen willst.',
-    starter_piplup: 'Plinfa â€” Wasser â€¢ Elegant, sicher und sehr zuverlÃ¤ssig. Ein starker Allrounder mit guter Entwicklungskurve.',
+    starter_turtwig: 'Chelast Ã¢â‚¬â€ Pflanze Ã¢â‚¬Â¢ Robust und geduldig. Ein defensiv starker Starter, der im langen Run immer besser wird.',
+    starter_chimchar: 'Panflam Ã¢â‚¬â€ Feuer Ã¢â‚¬Â¢ Schnell, frech und offensiv. Ideal, wenn du von Anfang an Druck machen willst.',
+    starter_piplup: 'Plinfa Ã¢â‚¬â€ Wasser Ã¢â‚¬Â¢ Elegant, sicher und sehr zuverlÃƒÂ¤ssig. Ein starker Allrounder mit guter Entwicklungskurve.',
     starter_snivy: 'Serpifeu - Pflanze. Elegant, schnell und technisch stark. Perfekt fuer cleane Runs mit Tempo und Kontrolle.',
     starter_tepig: 'Floink - Feuer. Kraftvoll, direkt und robust. Gut fuer offensive Runs mit viel Druck und sicherem Schaden.',
     starter_oshawott: 'Ottaro - Wasser. Flexibel, sauber und verlaesslich. Ein starker Allround-Starter fuer fast jedes Matchup.',
@@ -68,14 +68,14 @@ const i18n = {
     final_battle: 'Finaler Kampf!',
     elite_four_battle: 'Top Vier - Kampf {num}/4',
     defeated_msg: '{name} besiegt!',
-    next_elite: 'Nächster: {name}...',
+    next_elite: 'NÃ¤chster: {name}...',
     champion_awaits: 'Der Champion erwartet dich!',
-    new_pokemon: 'Neues Pokémon!',
+    new_pokemon: 'Neues PokÃ©mon!',
     team_full: 'Team voll!',
-    add_to_team: 'Zum Team hinzufügen oder Team so lassen:',
-    choose_release: 'Wähle ein Pokémon zum Freilassen:',
+    add_to_team: 'Zum Team hinzufÃ¼gen oder Team so lassen:',
+    choose_release: 'WÃ¤hle ein PokÃ©mon zum Freilassen:',
     continue: 'Fortsetzen',
-    skip: 'Überspringen',
+    skip: 'Ãœberspringen',
     
     // Languages
     lang_de: 'Deutsch',
@@ -90,20 +90,20 @@ const i18n = {
     gen_8: 'Generation VIII',
     gen_9: 'Generation IX',
     all_gens_label: 'Alle Gens',
-    gen_1_progress: 'Gen 1 — {pct}%',
-    all_gens_progress: 'Alle Gens — {pct}%',
+    gen_1_progress: 'Gen 1 â€” {pct}%',
+    all_gens_progress: 'Alle Gens â€” {pct}%',
     pokedex_count: '{count} / {total}',
     team_label: 'TEAM',
-    items_label: 'GEGENSTÄNDE',
+    items_label: 'GEGENSTÃ„NDE',
     badges_label: 'ORDEN',
-    catch_title: '⬟ Wildes PokÃ©mon erschienen!',
-    catch_subtitle: 'WÃ¤hle ein PokÃ©mon fÃ¼r dein Team',
-    item_title: '✦ Item gefunden!',
-    item_subtitle: 'WÃ¤hle ein Item zum Behalten',
+    catch_title: 'â¬Ÿ Wildes PokÃƒÂ©mon erschienen!',
+    catch_subtitle: 'WÃƒÂ¤hle ein PokÃƒÂ©mon fÃƒÂ¼r dein Team',
+    item_title: 'âœ¦ Item gefunden!',
+    item_subtitle: 'WÃƒÂ¤hle ein Item zum Behalten',
     btn_retry: 'Nochmal versuchen',
-    win_caption: 'GlÃ¼ckwunsch! Du hast die Top Vier besiegt!',
+    win_caption: 'GlÃƒÂ¼ckwunsch! Du hast die Top Vier besiegt!',
     btn_play_again: 'Nochmal spielen',
-    battle_tower_title: '∞ Endless Mode',
+    battle_tower_title: 'âˆž Endless Mode',
     battle_tower_subtitle: 'Waehle eine Stufe fuer deinen Gauntlet-Run',
     endless_boon_title: 'Endless Segen',
     endless_boon_subtitle: 'Waehle eine Belohnung fuer den naechsten Kampf',
@@ -113,12 +113,12 @@ const i18n = {
     endless_boon_training_desc: 'Das ganze Team erhaelt +1 Level und wird voll geheilt.',
     endless_boon_armory: 'Arsenal-Abwurf',
     endless_boon_armory_desc: 'Waehle 1 von 3 echten Pokemon-Items fuer deinen Run.',
-    btn_back_arrow: '← ZurÃ¼ck',
+    btn_back_arrow: 'â† ZurÃƒÂ¼ck',
     enemy_label: 'Gegner',
     evo_what: 'Was? {name} entwickelt sich!',
     evo_into: '{name} hat sich zu {into} entwickelt!',
-    evo_choose: '{name} entwickelt sich!<br>WÃ¤hle seine Entwicklung:',
-    bug_trait_level_up: '🐛 KÃ¤fer-Trait â€” Levelaufstieg!',
+    evo_choose: '{name} entwickelt sich!<br>WÃƒÂ¤hle seine Entwicklung:',
+    bug_trait_level_up: 'ðŸ› KÃƒÂ¤fer-Trait Ã¢â‚¬â€ Levelaufstieg!',
     achievement_unlocked: 'Achievement freigeschaltet!',
     item_found_toast: 'Item gefunden!',
     popup_dodge: 'Ausgewichen!',
@@ -126,26 +126,26 @@ const i18n = {
     popup_critical: 'Volltreffer!',
     popup_confusion: 'Verwirrung!',
     popup_thawed: 'Aufgetaut!',
-    tutorial_auto_skip: 'Ã–ffne die Einstellungen und aktiviere Auto Skip!',
-    tutorial_swap_team: 'Klicke auf ein PokÃ©mon, um die Team-Position zu tauschen',
-    tutorial_dismiss: 'Zum SchlieÃŸen irgendwo klicken',
-    reroll: 'Neu wÃ¼rfeln',
+    tutorial_auto_skip: 'Ãƒâ€“ffne die Einstellungen und aktiviere Auto Skip!',
+    tutorial_swap_team: 'Klicke auf ein PokÃƒÂ©mon, um die Team-Position zu tauschen',
+    tutorial_dismiss: 'Zum SchlieÃƒÅ¸en irgendwo klicken',
+    reroll: 'Neu wÃƒÂ¼rfeln',
     joined_team: '{name} ist deinem Team beigetreten!',
-    add_to_team_named: 'FÃ¼ge {name} deinem Team hinzu!',
+    add_to_team_named: 'FÃƒÂ¼ge {name} deinem Team hinzu!',
     revived_notification: '{name} wurde wiederbelebt!',
     healed_notification: '{name} wurde geheilt!',
     restored_notification: '{name} wurde vollstaendig versorgt!',
     level_grew_notification: '{name} erreichte Lv {level}!',
-    pokecenter_heal: '🏥 Dein Team wurde vollstÃ¤ndig geheilt!',
+    pokecenter_heal: 'ðŸ¥ Dein Team wurde vollstÃƒÂ¤ndig geheilt!',
     learned_move_notification: '{name} hat {move} gelernt!',
     continue_ellipsis: 'Weiter...',
     region_cleared: 'Region geschafft!',
-    choose_power_up: 'WÃ¤hle ein PokÃ©mon zum VerstÃ¤rken (Limit: {cap} Punkte)',
+    choose_power_up: 'WÃƒÂ¤hle ein PokÃƒÂ©mon zum VerstÃƒÂ¤rken (Limit: {cap} Punkte)',
     unlock_buffs: 'Gewinne eine Stufe, um Buffs freizuschalten',
     dex_not_found_battle_tower: 'Nicht im Kampfturm gefunden',
     dex_battle_tower_label: 'Kampfturm:',
     shiny_charm_locked: 'Shiny Charm - Vervollstaendige den Gen-1-Pokedex zum Freischalten. Verdoppelt alle Shiny-Raten.',
-    shiny_charm_active: 'Shiny Charm â€” aktiv! Verdoppelt alle Shiny-Raten.',
+    shiny_charm_active: 'Shiny Charm Ã¢â‚¬â€ aktiv! Verdoppelt alle Shiny-Raten.',
     hof_battle_tower: 'Endless Mode: {stage}',
     hof_championship: 'Championschaft #{num}',
     win_run_count: '{region} Championschaft #{num}',
@@ -206,7 +206,7 @@ const i18n = {
   en: {
     // Title Screen
     game_title: 'RogueMon',
-    game_subtitle: 'Roguelike Pokémon Adventure',
+    game_subtitle: 'Roguelike PokÃ©mon Adventure',
     game_tagline: 'Catch, battle and become the Champion!',
     btn_new_run: 'New Game',
     btn_hard_run: 'Nuzlocke Mode',
@@ -245,23 +245,23 @@ const i18n = {
     
     // Starter Select
     choose_starter: 'Choose your Starter',
-    starter_intro: 'Begin your adventure with one of these Pokémon!',
-    starter_description: 'Pick your partner for this run. Each champion has a different element and battle feel — choose the one that fits your strategy.',
-    starter_bulbasaur: 'Bulbasaur — Grass/Poison • The mysterious bulb on its back stores energy, making it a perfect ally for growth and balance.',
-    starter_charmander: 'Charmander — Fire • A loyal fire-type with a burning passion. It ignites with determination and evolves into a mighty dragon.',
-    starter_squirtle: 'Squirtle — Water • Protected by its tough shell, this water-type is reliable and adaptable, forming a bond that withstands any challenge.',
-    starter_chikorita: 'Chikorita — Grass • Calm, steady and resilient. A strong start for trainers who like control and staying power.',
-    starter_cyndaquil: 'Cyndaquil — Fire • Small, fast and explosive. Great for aggressive runs built on speed and pressure.',
-    starter_totodile: 'Totodile — Water • Wild, tough and offense-first. It bites through hard fights and stays dangerous deep into the run.',
+    starter_intro: 'Begin your adventure with one of these PokÃ©mon!',
+    starter_description: 'Pick your partner for this run. Each champion has a different element and battle feel â€” choose the one that fits your strategy.',
+    starter_bulbasaur: 'Bulbasaur â€” Grass/Poison â€¢ The mysterious bulb on its back stores energy, making it a perfect ally for growth and balance.',
+    starter_charmander: 'Charmander â€” Fire â€¢ A loyal fire-type with a burning passion. It ignites with determination and evolves into a mighty dragon.',
+    starter_squirtle: 'Squirtle â€” Water â€¢ Protected by its tough shell, this water-type is reliable and adaptable, forming a bond that withstands any challenge.',
+    starter_chikorita: 'Chikorita â€” Grass â€¢ Calm, steady and resilient. A strong start for trainers who like control and staying power.',
+    starter_cyndaquil: 'Cyndaquil â€” Fire â€¢ Small, fast and explosive. Great for aggressive runs built on speed and pressure.',
+    starter_totodile: 'Totodile â€” Water â€¢ Wild, tough and offense-first. It bites through hard fights and stays dangerous deep into the run.',
     
     // Battle
-    starter_treecko: 'Treecko â€” Grass â€¢ Fast, precise and graceful. Great for sharp runs built on speed and clean pressure.',
-    starter_torchic: 'Torchic â€” Fire â€¢ Small at first, but it scales hard. Perfect for offensive runs that snowball quickly.',
-    starter_mudkip: 'Mudkip â€” Water â€¢ Tough, flexible and extremely reliable. A starter that can carry almost any matchup cleanly.',
+    starter_treecko: 'Treecko Ã¢â‚¬â€ Grass Ã¢â‚¬Â¢ Fast, precise and graceful. Great for sharp runs built on speed and clean pressure.',
+    starter_torchic: 'Torchic Ã¢â‚¬â€ Fire Ã¢â‚¬Â¢ Small at first, but it scales hard. Perfect for offensive runs that snowball quickly.',
+    starter_mudkip: 'Mudkip Ã¢â‚¬â€ Water Ã¢â‚¬Â¢ Tough, flexible and extremely reliable. A starter that can carry almost any matchup cleanly.',
     
-    starter_turtwig: 'Turtwig â€” Grass â€¢ Sturdy and patient. A strong defensive starter that scales nicely through a long run.',
-    starter_chimchar: 'Chimchar â€” Fire â€¢ Fast, cheeky and aggressive. Great if you want to pressure fights from the opening turns.',
-    starter_piplup: 'Piplup â€” Water â€¢ Elegant, safe and reliable. A balanced starter with a very smooth progression curve.',
+    starter_turtwig: 'Turtwig Ã¢â‚¬â€ Grass Ã¢â‚¬Â¢ Sturdy and patient. A strong defensive starter that scales nicely through a long run.',
+    starter_chimchar: 'Chimchar Ã¢â‚¬â€ Fire Ã¢â‚¬Â¢ Fast, cheeky and aggressive. Great if you want to pressure fights from the opening turns.',
+    starter_piplup: 'Piplup Ã¢â‚¬â€ Water Ã¢â‚¬Â¢ Elegant, safe and reliable. A balanced starter with a very smooth progression curve.',
     starter_snivy: 'Snivy - Grass. Elegant, quick and technical. Great for precise runs built on speed and control.',
     starter_tepig: 'Tepig - Fire. Strong, direct and sturdy. Great for offensive runs with steady pressure.',
     starter_oshawott: 'Oshawott - Water. Flexible, clean and reliable. A balanced starter for almost any matchup.',
@@ -275,10 +275,10 @@ const i18n = {
     defeated_msg: '{name} defeated!',
     next_elite: 'Next: {name}...',
     champion_awaits: 'The Champion awaits!',
-    new_pokemon: 'New Pokémon!',
+    new_pokemon: 'New PokÃ©mon!',
     team_full: 'Team Full!',
     add_to_team: 'Add to team or keep team as-is:',
-    choose_release: 'Choose a Pokémon to release:',
+    choose_release: 'Choose a PokÃ©mon to release:',
     continue: 'Continue',
     skip: 'Skip',
     
@@ -295,20 +295,20 @@ const i18n = {
     gen_8: 'Generation VIII',
     gen_9: 'Generation IX',
     all_gens_label: 'All Gens',
-    gen_1_progress: 'Gen 1 — {pct}%',
-    all_gens_progress: 'All Gens — {pct}%',
+    gen_1_progress: 'Gen 1 â€” {pct}%',
+    all_gens_progress: 'All Gens â€” {pct}%',
     pokedex_count: '{count} / {total}',
     team_label: 'TEAM',
     items_label: 'ITEMS',
     badges_label: 'BADGES',
-    catch_title: '⬟ Wild Pokemon Appeared!',
+    catch_title: 'â¬Ÿ Wild Pokemon Appeared!',
     catch_subtitle: 'Choose one Pokemon to add to your team',
-    item_title: '✦ Item Found!',
+    item_title: 'âœ¦ Item Found!',
     item_subtitle: 'Choose one item to keep',
     btn_retry: 'Try Again',
     win_caption: 'Congratulations! You defeated the Elite Four!',
     btn_play_again: 'Play Again',
-    battle_tower_title: '∞ Endless Mode',
+    battle_tower_title: 'âˆž Endless Mode',
     battle_tower_subtitle: 'Choose a stage for your gauntlet run',
     endless_boon_title: 'Endless Boon',
     endless_boon_subtitle: 'Choose a reward for the next fight',
@@ -318,12 +318,12 @@ const i18n = {
     endless_boon_training_desc: 'Your whole team gains +1 level and is fully healed.',
     endless_boon_armory: 'Armory Drop',
     endless_boon_armory_desc: 'Choose 1 of 3 real Pokemon items for this run.',
-    btn_back_arrow: '← Back',
+    btn_back_arrow: 'â† Back',
     enemy_label: 'Enemy',
     evo_what: 'What? {name} is evolving!',
     evo_into: '{name} evolved into {into}!',
     evo_choose: '{name} is evolving!<br>Choose its evolution:',
-    bug_trait_level_up: '🐛 Bug Trait â€” Level Up!',
+    bug_trait_level_up: 'ðŸ› Bug Trait Ã¢â‚¬â€ Level Up!',
     achievement_unlocked: 'Achievement Unlocked!',
     item_found_toast: 'Item Found!',
     popup_dodge: 'Dodge!',
@@ -341,7 +341,7 @@ const i18n = {
     healed_notification: '{name} was healed!',
     restored_notification: '{name} was fully restored!',
     level_grew_notification: '{name} grew to Lv {level}!',
-    pokecenter_heal: '🏥 Your team was fully healed!',
+    pokecenter_heal: 'ðŸ¥ Your team was fully healed!',
     learned_move_notification: '{name} learned {move}!',
     continue_ellipsis: 'Continue...',
     region_cleared: 'Region Cleared!',
@@ -350,7 +350,7 @@ const i18n = {
     dex_not_found_battle_tower: 'Not found in Battle Tower',
     dex_battle_tower_label: 'Battle Tower:',
     shiny_charm_locked: 'Shiny Charm - complete the Gen 1 Pokedex to unlock. Doubles all shiny rates.',
-    shiny_charm_active: 'Shiny Charm â€” active! Doubles all shiny rates.',
+    shiny_charm_active: 'Shiny Charm Ã¢â‚¬â€ active! Doubles all shiny rates.',
     hof_battle_tower: 'Endless Mode: {stage}',
     hof_championship: 'Championship #{num}',
     win_run_count: '{region} Championship #{num}',
@@ -544,11 +544,11 @@ function renderPokemonCard(pokemon, onClick, selected, dexCaught = false, hofSta
     <div class="poke-sprite-wrap">
       <img src="${pokemon.spriteUrl || ''}" alt="${displayName}" class="poke-sprite${pokemon.isShiny?' shiny':''}"
            onerror="this.src='';this.style.display='none'">
-      ${pokemon.isShiny ? '<span class="shiny-badge">★ Shiny</span>' : ''}
+      ${pokemon.isShiny ? '<span class="shiny-badge">â˜… Shiny</span>' : ''}
       ${hofStarterBadge
         ? '<img class="dex-caught-badge" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png" alt="HoF Starter" title="Already in your Hall of Fame PC">'
         : dexCaught
-          ? '<img class="dex-caught-badge" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="Caught" title="Already in Pokédex">'
+          ? '<img class="dex-caught-badge" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="Caught" title="Already in PokÃ©dex">'
           : ''}
     </div>
     <div class="poke-name">${displayName}</div>
@@ -630,7 +630,7 @@ function renderTraitPreview(pokemon, currentTeam) {
     const desc = traitEntry?.description ?? null;
 
     let tierLabel = newTier > 0 ? ` T${newTier}` : '';
-    if (tierUp) tierLabel += ' ▲';
+    if (tierUp) tierLabel += ' â–²';
     const newBadge = isNew ? `<span class="trait-preview-new-tag">NEW</span>` : '';
 
     return `<div class="trait-preview-row${tierUp ? ' trait-preview-row-up' : ''}">
@@ -830,7 +830,7 @@ function renderItemBadges(items) {
 }
 
 
-// Render battlefield — first alive pokemon on each side starts as active
+// Render battlefield â€” first alive pokemon on each side starts as active
 function renderBattleField(pTeam, eTeam) {
   const pEl = document.getElementById('player-side');
   const eEl = document.getElementById('enemy-side');
@@ -914,7 +914,7 @@ function animateHpBar(containerEl, fromHp, toHp, maxHp, duration = 250) {
   });
 }
 
-// ─── Attack particle animations ──────────────────────────────────────────────
+// â”€â”€â”€ Attack particle animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 // ---- Move Animations ----
 
@@ -1887,7 +1887,7 @@ function animDazzlingGleam(canvas, ctx, from, to) {
     const dx = to.x - from.x, dy = to.y - from.y;
     const dist = Math.hypot(dx, dy);
     const nx = dx / dist, ny = dy / dist;
-    // Phase 1 (0–0.4): rays of light shoot forward
+    // Phase 1 (0â€“0.4): rays of light shoot forward
     if (t < 0.55) {
       const st = t / 0.55;
       const reach = lerp(0, dist + 30, st);
@@ -1906,7 +1906,7 @@ function animDazzlingGleam(canvas, ctx, from, to) {
         ctx.strokeStyle = grad; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.stroke();
       }
     }
-    // Phase 2 (0.45–1): golden flash at target
+    // Phase 2 (0.45â€“1): golden flash at target
     if (t > 0.4) {
       const it = (t - 0.4) / 0.6;
       const a = it < 0.4 ? it / 0.4 : 1 - (it - 0.4) / 0.6;
@@ -2064,7 +2064,7 @@ function playAttackAnimation(moveType, attackerEl, targetEl, isSpecial = true, m
   }
 }
 
-/* ── particle factories ── */
+/* â”€â”€ particle factories â”€â”€ */
 function rnd(a, b) { return a + Math.random() * (b - a); }
 function lerp(a, b, t) { return a + (b - a) * t; }
 
@@ -2105,7 +2105,7 @@ function buildParticles(type, from, to) {
       }
     });
 
-    // Ember trail — particles spawned at positions along the fireball's path
+    // Ember trail â€” particles spawned at positions along the fireball's path
     for (let i = 0; i < 38; i++) {
       const spawnFrac = i / 38;
       const spawnMs   = spawnFrac * TRAVEL;
@@ -3037,7 +3037,7 @@ async function animateBattleVisually(detailedLog, pTeamInit, eTeamInit) {
         && nextEvt.idx === event.targetIdx;
 
       if (flyingDodge && targetEl) {
-        // Show dodge animation instead of hit — consume trait_trigger and effect events
+        // Show dodge animation instead of hit â€” consume trait_trigger and effect events
         const canvas = document.getElementById('battle-anim-canvas');
         if (canvas) {
           resizeCanvasIfNeeded(canvas);
@@ -3090,7 +3090,7 @@ async function animateBattleVisually(detailedLog, pTeamInit, eTeamInit) {
 
       const sideLabel = event.side === 'player' ? '' : '(enemy) ';
       addLogEntry(
-        `${sideLabel}${event.attackerName} used ${event.moveName} → ${event.targetName} took ${event.damage} dmg.${effText}`,
+        `${sideLabel}${event.attackerName} used ${event.moveName} â†’ ${event.targetName} took ${event.damage} dmg.${effText}`,
         event.side === 'player' ? 'log-player' : 'log-enemy'
       );
 
@@ -3180,7 +3180,7 @@ async function animateBattleVisually(detailedLog, pTeamInit, eTeamInit) {
       const sideId = event.side === 'player' ? 'player-side' : 'enemy-side';
       const el = document.querySelector(`#${sideId} .battle-pokemon[data-idx="${event.idx}"]`);
       if (el) {
-        const icon  = event.status === 'poison' ? '☠' : '❄';
+        const icon  = event.status === 'poison' ? 'â˜ ' : 'â„';
         const color = event.status === 'poison' ? '#a040a0' : '#7ecff0';
         showStatusBadge(el, icon, color, event.status);
       }
@@ -3221,7 +3221,7 @@ async function animateBattleVisually(detailedLog, pTeamInit, eTeamInit) {
   }
 }
 
-// ── Stat change arrow animation ───────────────────────────────────────────────
+// â”€â”€ Stat change arrow animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function updateBattleStages(pokemonEl, stages) {
   const el = pokemonEl.querySelector('.battle-stages');
@@ -3231,7 +3231,7 @@ function updateBattleStages(pokemonEl, stages) {
     .filter(([, v]) => v !== 0)
     .map(([stat, v]) => {
       const cls = v > 0 ? 'stage-up' : 'stage-down';
-      const arrow = v > 0 ? '▲' : '▼';
+      const arrow = v > 0 ? 'â–²' : 'â–¼';
       return `<span class="battle-stage-badge ${cls}">${labels[stat] ?? stat} ${arrow}${Math.abs(v)}</span>`;
     }).join('');
 }
@@ -3240,7 +3240,7 @@ function animateStatChange(pokemonEl, stat, change) {
   return new Promise(resolve => {
     const isUp = change > 0;
     const color = isUp ? '#5af055' : '#f05545';
-    const arrow = isUp ? '▲' : '▼';
+    const arrow = isUp ? 'â–²' : 'â–¼';
     const statLabels = { atk: 'ATK', def: 'DEF', speed: 'SPD', special: 'SP.A', spdef: 'SP.D' };
 
     const popup = document.createElement('div');
@@ -3253,7 +3253,7 @@ function animateStatChange(pokemonEl, stat, change) {
   });
 }
 
-// ── Trait trigger burst animation (reuses existing particle system) ────────────
+// â”€â”€ Trait trigger burst animation (reuses existing particle system) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function playTraitTriggerAnimation(traitType, pokemonEl) {
   const canvas = document.getElementById('battle-anim-canvas');
@@ -3268,7 +3268,7 @@ async function playTraitTriggerAnimation(traitType, pokemonEl) {
   await runParticleCanvas(canvas, ctx, particles, 400);
 }
 
-// ── Status badge helpers ──────────────────────────────────────────────────────
+// â”€â”€ Status badge helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function showStatusBadge(pokemonEl, icon, color, statusId) {
   removeStatusBadge(pokemonEl, statusId);
@@ -3284,9 +3284,9 @@ function removeStatusBadge(pokemonEl, statusId) {
   pokemonEl.querySelector(`.status-badge[data-status-id="${statusId}"]`)?.remove();
 }
 
-// ── Endless mode UI ───────────────────────────────────────────────────────────
+// â”€â”€ Endless mode UI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-// ── Endless map trait panel ───────────────────────────────────────────────────
+// â”€â”€ Endless map trait panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function renderEndlessTraitPanel(team) {
   const panel = document.getElementById('endless-trait-panel');
@@ -3359,7 +3359,7 @@ function renderEndlessRegionPanel(region, currentMapIndex) {
       `<span class="type-badge type-${t.trim().toLowerCase()}" style="font-size:6px;padding:1px 3px;margin-right:1px;">${t.trim()}</span>`
     ).join('');
 
-    const statusIcon = isDone ? '✓ ' : isCurrent ? '▶ ' : '';
+    const statusIcon = isDone ? 'âœ“ ' : isCurrent ? 'â–¶ ' : '';
     const rowClass = isDone ? 'region-stage-row done'
       : isCurrent ? 'region-stage-row current'
       : isBigBoss ? 'region-stage-row boss'
@@ -3368,7 +3368,7 @@ function renderEndlessRegionPanel(region, currentMapIndex) {
 
     return `<div class="${rowClass}" data-species="${speciesAttr}" style="cursor:default;">
       <span style="display:inline-flex;gap:1px;align-items:center;">${typeBadges}</span>
-      <span class="region-stage-name">${statusIcon}${isBigBoss ? '★ ' : ''}${name}</span>
+      <span class="region-stage-name">${statusIcon}${isBigBoss ? 'â˜… ' : ''}${name}</span>
       <span class="region-stage-level">Lv${trainer.level}</span>
     </div>`;
   }).join('');
@@ -3489,7 +3489,7 @@ function renderTrainerIcons(gender, enemyName = null, showPlayer = true) {
       const img = enemyEl.querySelector('img');
       if (img) img.style.transform = 'scaleX(-1)';
     } else {
-      enemyEl.innerHTML = ''; // Wild battle — no enemy trainer portrait
+      enemyEl.innerHTML = ''; // Wild battle â€” no enemy trainer portrait
     }
   }
   if (labelEl) labelEl.textContent = getText('enemy_label');
@@ -3520,7 +3520,7 @@ async function playEvoAnimation(pokemon, evoData) {
   });
   const sleep = ms => skipped ? Promise.resolve() : Promise.race([new Promise(r => setTimeout(r, ms)), skipResolve]);
 
-  // Alternate between old and new silhouette, slow → fast (like the GB games)
+  // Alternate between old and new silhouette, slow â†’ fast (like the GB games)
   const delays = [600, 600, 500, 500, 400, 350, 280, 200, 150, 110, 80, 60, 50, 40, 40, 35];
   for (const d of delays) {
     if (skipped) break;
@@ -3529,7 +3529,7 @@ async function playEvoAnimation(pokemon, evoData) {
     await sleep(d);
   }
 
-  // End on new sprite — single white flash to reveal
+  // End on new sprite â€” single white flash to reveal
   spriteEl.src = newSpriteUrl;
   overlay.style.background = '#fff';
   await sleep(120);
@@ -3686,7 +3686,7 @@ async function animateLevelUp(levelUps) {
 let _toastQueue = [];
 let _toastRunning = false;
 
-// Bug trait level-up banner — shows each leveled Pokémon's sprite + new level
+// Bug trait level-up banner â€” shows each leveled PokÃ©mon's sprite + new level
 function showBugLevelUpBanner(leveled, duration = 1500) {
   // leveled: array of { name, spriteUrl, level }
   const banner = document.createElement('div');
@@ -3785,7 +3785,7 @@ function openSettingsModal() {
       <div class="settings-modal-box">
         <div class="settings-modal-header">
           <span>Settings</span>
-          <button class="ach-modal-close" onclick="document.getElementById('settings-modal').remove()">✕</button>
+          <button class="ach-modal-close" onclick="document.getElementById('settings-modal').remove()">âœ•</button>
         </div>
         <div class="settings-section-title">Auto-Skip</div>
         ${row('Regular Trainers', 'autoSkipBattles', s.autoSkipAllBattles)}
@@ -3830,11 +3830,11 @@ function openAchievementsModal() {
   const unlocked = getUnlockedAchievements();
   const storyRegionGroups = [
     { label: 'Kanto', ids: ['gym_0', 'gym_1', 'gym_2', 'gym_3', 'gym_4', 'gym_5', 'gym_6', 'gym_7', 'elite_four', 'starter_1', 'starter_4', 'starter_7', 'story_region_1', 'story_trio_1'] },
-    { label: 'Johto', ids: ['story_region_2', 'story_trio_2'] },
-    { label: 'Hoenn', ids: ['story_region_3', 'story_trio_3'] },
-    { label: 'Sinnoh', ids: ['story_region_4', 'story_trio_4'] },
-    { label: 'Einall', ids: ['story_region_5', 'story_trio_5'] },
-    { label: 'Kalos', ids: ['story_region_6', 'story_trio_6'] },
+    { label: 'Johto', ids: ['starter_152', 'starter_155', 'starter_158', 'story_region_2', 'story_trio_2'] },
+    { label: 'Hoenn', ids: ['starter_252', 'starter_255', 'starter_258', 'story_region_3', 'story_trio_3'] },
+    { label: 'Sinnoh', ids: ['starter_387', 'starter_390', 'starter_393', 'story_region_4', 'story_trio_4'] },
+    { label: 'Einall', ids: ['starter_495', 'starter_498', 'starter_501', 'story_region_5', 'story_trio_5'] },
+    { label: 'Kalos', ids: ['starter_650', 'starter_653', 'starter_656', 'story_region_6', 'story_trio_6'] },
     { label: 'Run Challenges', ids: ['solo_run', 'nuzlocke_win', 'three_birds', 'no_pokecenter', 'no_items', 'type_quartet', 'all_shiny_win', 'back_to_back', 'back_3_back', 'elite_10', 'elite_100'] },
   ];
 
@@ -3917,7 +3917,7 @@ function openAchievementsModal() {
     <div class="ach-modal-box">
       <div class="ach-modal-header">
         <span>Achievements (${unlocked.size}/${ACHIEVEMENTS.length})</span>
-        <button class="ach-modal-close" onclick="document.getElementById('achievements-modal').remove()">✕</button>
+        <button class="ach-modal-close" onclick="document.getElementById('achievements-modal').remove()">âœ•</button>
       </div>
       <div class="ach-modal-body">${categorySections}</div>
     </div>`;
@@ -4010,7 +4010,7 @@ function openPokedexModal(initialTab = 'normal') {
                onerror="this.src='';this.style.display='none'">
           <div class="dex-name">${displayName}</div>
           <div class="dex-types">${types}</div>
-          <div class="shiny-star">★</div>
+          <div class="shiny-star">â˜…</div>
         </div>`;
       }
       return header + `<div class="dex-card dex-unknown">
@@ -4043,11 +4043,11 @@ function openPokedexModal(initialTab = 'normal') {
     <div class="dex-modal-box">
       <div class="dex-modal-header">
         <div class="dex-tabs">
-          <button class="dex-tab" data-tab="normal">📖 Pokédex</button>
-          <button class="dex-tab" data-tab="shiny">✨ Shiny</button>
+          <button class="dex-tab" data-tab="normal">ðŸ“– PokÃ©dex</button>
+          <button class="dex-tab" data-tab="shiny">âœ¨ Shiny</button>
         </div>
         <span class="dex-counts" id="dex-count-label"></span>
-        <button class="ach-modal-close" onclick="document.getElementById('pokedex-modal').remove()">✕</button>
+        <button class="ach-modal-close" onclick="document.getElementById('pokedex-modal').remove()">âœ•</button>
       </div>
       <div class="dex-progress-area">
         <div class="dex-progress-row dex-progress-row-top">
@@ -4173,13 +4173,13 @@ function openDexDetailModal(speciesId, name, spriteUrl, shinySpriteUrl, types) {
     <div class="dex-detail-box">
       <div class="dex-detail-header">
         <span class="dex-detail-title">${numStr} ${name}</span>
-        <button class="ach-modal-close" id="dex-detail-close">✕</button>
+        <button class="ach-modal-close" id="dex-detail-close">âœ•</button>
       </div>
       <div class="dex-detail-body">
         <div class="dex-detail-top">
           <div class="dex-detail-sprite-wrap">
             <img id="dex-detail-sprite" class="dex-detail-sprite" src="${spriteUrl}" alt="${name}">
-            <button class="dex-detail-shiny-btn" id="dex-detail-shiny-btn" title="${getText('dex_toggle_shiny')}">★</button>
+            <button class="dex-detail-shiny-btn" id="dex-detail-shiny-btn" title="${getText('dex_toggle_shiny')}">â˜…</button>
           </div>
           <div class="dex-detail-info">
             <div class="dex-detail-name">${name}</div>
@@ -4256,7 +4256,7 @@ function openDexDetailModal(speciesId, name, spriteUrl, shinySpriteUrl, types) {
   // Async: flavor text
   fetchPokemonSpecies(speciesId).then(data => {
     const el = document.getElementById('dex-detail-flavor');
-    if (el) el.textContent = data.flavorText || '—';
+    if (el) el.textContent = data.flavorText || 'â€”';
   });
 
   // Async: evolution chain
@@ -4319,21 +4319,21 @@ function openDexDetailModal(speciesId, name, spriteUrl, shinySpriteUrl, types) {
 const PATCH_NOTES = [
   {
     version: '1.4.3',
-    title: 'Pokédex Update',
+    title: 'PokÃ©dex Update',
     date: '2026-04-30',
     sections: [
       {
         heading: 'New Features',
         entries: [
-          'Pokédex detail view — click any Pokémon in the Pokédex (caught or not) to see its sprite, types, Pokédex flavor text, full evolution chain with levels, and where to find it in regular mode and Battle Tower',
-          'Shiny toggle in the detail view — press ★ to preview the shiny sprite',
+          'PokÃ©dex detail view â€” click any PokÃ©mon in the PokÃ©dex (caught or not) to see its sprite, types, PokÃ©dex flavor text, full evolution chain with levels, and where to find it in regular mode and Battle Tower',
+          'Shiny toggle in the detail view â€” press â˜… to preview the shiny sprite',
         ],
       },
       {
         heading: 'Bug Fixes',
         entries: [
-          'Rerolled Pokémon in catch nodes can now be shiny',
-          'Catch nodes in Battle Tower now always show 3 options — when the team-duplicate filter reduced the pool below 3, the game now pulls from a lower-tier pool to fill the remaining slots',
+          'Rerolled PokÃ©mon in catch nodes can now be shiny',
+          'Catch nodes in Battle Tower now always show 3 options â€” when the team-duplicate filter reduced the pool below 3, the game now pulls from a lower-tier pool to fill the remaining slots',
           'Starting a new run no longer shows a stale "Continue Battle Tower" button when a previous Battle Tower save existed',
         ],
       },
@@ -4347,8 +4347,8 @@ const PATCH_NOTES = [
       {
         heading: 'New Features',
         entries: [
-          'Share button on the win screen and Battle Tower stage clear screen — share your team to X/Twitter or via native share sheet',
-          'Catch screen now shows a Great Ball badge on Pokémon whose evo line is already in your Hall of Fame PC, replacing the Poké Ball badge when applicable',
+          'Share button on the win screen and Battle Tower stage clear screen â€” share your team to X/Twitter or via native share sheet',
+          'Catch screen now shows a Great Ball badge on PokÃ©mon whose evo line is already in your Hall of Fame PC, replacing the PokÃ© Ball badge when applicable',
           'Professor Challenges: Battle Tower starter achievements renamed after each region\'s professor (Oak\'s, Elm\'s, Birch\'s, Rowan\'s, Juniper\'s Challenge) and now unlock by beating a stage with any one of the three regional starters',
         ],
       },
@@ -4356,14 +4356,14 @@ const PATCH_NOTES = [
         heading: 'Changes',
         entries: [
           'Eevee and all its evolutions now evolve at level 20',
-          'Stat labels updated: Speed → SPD, Special Attack → SP.A, Special Defense → SP.D',
-          'Shiny Poké Ball badge in the catch screen now only appears when you own the shiny form specifically',
+          'Stat labels updated: Speed â†’ SPD, Special Attack â†’ SP.A, Special Defense â†’ SP.D',
+          'Shiny PokÃ© Ball badge in the catch screen now only appears when you own the shiny form specifically',
         ],
       },
       {
         heading: 'Bug Fixes',
         entries: [
-          'Shiny Pokémon no longer lose their shiny status after evolving',
+          'Shiny PokÃ©mon no longer lose their shiny status after evolving',
         ],
       },
     ],
@@ -4376,7 +4376,7 @@ const PATCH_NOTES = [
       {
         heading: 'Bug Fixes',
         entries: [
-          'Catch nodes now show the same Pokémon after a page refresh — choices are saved when the node is first entered and restored on reload',
+          'Catch nodes now show the same PokÃ©mon after a page refresh â€” choices are saved when the node is first entered and restored on reload',
           'Ghost trait now correctly triggers on damage from all sources, not just direct attacks',
           'Shiny filter in the Hall of Fame PC now works correctly',
         ],
@@ -4391,18 +4391,18 @@ const PATCH_NOTES = [
       {
         heading: 'Battle Tower',
         entries: [
-          'New endless mode — the Battle Tower challenges you with 5 stages across all regions',
+          'New endless mode â€” the Battle Tower challenges you with 5 stages across all regions',
           'Each stage unlocks after clearing the previous one and is named after its region: Kanto, Johto, Hoenn, Sinnoh, Unova',
           'Each stage has 3 regions, each with 3 battles ending in a named boss trainer',
           'Stage select shows region artwork as button backgrounds',
           'Requires at least one Hall of Fame entry to unlock',
-          'Stage progress is now derived from your Hall of Fame history — cannot be spoofed by local storage',
+          'Stage progress is now derived from your Hall of Fame history â€” cannot be spoofed by local storage',
         ],
       },
       {
         heading: 'Stage 5: Unova',
         entries: [
-          'New stage featuring Gen 1–5 Pokémon',
+          'New stage featuring Gen 1â€“5 PokÃ©mon',
           'Boss trainers: N, Ghetsis, Iris, and Benga',
           'Ghetsis brings a Dragon-only team with Dragon trait at T10',
           'Iris and Benga have unique hand-crafted teams with no duplicates',
@@ -4412,13 +4412,13 @@ const PATCH_NOTES = [
       {
         heading: 'Trait System',
         entries: [
-          'Collect type traits by fielding Pokémon of matching types — traits level up as you progress',
+          'Collect type traits by fielding PokÃ©mon of matching types â€” traits level up as you progress',
           'Each trait tier unlocks a passive effect that applies in every battle',
           'Trait progress panel shown on the map screen and as a preview under each catch choice',
-          'Bug trait: your Pokémon gain a level after every battle — shown with a level-up banner',
+          'Bug trait: your PokÃ©mon gain a level after every battle â€” shown with a level-up banner',
           'Dark trait: enemies have a chance to hurt themselves in confusion each turn',
           'Stat buffs persist across evolutions and are shared by the full evo line',
-          'Stat stage cap set at ±10 stages; +10 = 4× multiplier',
+          'Stat stage cap set at Â±10 stages; +10 = 4Ã— multiplier',
           'Boss trainers have their own trait loadouts that appear in battle',
           'Trait type badges show your current progress on hover',
         ],
@@ -4426,46 +4426,46 @@ const PATCH_NOTES = [
       {
         heading: 'Metaprogression',
         entries: [
-          'Stat buffs persist between runs — each buff adds +10% to a stat permanently for that Pokémon\'s evo line',
+          'Stat buffs persist between runs â€” each buff adds +10% to a stat permanently for that PokÃ©mon\'s evo line',
           'After clearing a stage you allocate buff points across HP, ATK, DEF, SPD, SP.ATK, and SP.DEF',
           'Each stat can be buffed up to 10 points (+100%); total points available scales with stage number (up to 50)',
-          'Buffs are shared across the full evolution line — buff Charmander, Charizard gets it too',
-          'Stars on the starter select screen show how many stats have been buffed on each Pokémon',
+          'Buffs are shared across the full evolution line â€” buff Charmander, Charizard gets it too',
+          'Stars on the starter select screen show how many stats have been buffed on each PokÃ©mon',
         ],
       },
       {
         heading: 'New Achievements',
         entries: [
-          '🌀 Kanto Champion — clear Stage 1 (defeat Ash)',
-          '🌊 Johto Champion — clear Stage 2 (defeat Lance)',
-          '⚔️ Hoenn Champion — clear Stage 3 (defeat Steven Stone)',
-          '💎 Sinnoh Champion — clear Stage 4 (defeat Cynthia)',
-          '🏅 Unova Champion — clear Stage 5 (defeat N)',
-          '🌿 Kanto Trio — win a Stage 1 run starting with each of the three Kanto starters',
-          '🍃 Johto Trio — win a Stage 2 run starting with each of the three Johto starters',
-          '🌊 Hoenn Trio — win a Stage 3 run starting with each of the three Hoenn starters',
-          '⛰️ Sinnoh Trio — win a Stage 4 run starting with each of the three Sinnoh starters',
-          '🌀 Unova Trio — win a Stage 5 run starting with each of the three Unova starters',
-          '📈 First Peak — max out 1 stat on a single Pokémon',
-          '📊 Double Peak — max out 2 stats on a single Pokémon',
-          '🔝 Triple Peak — max out 3 stats',
-          '💪 Quad Peak — max out 4 stats',
-          '🏅 Perfect Specimen — max out all 6 stats on a single Pokémon',
+          'ðŸŒ€ Kanto Champion â€” clear Stage 1 (defeat Ash)',
+          'ðŸŒŠ Johto Champion â€” clear Stage 2 (defeat Lance)',
+          'âš”ï¸ Hoenn Champion â€” clear Stage 3 (defeat Steven Stone)',
+          'ðŸ’Ž Sinnoh Champion â€” clear Stage 4 (defeat Cynthia)',
+          'ðŸ… Unova Champion â€” clear Stage 5 (defeat N)',
+          'ðŸŒ¿ Kanto Trio â€” win a Stage 1 run starting with each of the three Kanto starters',
+          'ðŸƒ Johto Trio â€” win a Stage 2 run starting with each of the three Johto starters',
+          'ðŸŒŠ Hoenn Trio â€” win a Stage 3 run starting with each of the three Hoenn starters',
+          'â›°ï¸ Sinnoh Trio â€” win a Stage 4 run starting with each of the three Sinnoh starters',
+          'ðŸŒ€ Unova Trio â€” win a Stage 5 run starting with each of the three Unova starters',
+          'ðŸ“ˆ First Peak â€” max out 1 stat on a single PokÃ©mon',
+          'ðŸ“Š Double Peak â€” max out 2 stats on a single PokÃ©mon',
+          'ðŸ” Triple Peak â€” max out 3 stats',
+          'ðŸ’ª Quad Peak â€” max out 4 stats',
+          'ðŸ… Perfect Specimen â€” max out all 6 stats on a single PokÃ©mon',
         ],
       },
       {
         heading: 'Hall of Fame',
         entries: [
           'Battle Tower wins are now labelled "Battle Tower: Kanto" etc. instead of "Endless Mode"',
-          'HoF PC shows unique base Pokémon count out of all catchable species',
+          'HoF PC shows unique base PokÃ©mon count out of all catchable species',
         ],
       },
       {
         heading: 'Mobile Improvements',
         entries: [
-          'Map screen now uses the correct viewport height on iOS Safari — no more content cut off by the address bar',
+          'Map screen now uses the correct viewport height on iOS Safari â€” no more content cut off by the address bar',
           'Team cards on the map screen are more compact (smaller sprites, less padding)',
-          'Item bar shows icons only in a horizontal strip — no text labels',
+          'Item bar shows icons only in a horizontal strip â€” no text labels',
           'Catch and item screens always show all 3 choices in a single row',
           'TEAM label removed from the map screen panel',
         ],
@@ -4473,16 +4473,16 @@ const PATCH_NOTES = [
       {
         heading: 'Desktop Improvements',
         entries: [
-          'Map screen panels scale up with viewport width — larger screens show proportionally bigger UI',
+          'Map screen panels scale up with viewport width â€” larger screens show proportionally bigger UI',
         ],
       },
       {
         heading: 'Bug Fixes',
         entries: [
-          'Catch node could show only 2 choices when evo-line deduplication was too aggressive — fixed by fetching a larger candidate pool',
+          'Catch node could show only 2 choices when evo-line deduplication was too aggressive â€” fixed by fetching a larger candidate pool',
           'Saving and reloading mid-run in the Battle Tower no longer lets you revisit past nodes and make different choices',
           'Steel trait now correctly reduces damage before applying it instead of healing it back afterward',
-          'Pokémon forced to use Struggle now show a Struggle! popup on their sprite',
+          'PokÃ©mon forced to use Struggle now show a Struggle! popup on their sprite',
           'Air Balloon and Sneasel evolution edge cases fixed',
         ],
       },
@@ -4504,7 +4504,7 @@ const PATCH_NOTES = [
       {
         heading: 'Run Persistence',
         entries: [
-          'Your run is now saved to local storage — closing the tab mid-run no longer loses progress',
+          'Your run is now saved to local storage â€” closing the tab mid-run no longer loses progress',
           'Continue Run button appears on the title screen when a saved run exists',
           'Reloading during a fight brings you back to the same fight with the same encounter',
         ],
@@ -4512,28 +4512,28 @@ const PATCH_NOTES = [
       {
         heading: 'Seeded Randomness',
         entries: [
-          'Each run now has a seed — encounters, map layout, and battle outcomes are fully deterministic',
-          'Reloading during a fight produces identical crits, damage rolls, and Pokémon choices',
+          'Each run now has a seed â€” encounters, map layout, and battle outcomes are fully deterministic',
+          'Reloading during a fight produces identical crits, damage rolls, and PokÃ©mon choices',
         ],
       },
       {
         heading: 'Map & Mobile',
         entries: [
-          'Visited nodes are now greyed out — your last visited node shows a ✓',
+          'Visited nodes are now greyed out â€” your last visited node shows a âœ“',
           'Edges you have already travelled are visually darker than available paths',
           'Long press a node on mobile to see what it is before committing',
           'Node tooltips now correctly disappear when entering a battle on mobile',
-          'Hovering over Pokémon or nodes no longer triggers accidentally after a screen transition',
+          'Hovering over PokÃ©mon or nodes no longer triggers accidentally after a screen transition',
           'Team bar on mobile now uses a 3-column grid layout',
           'Team panel takes 2/3 width, item panel takes 1/3 on mobile',
-          'Map header no longer shows the map name — badges display in a single row',
-          'Random Pokémon Center nodes removed — only the guaranteed one remains',
+          'Map header no longer shows the map name â€” badges display in a single row',
+          'Random PokÃ©mon Center nodes removed â€” only the guaranteed one remains',
         ],
       },
       {
-        heading: 'Pokémon Reordering',
+        heading: 'PokÃ©mon Reordering',
         entries: [
-          'Team drag and drop now uses pointer events — feels smooth and precise on both desktop and mobile',
+          'Team drag and drop now uses pointer events â€” feels smooth and precise on both desktop and mobile',
         ],
       },
       {
@@ -4541,8 +4541,8 @@ const PATCH_NOTES = [
         entries: [
           'You can no longer encounter a legendary already on your team',
           'Starters now correctly benefit from the Shiny Charm',
-          'Traded Pokémon can now be shiny',
-          'Lucky Egg description corrected — it boosts XP after every battle, not just wild ones',
+          'Traded PokÃ©mon can now be shiny',
+          'Lucky Egg description corrected â€” it boosts XP after every battle, not just wild ones',
         ],
       },
     ],
@@ -4557,12 +4557,12 @@ const PATCH_NOTES = [
         entries: [
           'New retro GBA-style light panel aesthetic across all cards, HUD boxes, and modals',
           'Pixel-art hard shadows on cards, HP bars, battle divs, and buttons',
-          'Battle Pokémon cells are taller with bigger sprites and a larger base platform',
+          'Battle PokÃ©mon cells are taller with bigger sprites and a larger base platform',
           'All primary buttons redesigned to match the retro panel style',
           'Normal Mode button highlighted in blue, Nuzlocke in red',
           'Removed redundant "Defeated [Leader]" line from the badge screen',
           'Battle background now fills the full cell on mobile',
-          'Gender selection is saved — you only need to pick once across all runs',
+          'Gender selection is saved â€” you only need to pick once across all runs',
           'Settings button is now accessible from the main menu',
         ],
       },
@@ -4579,25 +4579,25 @@ const PATCH_NOTES = [
           'Fire: overhauled to a glowing fireball traveling to the target with an ember trail and impact explosion',
           'Fighting: red impact orb now travels from attacker to target before the burst',
           'Steel: silver metallic orb travels to the target before sparks fly on impact',
-          'Hit flash brightness reduced across all types — less obnoxious on bright panels',
+          'Hit flash brightness reduced across all types â€” less obnoxious on bright panels',
         ],
       },
       {
         heading: 'New Achievements',
         entries: [
-          '🦅 Bird Keeper — beat the game with all 3 legendary birds on your team',
-          '🏃 No Rest for the Wicked — beat the game without using a Pokémon Center',
-          '🎒 Minimalist — beat the game without picking up any items',
-          '🔣 Type Supremacy — beat the game with 4 of 6 Pokémon sharing a type',
-          '💫 Shiny Squad — beat the game with a full team of shiny Pokémon',
-          '🔁 On a Roll — beat the game two runs in a row',
+          'ðŸ¦… Bird Keeper â€” beat the game with all 3 legendary birds on your team',
+          'ðŸƒ No Rest for the Wicked â€” beat the game without using a PokÃ©mon Center',
+          'ðŸŽ’ Minimalist â€” beat the game without picking up any items',
+          'ðŸ”£ Type Supremacy â€” beat the game with 4 of 6 PokÃ©mon sharing a type',
+          'ðŸ’« Shiny Squad â€” beat the game with a full team of shiny PokÃ©mon',
+          'ðŸ” On a Roll â€” beat the game two runs in a row',
         ],
       },
       {
         heading: 'Bug Fixes',
         entries: [
-          'Pokémon no longer skip evolution entirely when "Skip Evolutions" is on — only the animation is skipped',
-          'Pokémon obtained by trading are now correctly registered in the Pokédex',
+          'PokÃ©mon no longer skip evolution entirely when "Skip Evolutions" is on â€” only the animation is skipped',
+          'PokÃ©mon obtained by trading are now correctly registered in the PokÃ©dex',
         ],
       },
     ],
@@ -4612,25 +4612,25 @@ const PATCH_NOTES = [
         entries: [
           'Skipping battle animations now speeds them up instead of jumping straight to the end',
           'Skip button greys out after pressing instead of disappearing',
-          'Auto-skip setting hides the skip button entirely — no more greyed-out clutter',
-          'Continue button is now available as soon as the level-up animation starts — click to fast-forward and auto-proceed',
-          'All Pokémon level up simultaneously instead of one at a time',
+          'Auto-skip setting hides the skip button entirely â€” no more greyed-out clutter',
+          'Continue button is now available as soon as the level-up animation starts â€” click to fast-forward and auto-proceed',
+          'All PokÃ©mon level up simultaneously instead of one at a time',
         ],
       },
       {
         heading: 'Difficulty',
         entries: [
-          'Gym leaders Lt. Surge, Erika, and Koga now give their Pokémon held items',
-          'Lt. Surge: Pikachu → Eviolite, Voltorb → Magnet, Raichu → Life Orb',
-          'Erika: Tangela → Leftovers, Victreebel → Poison Barb, Vileplume → Miracle Seed',
-          'Koga: Koffing × 2 → Rocky Helmet, Muk → Poison Barb, Weezing → Leftovers',
+          'Gym leaders Lt. Surge, Erika, and Koga now give their PokÃ©mon held items',
+          'Lt. Surge: Pikachu â†’ Eviolite, Voltorb â†’ Magnet, Raichu â†’ Life Orb',
+          'Erika: Tangela â†’ Leftovers, Victreebel â†’ Poison Barb, Vileplume â†’ Miracle Seed',
+          'Koga: Koffing Ã— 2 â†’ Rocky Helmet, Muk â†’ Poison Barb, Weezing â†’ Leftovers',
         ],
       },
       {
         heading: 'Branching Paths',
         entries: [
           'Tons of overall improvements to branching paths',
-          'The last content layer before each boss is now guaranteed to have a Pokémon Center',
+          'The last content layer before each boss is now guaranteed to have a PokÃ©mon Center',
           'Added proper icons for nodes',
         ],
       },
@@ -4650,9 +4650,9 @@ const PATCH_NOTES = [
       {
         heading: 'New: Usable Items',
         entries: [
-          '💊 Max Revive — fully revives a fainted Pokémon (only offered when someone is fainted)',
-          '🍬 Rare Candy — gives a Pokémon +3 levels; triggers evolution if the threshold is reached',
-          '🌟 Evolution Stone — force evolves any Pokémon regardless of level (Eevee gets the choice picker)',
+          'ðŸ’Š Max Revive â€” fully revives a fainted PokÃ©mon (only offered when someone is fainted)',
+          'ðŸ¬ Rare Candy â€” gives a PokÃ©mon +3 levels; triggers evolution if the threshold is reached',
+          'ðŸŒŸ Evolution Stone â€” force evolves any PokÃ©mon regardless of level (Eevee gets the choice picker)',
           'Usable items stack in the bag and are consumed on use',
         ],
       },
@@ -4660,16 +4660,16 @@ const PATCH_NOTES = [
         heading: 'New: Hall of Fame',
         entries: [
           'Every championship win now saves your winning team to the Hall of Fame',
-          'View past winning teams from the title screen — sprites, levels, and nicknames preserved',
-          'Hard mode wins are marked with 💀',
+          'View past winning teams from the title screen â€” sprites, levels, and nicknames preserved',
+          'Hard mode wins are marked with ðŸ’€',
         ],
       },
       {
         heading: 'Enemy Items Rework',
         entries: [
-          'Elite Four and Champion now use per-Pokémon held items instead of shared trainer items',
-          'Gary gives each of his Pokémon the type-boosting item matching their primary type',
-          'Gym leaders Sabrina, Blaine, and Giovanni also reworked to per-Pokémon items',
+          'Elite Four and Champion now use per-PokÃ©mon held items instead of shared trainer items',
+          'Gary gives each of his PokÃ©mon the type-boosting item matching their primary type',
+          'Gym leaders Sabrina, Blaine, and Giovanni also reworked to per-PokÃ©mon items',
           'Enemy held items now interact with all item effects the same way the player\'s do',
         ],
       },
@@ -4678,7 +4678,7 @@ const PATCH_NOTES = [
         entries: [
           'Layer 1 of every map is now guaranteed to have at least one Catch node',
           'Layers 1, 3, and 5 are now guaranteed to have at least one Battle node',
-          'The first Catch node on Map 1 always includes a Grass or Water type Pokémon',
+          'The first Catch node on Map 1 always includes a Grass or Water type PokÃ©mon',
         ],
       },
     ],
@@ -4765,7 +4765,7 @@ function openHallOfFameModal() {
         <div class="hof-entry-header">
           <div class="hof-entry-title-row">
             <span class="hof-entry-title">${title}</span>
-            ${e.hardMode ? '<span class="hof-entry-skull">☠️</span>' : ''}
+            ${e.hardMode ? '<span class="hof-entry-skull">â˜ ï¸</span>' : ''}
           </div>
           <span class="hof-entry-date">${e.date}</span>
         </div>
@@ -4820,7 +4820,7 @@ function openHallOfFameModal() {
           <div class="hof-modal-title">${getText('hall_of_fame_title')}</div>
           <div class="hof-modal-subtitle">Gen 1 - Gen 5 Archiv</div>
         </div>
-        <button class="hof-modal-close" onclick="document.getElementById('hof-modal').remove()">✕</button>
+        <button class="hof-modal-close" onclick="document.getElementById('hof-modal').remove()">âœ•</button>
       </div>
       <div class="hof-modal-body">${contentHtml}</div>
     </div>`;
