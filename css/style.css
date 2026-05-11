@@ -2602,7 +2602,87 @@ h1, h2, .pixel-font {
   text-shadow: 0 0 30px var(--gold);
   animation: shimmer 1.5s ease-in-out infinite alternate;
 }
-#win-team { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+#win-team {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+.win-team-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.win-team-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+#win-screen .poke-card {
+  width: 180px;
+  background:
+    linear-gradient(180deg, rgba(9, 17, 33, 0.96), rgba(16, 26, 48, 0.94)),
+    radial-gradient(circle at top, rgba(139, 232, 255, 0.08), transparent 48%);
+  border: 1px solid rgba(139, 232, 255, 0.22);
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba(10, 18, 36, 0.92),
+    0 18px 34px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  color: #eef4ff;
+}
+#win-screen .poke-name,
+#win-screen .poke-level {
+  color: #eef4ff;
+}
+#win-screen .poke-level {
+  opacity: 0.82;
+}
+#win-screen .poke-stats-bars {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(143, 215, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+#win-screen .stat-label {
+  color: #9fc6ff;
+}
+#win-screen .stat-value {
+  color: #dcecff;
+}
+#win-screen .hp-bar {
+  background: rgba(7, 12, 24, 0.92);
+  border-color: rgba(143, 215, 255, 0.12);
+}
+#win-screen .move-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(143, 215, 255, 0.12);
+  border-radius: 12px;
+}
+#win-screen .move-name {
+  color: #f4fbff;
+}
+#win-screen .move-power {
+  color: #9fc6ff;
+}
+#win-screen .move-box .type-badge,
+#win-screen .poke-types .type-badge {
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  #win-team {
+    gap: 10px;
+  }
+  #win-screen .poke-card {
+    width: min(172px, calc(50vw - 18px));
+  }
+}
 
 /* ---- Loading ---- */
 .loading {

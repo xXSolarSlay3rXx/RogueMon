@@ -2592,9 +2592,9 @@ function showWinScreen() {
   const region = getCurrentStoryRegion();
   document.getElementById('win-team').innerHTML = state.team.map(p => {
     const itemHtml = p.heldItem
-      ? `<div style="display:flex;align-items:center;gap:4px;font-size:8px;color:var(--text-dim);margin-top:4px;">${itemIconHtml(p.heldItem, 14)}<span>${p.heldItem.name}</span></div>`
+      ? `<div class="win-team-item">${itemIconHtml(p.heldItem, 14)}<span>${p.heldItem.name}</span></div>`
       : '';
-    return `<div style="display:flex;flex-direction:column;align-items:center;">${renderPokemonCard(p, false, false)}${itemHtml}</div>`;
+    return `<div class="win-team-entry">${renderPokemonCard(p, false, false)}${itemHtml}</div>`;
   }).join('');
   document.getElementById('btn-play-again').onclick = () => startNewRun(state.nuzlockeMode);
 
