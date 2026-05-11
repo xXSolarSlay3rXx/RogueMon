@@ -4058,9 +4058,6 @@ function openPokedexModal(initialTab = 'normal') {
               </div>
             </div>
           </div>
-          <div id="dex-charm-icon" class="dex-charm-icon" title="${getText('shiny_charm_locked')}">
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shiny-charm.png" alt="Shiny Charm" onerror="this.style.display='none'">
-          </div>
         </div>
       </div>
       <div class="dex-grid" id="dex-grid-content"></div>
