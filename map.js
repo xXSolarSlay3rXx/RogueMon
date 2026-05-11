@@ -598,7 +598,7 @@ function renderMap(map, container, onNodeClick) {
   const layerCount = map.layers.length;
   // Keep tall trainer/boss sprites away from the clipped top/bottom edge
   // when the map viewport is compressed by side panels or mobile chrome.
-  const padY = Math.max(42, Math.min(64, Math.round(H * 0.085)));
+  const padY = Math.max(56, Math.min(76, Math.round(H * 0.11)));
 
   const positions = {};
   for (let l = 0; l < map.layers.length; l++) {
