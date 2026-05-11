@@ -4939,6 +4939,31 @@ h1, h2, .pixel-font {
   }
 }
 
+@media (max-height: 900px) {
+  #battle-screen {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .battle-field {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .battle-side {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #player-side,
+  #enemy-side {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+}
+
 @media (max-width: 768px) {
   #battle-screen {
     height: 100dvh;
@@ -4981,10 +5006,15 @@ h1, h2, .pixel-font {
     min-height: 0;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 8px;
+    overflow: hidden;
   }
 
   .battle-side {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
     min-height: 0;
+    overflow: hidden;
     padding: 8px;
     gap: 6px;
     border-radius: 16px;
@@ -5002,9 +5032,12 @@ h1, h2, .pixel-font {
 
   #player-side,
   #enemy-side {
+    flex: 1 1 auto;
     gap: 8px;
     min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding-right: 2px;
   }
 
