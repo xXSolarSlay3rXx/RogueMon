@@ -6163,12 +6163,70 @@ h1, h2, .pixel-font {
     padding: 8px 10px 4px;
   }
 
+  .dex-progress-row {
+    gap: 8px;
+  }
+
+  .dex-progress-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 10px;
+    min-width: 0;
+  }
+
+  .dex-progress-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .dex-progress-title,
+  .dex-progress-label {
+    line-height: 1.4;
+  }
+
+  .dex-progress-title {
+    letter-spacing: 0.08em;
+  }
+
+  .dex-progress-track {
+    height: 18px;
+  }
+
+  .dex-progress-bar::after {
+    display: none;
+  }
+
   .dex-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 520px) {
+  .dex-progress-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dex-progress-row-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #dex-charm-icon {
+    align-self: flex-start;
+  }
+
+  .dex-progress-group {
+    gap: 6px;
+  }
+
+  .dex-progress-title {
+    font-size: 7px;
+  }
+
+  .dex-progress-label {
+    font-size: 6px;
+  }
+
   .dex-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
