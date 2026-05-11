@@ -874,7 +874,7 @@ const UNOVA_ELITE_4 = [
 const KALOS_GYM_LEADERS = [
   {
     name: 'Viola', badge: 'Bug Badge', type: 'Bug', moveTier: 0,
-    sprite: 'sprites/aceTrainer.png',
+    sprite: 'sprites/Kalos/viola.png',
     badgeImage: 'ui/badges/Kalos/arena1.png',
     team: [
       { speciesId: 283, name: 'Surskit', level: 12, heldItem: { id: 'silver_powder', name: 'Silver Powder', icon: '🐛' } },
@@ -883,7 +883,7 @@ const KALOS_GYM_LEADERS = [
   },
   {
     name: 'Grant', badge: 'Cliff Badge', type: 'Rock', moveTier: 0,
-    sprite: 'sprites/aceTrainer.png',
+    sprite: 'sprites/Kalos/grant.png',
     badgeImage: 'ui/badges/Kalos/arena2.png',
     team: [
       { speciesId: 698, name: 'Amaura', level: 18, heldItem: { id: 'hard_stone', name: 'Hard Stone', icon: '🪨' } },
@@ -892,7 +892,7 @@ const KALOS_GYM_LEADERS = [
   },
   {
     name: 'Korrina', badge: 'Rumble Badge', type: 'Fighting', moveTier: 1,
-    sprite: 'sprites/aceTrainer.png',
+    sprite: 'sprites/Kalos/korrina.png',
     badgeImage: 'ui/badges/Kalos/arena3.png',
     team: [
       { speciesId: 619, name: 'Mienfoo', level: 23, heldItem: { id: 'black_belt', name: 'Black Belt', icon: '🥋' } },
@@ -902,7 +902,7 @@ const KALOS_GYM_LEADERS = [
   },
   {
     name: 'Ramos', badge: 'Plant Badge', type: 'Grass', moveTier: 1,
-    sprite: 'sprites/aceTrainer.png',
+    sprite: 'sprites/Kalos/ramos.png',
     badgeImage: 'ui/badges/Kalos/arena4.png',
     team: [
       { speciesId: 189, name: 'Jumpluff', level: 30, heldItem: { id: 'miracle_seed', name: 'Miracle Seed', icon: '🌱' } },
@@ -912,7 +912,7 @@ const KALOS_GYM_LEADERS = [
   },
   {
     name: 'Clemont', badge: 'Voltage Badge', type: 'Electric', moveTier: 1,
-    sprite: 'sprites/aceTrainer.png',
+    sprite: 'sprites/Kalos/clemont.png',
     badgeImage: 'ui/badges/Kalos/arena5.png',
     team: [
       { speciesId: 587, name: 'Emolga', level: 35, heldItem: { id: 'magnet', name: 'Magnet', icon: '🧲' } },
@@ -922,7 +922,7 @@ const KALOS_GYM_LEADERS = [
   },
   {
     name: 'Valerie', badge: 'Fairy Badge', type: 'Fairy', moveTier: 2,
-    sprite: 'sprites/aceTrainer.png',
+    sprite: 'sprites/Kalos/valerie.png',
     badgeImage: 'ui/badges/Kalos/arena6.png',
     team: [
       { speciesId: 303, name: 'Mawile', level: 40, heldItem: { id: 'pixie_plate', name: 'Pixie Plate', icon: '🧚' } },
@@ -932,7 +932,7 @@ const KALOS_GYM_LEADERS = [
   },
   {
     name: 'Olympia', badge: 'Psychic Badge', type: 'Psychic', moveTier: 2,
-    sprite: 'sprites/aceTrainer.png',
+    sprite: 'sprites/Kalos/olympia.png',
     badgeImage: 'ui/badges/Kalos/arena7.png',
     team: [
       { speciesId: 561, name: 'Sigilyph', level: 44, heldItem: { id: 'twisted_spoon', name: 'Twisted Spoon', icon: '🥄' } },
@@ -942,7 +942,7 @@ const KALOS_GYM_LEADERS = [
   },
   {
     name: 'Wulfric', badge: 'Iceberg Badge', type: 'Ice', moveTier: 2,
-    sprite: 'sprites/aceTrainer.png',
+    sprite: 'sprites/Kalos/wulfric.png',
     badgeImage: 'ui/badges/Kalos/arena8.png',
     team: [
       { speciesId: 460, name: 'Abomasnow', level: 48, heldItem: { id: 'never_melt_ice', name: 'Never-Melt Ice', icon: '❄️' } },
@@ -955,7 +955,7 @@ const KALOS_GYM_LEADERS = [
 const KALOS_ELITE_4 = [
   {
     name: 'Malva', title: 'Elite Four', type: 'Fire',
-    sprite: 'sprites/misteryTrainer.png',
+    sprite: 'sprites/Kalos/malva.png',
     team: [
       { speciesId: 668, name: 'Pyroar', level: 53, heldItem: { id: 'charcoal', name: 'Charcoal', icon: '🔥' } },
       { speciesId: 324, name: 'Torkoal', level: 53, heldItem: { id: 'charcoal', name: 'Charcoal', icon: '🔥' } },
@@ -965,7 +965,7 @@ const KALOS_ELITE_4 = [
   },
   {
     name: 'Siebold', title: 'Elite Four', type: 'Water',
-    sprite: 'sprites/misteryTrainer.png',
+    sprite: 'sprites/Kalos/siebold.png',
     team: [
       { speciesId: 693, name: 'Clawitzer', level: 54, heldItem: { id: 'mystic_water', name: 'Mystic Water', icon: '💧' } },
       { speciesId: 121, name: 'Starmie', level: 54, heldItem: { id: 'mystic_water', name: 'Mystic Water', icon: '💧' } },
@@ -975,7 +975,7 @@ const KALOS_ELITE_4 = [
   },
   {
     name: 'Wikstrom', title: 'Elite Four', type: 'Steel',
-    sprite: 'sprites/misteryTrainer.png',
+    sprite: 'sprites/Kalos/wikstrom.png',
     team: [
       { speciesId: 707, name: 'Klefki', level: 54, heldItem: { id: 'metal_coat', name: 'Metal Coat', icon: '⚙️' } },
       { speciesId: 476, name: 'Probopass', level: 54, heldItem: { id: 'metal_coat', name: 'Metal Coat', icon: '⚙️' } },
@@ -985,7 +985,7 @@ const KALOS_ELITE_4 = [
   },
   {
     name: 'Drasna', title: 'Elite Four', type: 'Dragon',
-    sprite: 'sprites/misteryTrainer.png',
+    sprite: 'sprites/Kalos/drasna.png',
     team: [
       { speciesId: 691, name: 'Dragalge', level: 54, heldItem: { id: 'dragon_fang', name: 'Dragon Fang', icon: '🐉' } },
       { speciesId: 621, name: 'Druddigon', level: 54, heldItem: { id: 'dragon_fang', name: 'Dragon Fang', icon: '🐉' } },
@@ -995,7 +995,7 @@ const KALOS_ELITE_4 = [
   },
   {
     name: 'Diantha', title: 'Champion', type: 'Fairy',
-    sprite: 'sprites/misteryTrainer.png',
+    sprite: 'sprites/Kalos/diantha.png',
     team: [
       { speciesId: 701, name: 'Hawlucha', level: 58, heldItem: { id: 'sharp_beak', name: 'Sharp Beak', icon: '🦅' } },
       { speciesId: 697, name: 'Tyrantrum', level: 58, heldItem: { id: 'hard_stone', name: 'Hard Stone', icon: '🪨' } },
@@ -1734,7 +1734,7 @@ const STORY_REGION_CONFIGS = {
     ],
     mapBackgroundSize: 'cover',
     mapBackgroundPosition: 'center',
-    mysteryTrainerSprite: 'sprites/misteryTrainer.png',
+    mysteryTrainerSprite: 'sprites/Kalos/misteryTrainer.png',
   },
 };
 

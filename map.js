@@ -466,6 +466,8 @@ function getNodeSprite(node) {
         ? 'sprites/Sinnoh'
         : regionKey === 'unova'
           ? 'sprites/Einall'
+          : regionKey === 'kalos'
+            ? 'sprites/Kalos'
         : 'sprites';
   const ICON_SPRITES = {
     [NODE_TYPES.BATTLE]:    `${spriteRoot}/grass.png`,
