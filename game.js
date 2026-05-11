@@ -805,7 +805,11 @@ async function buildConfiguredEnemyTeam(entries, defaultMoveTier = 1) {
 function getAdjustedEnemyLevel(level, isBoss = false) {
   if (state?.isEndlessMode) return level;
   const safeLevel = Math.max(1, Number(level) || 1);
-  const delta = isBoss ? -2 : -1;
+  const storyRegionId = state?.storyRegionId || 1;
+  const progressIndex = Math.max(0, Number(state?.currentMap) || 0);
+  const delta = isBoss
+    ? (storyRegionId >= 2 ? -3 : -2)
+    : -1;
   let adjustedLevel = Math.max(2, safeLevel + delta);
 
   // Keep boss previews and actual boss fights deterministic so the
@@ -816,14 +820,10 @@ function getAdjustedEnemyLevel(level, isBoss = false) {
 
   // Keep Kanto on its current feel, but let later regions catch up if the
   // player's team levels faster than the fixed regional trainer tables.
-  const storyRegionId = state?.storyRegionId || 1;
   const teamLevels = Array.isArray(state?.team) ? state.team.map(p => Number(p?.level) || 0).filter(l => l > 0) : [];
   if (storyRegionId >= 2 && teamLevels.length > 0) {
     const strongestPlayerLevel = Math.max(...teamLevels);
-    const progressIndex = Math.max(0, Number(state?.currentMap) || 0);
-    const catchupLag = storyRegionId === 2
-      ? (progressIndex >= 6 ? 3 : 4)
-      : (progressIndex >= 6 ? 2 : 3);
+    const catchupLag = progressIndex >= 6 ? 4 : 5;
     const catchupFloor = Math.max(2, strongestPlayerLevel - catchupLag);
     adjustedLevel = Math.max(adjustedLevel, catchupFloor);
   }
