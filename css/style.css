@@ -539,9 +539,14 @@ h1, h2, .pixel-font {
     grid-template-columns: 1fr;
   }
   #starter-choices {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
     align-items: start;
+  }
+  #starter-screen .starter-card-wrapper:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 220px;
+    justify-self: center;
   }
   #starter-screen .poke-card {
     max-width: none;
@@ -618,6 +623,23 @@ h1, h2, .pixel-font {
 
   .story-region-card {
     min-height: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  #starter-choices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #starter-screen .starter-card-wrapper:last-child:nth-child(odd) {
+    grid-column: auto;
+    max-width: none;
+    justify-self: stretch;
+  }
+
+  #starter-screen .poke-card {
+    max-width: 260px;
+    margin: 0 auto;
   }
 }
 
