@@ -477,7 +477,7 @@ function getNodeSprite(node) {
     [NODE_TYPES.LEGENDARY]: `${spriteRoot}/legendaryEncounter.png`,
     [NODE_TYPES.QUESTION]:  `${spriteRoot}/questionMark.png`,
     [NODE_TYPES.POKECENTER]: `${spriteRoot}/Poke Center.png`,
-    [NODE_TYPES.MOVE_TUTOR]: regionKey === 'johto' ? `${spriteRoot}/oldGuy.png` : `${spriteRoot}/moveTutor.png`,
+    [NODE_TYPES.MOVE_TUTOR]: `${spriteRoot}/moveTutor.png`,
   };
   if (ICON_SPRITES[node.type]) return ICON_SPRITES[node.type];
   if (node.type === NODE_TYPES.TRAINER) {
@@ -575,8 +575,96 @@ function renderMapTooltipTeam(entries, isBoss = false) {
   }).join('');
 }
 
-function renderMap(map, container, onNodeClick) {
+
+function renderMapFallback(map, container, onNodeClick) {
   container.innerHTML = '';
+  const W = container.clientWidth || 600;
+  const H = container.clientHeight || 500;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.style.width = '100%';
+  svg.style.height = '100%';
+  svg.style.position = 'absolute';
+  svg.style.top = '0';
+  svg.style.left = '0';
+  svg.style.zIndex = '1';
+
+  const layers = Array.isArray(map?.layers) ? map.layers : [];
+  if (!layers.length) {
+    container.appendChild(svg);
+    return;
+  }
+
+  const layerCount = layers.length;
+  const padY = Math.max(56, Math.min(76, Math.round(H * 0.11)));
+  const positions = {};
+  for (let l = 0; l < layers.length; l++) {
+    const layer = layers[l];
+    const y = layerCount > 1 ? padY + (l / (layerCount - 1)) * (H - 2 * padY) : H / 2;
+    const nodeGap = W / ((layer.length || 1) + 0.2);
+    for (let c = 0; c < layer.length; c++) {
+      const baseX = layer.length === 1 ? W / 2 : W / 2 + (c - (layer.length - 1) / 2) * nodeGap;
+      positions[layer[c].id] = { x: baseX, y };
+    }
+  }
+
+  for (const edge of (map.edges || [])) {
+    const from = positions[edge.from];
+    const to = positions[edge.to];
+    if (!from || !to) continue;
+    const fromNode = map.nodes?.[edge.from];
+    const toNode = map.nodes?.[edge.to];
+    const active = !!(fromNode?.visited || fromNode?.accessible || toNode?.visited || toNode?.accessible);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', from.x);
+    line.setAttribute('y1', from.y);
+    line.setAttribute('x2', to.x);
+    line.setAttribute('y2', to.y);
+    line.setAttribute('stroke', active ? '#79d2ff' : '#2a2a35');
+    line.setAttribute('stroke-width', active ? '3' : '2');
+    if (!active) line.setAttribute('stroke-dasharray', '5,7');
+    svg.appendChild(line);
+  }
+
+  for (const [id, node] of Object.entries(map.nodes || {})) {
+    const pos = positions[id];
+    if (!pos) continue;
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('transform', `translate(${pos.x},${pos.y})`);
+    const isClickable = !!(node.accessible && !node.visited);
+    const isCurrent = !!(typeof state !== 'undefined' && state.currentNode && state.currentNode.id === node.id);
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('r', node.type === NODE_TYPES.BOSS ? '20' : '16');
+    circle.setAttribute('fill', node.visited ? '#333' : getNodeColor(node));
+    circle.setAttribute('stroke', isClickable ? '#ffffff' : '#111827');
+    circle.setAttribute('stroke-width', isClickable ? '3' : '2');
+    g.appendChild(circle);
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'central');
+    text.setAttribute('font-size', node.type === NODE_TYPES.MOVE_TUTOR ? '8' : '12');
+    text.setAttribute('fill', '#ffffff');
+    text.textContent = isCurrent ? '!' : getNodeIcon(node);
+    g.appendChild(text);
+
+    if (isClickable) {
+      g.style.cursor = 'pointer';
+      g.addEventListener('click', () => onNodeClick(node));
+    }
+
+    svg.appendChild(g);
+  }
+
+  container.appendChild(svg);
+}
+
+function renderMap(map, container, onNodeClick) {
+  try {
+    container.innerHTML = '';
   const theme = getMapTheme(map.mapIndex ?? 0);
   const storyTheme = getStoryRegionNodeTheme(container.dataset.storyRegion || 'kanto');
   container.dataset.mapTheme = theme.name;
@@ -842,6 +930,10 @@ function renderMap(map, container, onNodeClick) {
   }
 
   container.appendChild(svg);
+  } catch (error) {
+    console.error('renderMap failed, using fallback map renderer:', error);
+    renderMapFallback(map, container, onNodeClick);
+  }
 }
 
 function getNodeColor(node, storyTheme = null) {

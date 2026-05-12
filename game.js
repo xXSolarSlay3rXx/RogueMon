@@ -226,6 +226,26 @@ function hasRenderableStoryMap(map) {
   return true;
 }
 
+function normalizeStoryMapLayers(map) {
+  if (!map || typeof map !== 'object' || !map.nodes || !Array.isArray(map.layers)) return false;
+  let changed = false;
+  map.layers = map.layers.map(layer => {
+    if (!Array.isArray(layer)) return layer;
+    return layer.map(entry => {
+      if (entry && typeof entry === 'object' && entry.id && map.nodes[entry.id]) {
+        if (entry !== map.nodes[entry.id]) changed = true;
+        return map.nodes[entry.id];
+      }
+      if (typeof entry === 'string' && map.nodes[entry]) {
+        changed = true;
+        return map.nodes[entry];
+      }
+      return entry;
+    });
+  });
+  return changed;
+}
+
 function rebuildStoryMapForCurrentState() {
   state.map = generateMap(state.currentMap || 0, !!state.nuzlockeMode);
   state.currentNode = Object.values(state.map.nodes || {}).find(node => node.accessible && !node.visited) || state.map.nodes?.['n0_0'] || null;
@@ -237,6 +257,7 @@ function ensureStoryMapIsRenderable() {
     rebuildStoryMapForCurrentState();
     return;
   }
+  normalizeStoryMapLayers(state.map);
   if (!state.currentNode || !state.map.nodes?.[state.currentNode.id]) {
     state.currentNode = Object.values(state.map.nodes || {}).find(node => node.accessible && !node.visited) || state.map.nodes?.['n0_0'] || null;
   }
