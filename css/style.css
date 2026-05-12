@@ -2516,6 +2516,7 @@ h1, h2, .pixel-font {
   inset: 0;
   padding: 12px;
   background: rgba(2, 6, 16, 0.82);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -4119,7 +4120,6 @@ h1, h2, .pixel-font {
   gap: 10px;
   padding: 12px;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   background: rgba(6,10,22,0.95);
 }
@@ -5303,7 +5303,6 @@ h1, h2, .pixel-font {
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
     padding-right: 2px;
   }
 
@@ -6500,7 +6499,6 @@ h1, h2, .pixel-font {
     flex: 0 0 auto;
     max-height: clamp(112px, 28dvh, 180px);
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     gap: 6px;
     padding: 6px 8px 4px;
   }
