@@ -575,6 +575,13 @@ function renderMapTooltipTeam(entries, isBoss = false) {
   }).join('');
 }
 
+function resolveMapLayerNode(map, entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') return map?.nodes?.[entry] || null;
+  if (typeof entry === 'object' && entry.id) return map?.nodes?.[entry.id] || entry;
+  return null;
+}
+
 
 function renderMapFallback(map, container, onNodeClick) {
   container.innerHTML = '';
@@ -601,7 +608,7 @@ function renderMapFallback(map, container, onNodeClick) {
   const padY = Math.max(56, Math.min(76, Math.round(H * 0.11)));
   const positions = {};
   for (let l = 0; l < layers.length; l++) {
-    const layer = layers[l];
+    const layer = layers[l].map(entry => resolveMapLayerNode(map, entry)).filter(Boolean);
     const y = layerCount > 1 ? padY + (l / (layerCount - 1)) * (H - 2 * padY) : H / 2;
     const nodeGap = W / ((layer.length || 1) + 0.2);
     for (let c = 0; c < layer.length; c++) {
@@ -691,7 +698,7 @@ function renderMap(map, container, onNodeClick) {
 
   const positions = {};
   for (let l = 0; l < map.layers.length; l++) {
-    const layer = map.layers[l];
+    const layer = map.layers[l].map(entry => resolveMapLayerNode(map, entry)).filter(Boolean);
     const y = layerCount > 1 ? padY + (l / (layerCount - 1)) * (H - 2 * padY) : H / 2;
     const nodeGap = W / (layer.length + 0.2);
     for (let c = 0; c < layer.length; c++) {
@@ -705,7 +712,11 @@ function renderMap(map, container, onNodeClick) {
   const bgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   bgGroup.setAttribute('opacity', '0.12');
   for (let l = 0; l < map.layers.length; l++) {
-    const ids = map.layers[l].map(n => positions[n.id]);
+    const ids = map.layers[l]
+      .map(entry => resolveMapLayerNode(map, entry))
+      .filter(Boolean)
+      .map(node => positions[node.id])
+      .filter(Boolean);
     if (!ids.length) continue;
     const rowY = ids[0].y;
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -732,6 +743,7 @@ function renderMap(map, container, onNodeClick) {
     if (!from || !to) continue;
     const fromNode = map.nodes[edge.from];
     const toNode   = map.nodes[edge.to];
+    if (!fromNode || !toNode) continue;
     const travelled = fromNode.visited && toNode.visited;
     const onPath = (fromNode.visited || fromNode.accessible) && (toNode.visited || toNode.accessible);
 
