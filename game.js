@@ -45,7 +45,7 @@ function refreshTitleScreenPokedexButton() {
   titleDexBtn.classList.add('btn-pokedex-launch');
   titleDexBtn.innerHTML = `
     <img src="ui/pokedex.png" alt="Pokedex icon" class="btn-pokedex-launch-icon">
-    <span>PokÃƒÆ’Ã‚Â©dex</span>
+    <span>PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dex</span>
   `;
 }
 
@@ -84,7 +84,7 @@ function syncMobileMapPanel() {
   setMobileMapPanel(currentMobileMapPanel || 'team');
 }
 
-// Seeded PRNG (mulberry32) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â use rng() instead of Math.random() for all game logic
+// Seeded PRNG (mulberry32) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â use rng() instead of Math.random() for all game logic
 let _rngSeed = 0;
 function rng() {
   _rngSeed = (_rngSeed + 0x6D2B79F5) | 0;
@@ -569,7 +569,7 @@ async function showStarterSelect() {
         const speciesAttr = (trainer.speciesIds || []).join(',');
         return `<div class="${rowClass}" data-species="${speciesAttr}" style="cursor:default;">
           <span class="type-badge type-${typeClass}" style="font-size:6px;padding:1px 3px;">${type}</span>
-          <span class="region-stage-name">${isBigBoss ? 'ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ ' : ''}${name}</span>
+          <span class="region-stage-name">${isBigBoss ? 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ ' : ''}${name}</span>
           <span class="region-stage-level">Lv${trainer.level}</span>
         </div>`;
       }).join('');
@@ -616,7 +616,7 @@ async function showStarterSelect() {
     }
     container.appendChild(starterRow);
 
-    // --- Section 2: HoF PC (past run PokÃƒÆ’Ã‚Â©mon only) ---
+    // --- Section 2: HoF PC (past run PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©mon only) ---
     const seen = new Set();
     const hofIds = [];
     for (const entry of allHofEntries) {
@@ -636,14 +636,14 @@ async function showStarterSelect() {
     hofBox.className = 'pc-box';
     const hasEntries = hofSpecies.length > 0;
     const sortBtnsHtml = hasEntries
-      ? `<div class="hof-sort-btns"><button class="hof-sort-btn active" data-sort="stars">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ Stars</button><button class="hof-sort-btn" data-sort="type">Type</button><button class="hof-sort-btn" data-sort="id">#</button><span class="hof-sort-sep"></span><button class="hof-sort-btn hof-filter-shiny" data-filter="shiny">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ Shiny</button></div>`
+      ? `<div class="hof-sort-btns"><button class="hof-sort-btn active" data-sort="stars">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ Stars</button><button class="hof-sort-btn" data-sort="type">Type</button><button class="hof-sort-btn" data-sort="id">#</button><span class="hof-sort-sep"></span><button class="hof-sort-btn hof-filter-shiny" data-filter="shiny">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ Shiny</button></div>`
       : '';
     const hofTitle = hasEntries ? `HALL OF FAME PC (${hofX}/${hofY})` : 'HALL OF FAME PC';
     hofBox.innerHTML = `<div class="pc-box-titlebar${hasEntries ? ' with-sort' : ''}"><span>${hofTitle}</span>${sortBtnsHtml}</div><div class="pc-box-body"><div class="pc-box-grid" style="grid-template-columns:repeat(6,1fr);"></div></div>`;
     const grid = hofBox.querySelector('.pc-box-grid');
 
     if (!hasEntries) {
-      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;opacity:0.5;padding:12px;font-size:8px;">Complete a run to unlock PokÃƒÆ’Ã‚Â©mon here</div>`;
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;opacity:0.5;padding:12px;font-size:8px;">Complete a run to unlock PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©mon here</div>`;
     }
 
     const persistBuffs = loadPersistentBuffs();
@@ -687,7 +687,7 @@ async function showStarterSelect() {
         if (stars) slot.appendChild(stars);
         if (inst.isShiny) {
           const shinyStar = document.createElement('span');
-          shinyStar.textContent = 'ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦';
+          shinyStar.textContent = 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦';
           shinyStar.style.cssText = 'position:absolute;top:3px;left:3px;font-size:7px;color:#4af;line-height:1;';
           shinyStar.title = 'Shiny!';
           slot.appendChild(shinyStar);
@@ -810,14 +810,14 @@ function getAdjustedEnemyLevel(level, isBoss = false, encounterType = 'wild') {
 
   let delta;
   if (isBoss) {
-    delta = storyRegionId >= 2 ? -2 : -2;
+    delta = storyRegionId >= 2
+      ? (progressIndex >= 8 ? 0 : -1)
+      : -2;
   } else if (encounterType === 'trainer') {
     delta = storyRegionId >= 2 ? -2 : -1;
   } else {
     delta = storyRegionId >= 2 ? -3 : -1;
   }
-
-  let adjustedLevel = Math.max(2, safeLevel + delta);
 
   // Keep boss previews and actual boss fights deterministic so the
   // Easy Mode card / map tooltip always match the real battle levels.
@@ -1286,7 +1286,7 @@ function getEncounterMapIndex() {
 // Returns a level scaled to the node's layer.
 function getLevelForNode(node) {
   if (state.isEndlessMode) {
-    // Endless R1M1: level exactly equals layer number (1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“7), no spread
+    // Endless R1M1: level exactly equals layer number (1ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“7), no spread
     if (endlessState.regionNumber === 1 && endlessState.mapIndexInRegion === 0) return node.layer;
     const [minL, maxL] = state.endlessLevelRange;
     const t = Math.min(1, Math.max(0, (node.layer - 1) / 6)); // 0.0 at layer 1, 1.0 at layer 7
@@ -1758,7 +1758,7 @@ function showSwapScreen(newPoke, node) {
             : diff < 0
               ? `<span style="color:#f44;font-size:7px;">${diff}</span>`
               : '';
-          const tierDots = (t) => 'ÃƒÂ¢Ã¢â‚¬â€Ã‚Â'.repeat(t) + 'ÃƒÂ¢Ã¢â‚¬â€Ã¢â‚¬Â¹'.repeat(3 - t);
+          const tierDots = (t) => 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â'.repeat(t) + 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¹'.repeat(3 - t);
           return `<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">
             <span class="type-badge type-${type.toLowerCase()}" style="font-size:5px;padding:1px 3px;min-width:36px;text-align:center;">${type}</span>
             <span style="font-size:7px;color:var(--text-dim);">${tierDots(n.tier)}</span>
@@ -1893,7 +1893,7 @@ function openItemEquipModal(item, { fromBagIdx = -1, fromPokemonIdx = -1, onComp
         ${isSelf
           ? `<button class="equip-btn equip-btn-unequip" data-unequip="${i}">${getText('item_btn_unequip')}</button>`
           : `<button class="equip-btn${hasHeld ? ' equip-btn-swap' : ''}" data-idx="${i}">${btnLabel}</button>`}
-        ${hasHeld && !isSelf ? `<button class="equip-btn equip-btn-unequip" data-unequip="${i}" title="${getText('item_btn_unequip_title', { name: p.heldItem.name })}">ÃƒÆ’Ã¢â‚¬â€</button>` : ''}
+        ${hasHeld && !isSelf ? `<button class="equip-btn equip-btn-unequip" data-unequip="${i}" title="${getText('item_btn_unequip_title', { name: p.heldItem.name })}">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â</button>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -1916,7 +1916,7 @@ function openItemEquipModal(item, { fromBagIdx = -1, fromPokemonIdx = -1, onComp
 
   document.body.appendChild(modal);
 
-  // Unequip buttons ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â strip item off a Pokemon and bag it, without equipping current item
+  // Unequip buttons ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â strip item off a Pokemon and bag it, without equipping current item
   modal.querySelectorAll('[data-unequip]').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.dataset.unequip);
@@ -1944,7 +1944,7 @@ function openItemEquipModal(item, { fromBagIdx = -1, fromPokemonIdx = -1, onComp
         // True swap: give the displaced item back to the source Pokemon
         state.team[fromPokemonIdx].heldItem = displaced || null;
       } else {
-        // Brand new item from a node ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â displaced item goes to bag
+        // Brand new item from a node ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â displaced item goes to bag
         if (displaced) state.items.push(displaced);
       }
 
@@ -1959,10 +1959,10 @@ function openItemEquipModal(item, { fromBagIdx = -1, fromPokemonIdx = -1, onComp
       state.team[fromPokemonIdx].heldItem = null;
       state.items.push(item);
     } else if (fromBagIdx < 0) {
-      // Brand new item ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â put in bag
+      // Brand new item ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â put in bag
       state.items.push(item);
     }
-    // fromBagIdx >= 0 means it's already in bag ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â do nothing
+    // fromBagIdx >= 0 means it's already in bag ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â do nothing
     modal.remove();
     done();
   });
@@ -1997,7 +1997,7 @@ function openUsableItemModal(item, bagIdx) {
       <img src="${p.spriteUrl}" class="equip-poke-sprite" onerror="this.style.display='none'">
       <div class="equip-poke-info">
         <div class="equip-poke-name">${p.nickname || p.name}</div>
-        <div class="equip-poke-lv">Lv${p.level} ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${statusText}</div>
+        <div class="equip-poke-lv">Lv${p.level} ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ${statusText}</div>
       </div>
     </div>`;
   }).join('');
@@ -2186,15 +2186,15 @@ async function doTrainerNode(node) {
 
   if (!speciesList.length) { advanceFromNode(state.map, node.id); showMapScreen(); return; }
   const ENDLESS_ENEMY_ITEM_POOL = [
-    { id: 'choice_band',  name: 'Choice Band',  icon: 'ÃƒÂ°Ã…Â¸Ã…Â½Ã¢â€šÂ¬' },
-    { id: 'choice_specs', name: 'Choice Specs', icon: 'ÃƒÂ°Ã…Â¸Ã¢â‚¬ËœÃ¢â‚¬Å“' },
-    { id: 'choice_scarf', name: 'Choice Scarf', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â£' },
-    { id: 'life_orb',     name: 'Life Orb',     icon: 'ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â®' },
-    { id: 'rocky_helmet', name: 'Rocky Helmet', icon: 'ÃƒÂ¢Ã¢â‚¬ÂºÃ¢â‚¬ËœÃƒÂ¯Ã‚Â¸Ã‚Â' },
-    { id: 'leftovers',    name: 'Leftovers',    icon: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬â€œ' },
-    { id: 'shell_bell',   name: 'Shell Bell',   icon: 'ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Â' },
-    { id: 'assault_vest', name: 'Assault Vest', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â¦Ã‚Âº' },
-    { id: 'scope_lens',   name: 'Scope Lens',   icon: 'ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â­' },
+    { id: 'choice_band',  name: 'Choice Band',  icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â½ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬' },
+    { id: 'choice_specs', name: 'Choice Specs', icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¹Ã…â€œÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“' },
+    { id: 'choice_scarf', name: 'Choice Scarf', icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£' },
+    { id: 'life_orb',     name: 'Life Orb',     icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â®' },
+    { id: 'rocky_helmet', name: 'Rocky Helmet', icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂºÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¹Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â' },
+    { id: 'leftovers',    name: 'Leftovers',    icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ' },
+    { id: 'shell_bell',   name: 'Shell Bell',   icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â' },
+    { id: 'assault_vest', name: 'Assault Vest', icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âº' },
+    { id: 'scope_lens',   name: 'Scope Lens',   icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­' },
   ];
   const enemyTeam = speciesList.map(sp => {
     const inst = createInstance(sp, getAdjustedEnemyLevel(level, false, 'trainer'), false, moveTier);
@@ -2239,7 +2239,7 @@ async function doLegendaryNode(node) {
   if (subEl) subEl.textContent = getText('legendary_subtitle', { level: legendary.level });
 
   await runBattleScreen([legendary], false, async () => {
-    // Win ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â offer to add legendary to team
+    // Win ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â offer to add legendary to team
     const normalUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${legendary.speciesId}.png`;
     markPokedexCaught(legendary.speciesId, legendary.name, legendary.types, normalUrl);
     if (legendary.isShiny) markShinyDexCaught(legendary.speciesId, legendary.name, legendary.types, legendary.spriteUrl);
@@ -2273,8 +2273,8 @@ function doMoveTutorNode(node) {
       </div>
       <div class="equip-btn-group">
         ${maxed
-          ? `<span style="font-size:10px;color:#888;">${getText('move_tutor_mastered')}</span>`
-          : `<button class="equip-btn" data-tutor="${i}">ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ${nextMove.name}</button>`}
+          ? `<span style="font-size:10px;color:#888;">Mastered</span>`
+          : `<button class="equip-btn" data-tutor="${i}">Learn ${nextMove.name}</button>`}
       </div>
     </div>`;
   }).join('');
@@ -2282,10 +2282,10 @@ function doMoveTutorNode(node) {
   modal.innerHTML = `
     <div class="item-equip-box">
       <div class="equip-item-header">
-        <span class="equip-item-icon" style="font-size:28px;">ÃƒÂ¢Ã¢â€žÂ¢Ã‚Âª</span>
+        <span class="equip-item-icon" style="font-size:24px;letter-spacing:1px;">MT</span>
         <div>
-          <div class="equip-item-name">${getText('move_tutor_title')}</div>
-          <div class="equip-item-desc">${getText('move_tutor_desc')}</div>
+          <div class="equip-item-name">Move Tutor</div>
+          <div class="equip-item-desc">Teach one Pokemon a more powerful move.</div>
         </div>
       </div>
       <div class="equip-pokemon-list">${rows}</div>
@@ -2320,7 +2320,7 @@ function doMoveTutorNode(node) {
 
 async function doTradeNode(node) {
   showScreen('trade-screen');
-  document.getElementById('trade-desc').textContent = "Trade one of your PokÃƒÆ’Ã‚Â©mon for a random PokÃƒÆ’Ã‚Â©mon 3 levels higher.";
+  document.getElementById('trade-desc').textContent = "Trade one of your PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©mon for a random PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©mon 3 levels higher.";
 
   const listEl = document.getElementById('trade-team-list');
   listEl.innerHTML = '';
@@ -2340,7 +2340,7 @@ async function doTradeNode(node) {
         <div class="trade-member-level">Lv ${mine.level}</div>
         <div class="trade-member-types">${typeBadges}</div>
       </div>
-      <div class="trade-member-arrow">ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢</div>
+      <div class="trade-member-arrow">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢</div>
     `;
 
     const idx = i;
@@ -2436,7 +2436,7 @@ async function doShinyNode(node) {
 // ---- Battle Screen ----
 
 function runBattleScreen(enemyTeam, isBoss, onWin, onLose, enemyName = null, enemyItems = [], baseGainOverride = null, showPlayerPortrait = null, traitsConfig = null) {
-  // In endless mode, always apply traits ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â compute them if not pre-computed by the caller
+  // In endless mode, always apply traits ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â compute them if not pre-computed by the caller
   if (state.isEndlessMode && traitsConfig === null) {
     const tiers = computeTraitTiers(state.team);
     traitsConfig = buildTraitsConfig(tiers, {});
@@ -2681,7 +2681,7 @@ function showWinScreen() {
     if (ach) setTimeout(() => showAchievementToast(ach), 800);
   }
 
-  // No PokÃƒÆ’Ã‚Â©mon Center used
+  // No PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©mon Center used
   if (!state.usedPokecenter) {
     const ach = unlockAchievement('no_pokecenter');
     if (ach) setTimeout(() => showAchievementToast(ach), 1000);
@@ -2693,7 +2693,7 @@ function showWinScreen() {
     if (ach) setTimeout(() => showAchievementToast(ach), 1200);
   }
 
-  // 4 of 6 PokÃƒÆ’Ã‚Â©mon share a type
+  // 4 of 6 PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©mon share a type
   if (state.team.length === 6) {
     const typeCounts = {};
     for (const p of state.team) {
@@ -2732,10 +2732,10 @@ function showWinScreen() {
 function shareEndlessRun(stageNum, team) {
   const stageName = typeof getStageName === 'function' ? getStageName(stageNum) : `Stage ${stageNum}`;
   const teamLines = team.map(p => {
-    const shiny = p.isShiny ? ' ÃƒÂ¢Ã…â€œÃ‚Â¨' : '';
+    const shiny = p.isShiny ? ' ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨' : '';
     return `${p.nickname || p.name} Lv.${p.level}${shiny}`;
   }).join('\n');
-  const text = `ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬Â  Cleared ${stageName} in RogueMon Battle Tower!\n\nMy team:\n${teamLines}\n\n${window.location.href}`;
+  const text = `ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â  Cleared ${stageName} in RogueMon Battle Tower!\n\nMy team:\n${teamLines}\n\n${window.location.href}`;
 
   if (navigator.share) {
     navigator.share({ title: 'RogueMon', text }).catch(() => {});
@@ -2747,11 +2747,11 @@ function shareEndlessRun(stageNum, team) {
 function shareRun() {
   const wins = getEliteWins();
   const teamLines = state.team.map(p => {
-    const shiny = p.isShiny ? ' ÃƒÂ¢Ã…â€œÃ‚Â¨' : '';
+    const shiny = p.isShiny ? ' ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨' : '';
     return `${p.nickname || p.name} Lv.${p.level}${shiny}`;
   }).join('\n');
   const modeTag = state.nuzlockeMode ? ' (Nuzlocke)' : '';
-  const text = `ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬Â  Championship #${wins}${modeTag} on RogueMon!\n\nMy team:\n${teamLines}\n\n${window.location.href}`;
+  const text = `ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â  Championship #${wins}${modeTag} on RogueMon!\n\nMy team:\n${teamLines}\n\n${window.location.href}`;
 
   if (navigator.share) {
     navigator.share({ title: 'RogueMon', text }).catch(() => {});
@@ -2760,7 +2760,7 @@ function shareRun() {
   }
 }
 
-// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Endless Mode ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
+// ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ Endless Mode ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬
 
 function getUnlockedStageCount() {
   const hof = getHallOfFame();
@@ -2774,7 +2774,7 @@ function getUnlockedStageCount() {
 }
 
 function unlockNextStage(_completedStage) {
-  // Unlock is now derived from Hall of Fame entries ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no localStorage needed.
+  // Unlock is now derived from Hall of Fame entries ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â no localStorage needed.
 }
 
 const MAX_ACCESSIBLE_STAGE = 5;
@@ -2799,7 +2799,7 @@ const STAGE_REGION_BG = [
 
 function getStageName(n) { return STAGE_META[n]?.label || `Stage ${n}`; }
 
-// Starter PokÃƒÆ’Ã‚Â©mon for each endless stage (base forms)
+// Starter PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©mon for each endless stage (base forms)
 const REGION_STARTERS = [
   null,
   [1,   4,   7],   // Kanto
@@ -2857,19 +2857,19 @@ async function showEndlessBoonScreen() {
 
     const boons = [
       {
-        icon: 'ÃƒÂ°Ã…Â¸Ã‚Â©Ã‚Â¹',
+        icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¹',
         name: getText('endless_boon_recovery'),
         desc: getText('endless_boon_recovery_desc'),
         apply: async () => {
           fullyRestoreEndlessTeam();
-          state.items.push({ id: 'berry_juice', name: 'Berry Juice', desc: 'Heals 20 HP of one PokÃƒÆ’Ã‚Â©mon', icon: 'ÃƒÂ°Ã…Â¸Ã‚Â§Ã†â€™', usable: true, minRegion: 2 });
+          state.items.push({ id: 'berry_juice', name: 'Berry Juice', desc: 'Heals 20 HP of one PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©mon', icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢', usable: true, minRegion: 2 });
           renderTeamBar(state.team);
           renderItemBadges(state.items);
           resolve();
         },
       },
       {
-        icon: 'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¦',
+        icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦',
         name: getText('endless_boon_armory'),
         desc: getText('endless_boon_armory_desc'),
         apply: async () => {
@@ -2909,7 +2909,7 @@ async function showEndlessBoonScreen() {
         },
       },
       {
-        icon: 'ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‹â€ ',
+        icon: 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ',
         name: getText('endless_boon_training'),
         desc: getText('endless_boon_training_desc'),
         apply: async () => {
@@ -2954,11 +2954,11 @@ function showEndlessStageSelect() {
       : `background:linear-gradient(135deg,#1a0a3e,#3a0a6e);`;
     btn.style.cssText = `width:200px;${isLocked ? `opacity:0.45;cursor:not-allowed;${bgStyle}` : `${bgStyle}${borderColor ? `border-color:${borderColor};box-shadow:0 0 6px ${borderColor}55;` : ''}`}`;
     if (isLocked) {
-      btn.innerHTML = `<div style="background:rgba(0,0,0,0.55);padding:4px 8px;border-radius:4px;color:#fff;">ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬â„¢ ${getStageName(s)}</div>`;
+      btn.innerHTML = `<div style="background:rgba(0,0,0,0.55);padding:4px 8px;border-radius:4px;color:#fff;">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ ${getStageName(s)}</div>`;
     } else if (meta) {
-      btn.innerHTML = `<div style="background:rgba(0,0,0,0.5);padding:4px 8px;border-radius:4px;color:#fff;"><div>ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¶ ${meta.label}</div><div style="font-size:5px;opacity:0.85;margin-top:2px;">${meta.gens}</div></div>`;
+      btn.innerHTML = `<div style="background:rgba(0,0,0,0.5);padding:4px 8px;border-radius:4px;color:#fff;"><div>ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¶ ${meta.label}</div><div style="font-size:5px;opacity:0.85;margin-top:2px;">${meta.gens}</div></div>`;
     } else {
-      btn.innerHTML = `<div style="background:rgba(0,0,0,0.5);padding:4px 8px;border-radius:4px;color:#fff;"><div>ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¶ ${getStageName(s)}</div><div style="font-size:5px;opacity:0.85;margin-top:2px;">All Gens</div></div>`;
+      btn.innerHTML = `<div style="background:rgba(0,0,0,0.5);padding:4px 8px;border-radius:4px;color:#fff;"><div>ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¶ ${getStageName(s)}</div><div style="font-size:5px;opacity:0.85;margin-top:2px;">All Gens</div></div>`;
     }
     if (!isLocked) btn.addEventListener('click', () => startEndlessRun(s));
     list.appendChild(btn);
@@ -3127,7 +3127,7 @@ async function doEndlessBossNode() {
   const trainerData = region.trainers[endlessState.mapIndexInRegion];
   const isBigBoss = endlessState.mapIndexInRegion === 2;
 
-  // Fetch all species ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â use fetchIds when available (supports form slugs like 'deoxys-attack')
+  // Fetch all species ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â use fetchIds when available (supports form slugs like 'deoxys-attack')
   const fetchIds = trainerData.fetchIds || trainerData.speciesIds;
   const speciesArr = await Promise.all(fetchIds.map(id => fetchPokemonById(id)));
   const enemyTeam = speciesArr
@@ -3172,7 +3172,7 @@ async function doEndlessBossNode() {
     enemyTeam, true, null, null,
     trainerData.archetype.sprite,
     [],
-    null, // baseGainOverride ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â use default level gain
+    null, // baseGainOverride ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â use default level gain
     true, // showPlayerPortrait
     traitsConfig
   );
@@ -3224,7 +3224,7 @@ async function showStatBuffScreen() {
         wrap.innerHTML = renderPokemonCard(p, false, false);
         const label = document.createElement('div');
         label.style.cssText = 'font-size:8px;text-align:center;margin-top:2px;color:' + (capped ? '#888' : '#c8a0ff') + ';';
-        label.textContent = maxPts > 0 ? `${totalPts}/${maxPts} pts` : 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â';
+        label.textContent = maxPts > 0 ? `${totalPts}/${maxPts} pts` : 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â';
         wrap.appendChild(label);
         const card = wrap.querySelector('.poke-card');
         if (capped || maxPts === 0) {
@@ -3252,7 +3252,7 @@ async function showStatBuffScreen() {
       const atCap = totalPts >= maxPts;
       subEl.textContent = atCap
         ? `Fully buffed (${totalPts}/${maxPts} pts)`
-        : `Choose a stat to boost (+10%) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${totalPts}/${maxPts} pts used`;
+        : `Choose a stat to boost (+10%) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ${totalPts}/${maxPts} pts used`;
       choicesEl.innerHTML = '';
 
       const isSpecialAttacker = (pokemon.baseStats?.special ?? 0) >= (pokemon.baseStats?.atk ?? 0);
@@ -3294,7 +3294,7 @@ async function showStatBuffScreen() {
       const back = document.createElement('button');
       back.className = 'btn-secondary';
       back.style.cssText = 'margin-top:12px;width:100%;';
-      back.textContent = 'ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Back';
+      back.textContent = 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Back';
       back.addEventListener('click', showPhase1);
       choicesEl.appendChild(back);
     }
@@ -3308,11 +3308,11 @@ function loadPersistentBuffs() {
     const store = JSON.parse(localStorage.getItem('poke_stat_buffs') || '{}');
     // Migrate old evo-line root IDs whenever a baby-form pre-evolution is added
     const migrations = [
-      [143, 446],  // Snorlax  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Munchlax
-      [122, 439],  // Mr. Mime ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Mime Jr.
-      [113, 440],  // Chansey  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Happiny
-      [185, 438],  // Sudowoodo ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Bonsly
-      [226, 458],  // Mantine  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Mantyke
+      [143, 446],  // Snorlax  ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Munchlax
+      [122, 439],  // Mr. Mime ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Mime Jr.
+      [113, 440],  // Chansey  ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Happiny
+      [185, 438],  // Sudowoodo ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Bonsly
+      [226, 458],  // Mantine  ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Mantyke
     ];
     let dirty = false;
     for (const [oldKey, newKey] of migrations) {
@@ -3411,7 +3411,7 @@ function advanceEndless() {
   if (endlessState.mapIndexInRegion >= 3) {
     endlessState.regionNumber++;
     if (endlessState.regionNumber > 3) {
-      // All 3 regions cleared ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the stage final boss was the last big boss, so go to next stage
+      // All 3 regions cleared ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â the stage final boss was the last big boss, so go to next stage
       const completedStage = endlessState.stageNumber;
       saveHallOfFameEntry(state.team, completedStage, false, true, completedStage, state.starterSpeciesId);
       unlockNextStage(completedStage);
