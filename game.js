@@ -45,7 +45,7 @@ function refreshTitleScreenPokedexButton() {
   titleDexBtn.classList.add('btn-pokedex-launch');
   titleDexBtn.innerHTML = `
     <img src="ui/pokedex.png" alt="Pokedex icon" class="btn-pokedex-launch-icon">
-    <span>PokÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dex</span>
+    <span>Pokedex</span>
   `;
 }
 
@@ -315,11 +315,11 @@ function loadRun() {
     }
     runPersistenceDisabled = false;
     if (saved.rngSeed) seedRng(saved.rngSeed);
-    if (!saved.isEndlessMode && (!saved.map?.nodes || !saved.map?.edges || !saved.map?.layers)) {
+    if (!saved.isEndlessMode && (!saved.map?.nodes || !saved.map?.edges || !saved.map?.layers || !Object.keys(saved.map?.nodes || {}).length || !(saved.map?.edges || []).length || !(saved.map?.layers || []).length)) {
       saved.map = generateMap(saved.currentMap || 0, !!saved.nuzlockeMode);
     }
     state = saved;
-    if (!state.isEndlessMode && (!state.map?.nodes || !state.map?.edges || !state.map?.layers)) {
+    if (!state.isEndlessMode && (!state.map?.nodes || !state.map?.edges || !state.map?.layers || !Object.keys(state.map?.nodes || {}).length || !(state.map?.edges || []).length || !(state.map?.layers || []).length)) {
       state.map = generateMap(state.currentMap || 0, !!state.nuzlockeMode);
     }
     state.currentNode = saved.currentNodeId ? (state.map?.nodes?.[saved.currentNodeId] || null) : null;
@@ -1030,7 +1030,7 @@ function showMapScreen() {
 
   const mapContainer = document.getElementById('map-container');
   if (mapContainer) {
-    if (!state.map?.nodes || !state.map?.edges || !state.map?.layers) {
+    if (!state.map?.nodes || !state.map?.edges || !state.map?.layers || !Object.keys(state.map.nodes || {}).length || !(state.map.edges || []).length || !(state.map.layers || []).length) {
       state.map = generateMap(state.currentMap || 0, !!state.nuzlockeMode);
       if (!state.currentNode) {
         state.currentNode = Object.values(state.map.nodes || {}).find(node => node.accessible && !node.visited) || state.map.nodes?.['n0_0'] || null;

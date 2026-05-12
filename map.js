@@ -754,7 +754,7 @@ function renderMap(map, container, onNodeClick) {
         check.setAttribute('dominant-baseline', 'central');
         check.setAttribute('font-size', '16');
         check.setAttribute('fill', '#fff');
-        check.textContent = 'Ã¢Å“â€œ';
+        check.textContent = '\u2713';
         g.appendChild(check);
       }
 
@@ -782,7 +782,7 @@ function renderMap(map, container, onNodeClick) {
       text.setAttribute('dominant-baseline', 'central');
       text.setAttribute('font-size', '14');
       text.setAttribute('fill', isInaccessible ? storyTheme.dimText : storyTheme.text);
-      text.textContent = isCurrent ? 'Ã¢Å“â€œ' : getNodeIcon(node);
+      text.textContent = isCurrent ? '\u2713' : getNodeIcon(node);
       g.appendChild(text);
     }
 
@@ -861,23 +861,26 @@ function getNodeColor(node, storyTheme = null) {
   return colors[node.type] || '#444';
 }
 
+
 function getNodeIcon(node) {
-  if (node.visited) return 'Ã¢Å“â€œ';
+  if (node.visited) return '\u2713';
   const icons = {
-    [NODE_TYPES.START]:      'Ã¢Ëœâ€¦',
-    [NODE_TYPES.BATTLE]:     'Ã¢Å¡â€',
-    [NODE_TYPES.CATCH]:      'Ã¢Â¬Å¸',
-    [NODE_TYPES.ITEM]:       'Ã¢Å“Â¦',
-    [NODE_TYPES.QUESTION]:   '?',
-    [NODE_TYPES.BOSS]:       'Ã¢â„¢â€º',
+    [NODE_TYPES.START]: '\u2605',
+    [NODE_TYPES.BATTLE]: '\u2694',
+    [NODE_TYPES.CATCH]: '\u25CE',
+    [NODE_TYPES.ITEM]: '\u25A0',
+    [NODE_TYPES.QUESTION]: '?',
+    [NODE_TYPES.BOSS]: '\u265B',
     [NODE_TYPES.POKECENTER]: '+',
-    [NODE_TYPES.TRAINER]:    'Ã¢Å¡â€˜',
-    [NODE_TYPES.LEGENDARY]:  'Ã¢Å¡Â',
-    [NODE_TYPES.MOVE_TUTOR]: 'Ã¢â„¢Âª',
-    [NODE_TYPES.TRADE]:      'Ã¢â€¡â€ž',
+    [NODE_TYPES.TRAINER]: '\u26B2',
+    [NODE_TYPES.LEGENDARY]: '\u2726',
+    [NODE_TYPES.MOVE_TUTOR]: 'MT',
+    [NODE_TYPES.TRADE]: '\u21C4',
   };
-  return icons[node.type] || 'Ã¢â€”Â';
+  return icons[node.type] || '\u2022';
 }
+
+
 
 function getNodeLabel(node) {
   if (node.visited) return 'Visited';
@@ -897,17 +900,18 @@ function getNodeLabel(node) {
     return 'Gym Leader';
   }
   const labels = {
-    [NODE_TYPES.START]:      'Start',
-    [NODE_TYPES.BATTLE]:     'Wild Battle Ã¢â‚¬â€ +1 level',
-    [NODE_TYPES.CATCH]:      'Catch Pokemon',
-    [NODE_TYPES.ITEM]:       'Item',
-    [NODE_TYPES.QUESTION]:   'Random Event',
+    [NODE_TYPES.START]: 'Start',
+    [NODE_TYPES.BATTLE]: 'Wild Battle - +1 level',
+    [NODE_TYPES.CATCH]: 'Catch Pokemon',
+    [NODE_TYPES.ITEM]: 'Item',
+    [NODE_TYPES.QUESTION]: 'Random Event',
     [NODE_TYPES.POKECENTER]: 'Pokemon Center',
-    [NODE_TYPES.TRAINER]:    `Trainer Battle Ã¢â‚¬â€ +2 levels${node.trainerSprite && TRAINER_SPRITE_NAMES[node.trainerSprite] ? ' Ã¢â‚¬â€ ' + TRAINER_SPRITE_NAMES[node.trainerSprite] : ''}`,
-    [NODE_TYPES.LEGENDARY]:  'Legendary Pokemon',
+    [NODE_TYPES.TRAINER]: `Trainer Battle - +2 levels${node.trainerSprite && TRAINER_SPRITE_NAMES[node.trainerSprite] ? ' - ' + TRAINER_SPRITE_NAMES[node.trainerSprite] : ''}`,
+    [NODE_TYPES.LEGENDARY]: 'Legendary Pokemon',
     [NODE_TYPES.MOVE_TUTOR]: 'Move Tutor',
-    [NODE_TYPES.TRADE]:      'Trade Ã¢â‚¬â€ swap a PokÃƒÂ©mon for one 3 levels higher',
+    [NODE_TYPES.TRADE]: 'Trade - swap a Pokemon for one 3 levels higher',
   };
   return labels[node.type] || node.type;
 }
+
 

@@ -8,7 +8,7 @@ const i18n = {
   de: {
     // Title Screen
     game_title: 'RogueMon',
-    game_subtitle: 'Roguelike PokÃƒÆ’Ã‚Â©mon Adventure',
+    game_subtitle: 'Roguelike Pokemon Adventure',
     game_tagline: 'Sammle, kÃƒÆ’Ã‚Â¤mpfe und werde der Champion!',
     btn_new_run: 'Neues Spiel',
     btn_hard_run: 'Nuzlocke Mode',
@@ -90,7 +90,7 @@ const i18n = {
     gen_8: 'Generation VIII',
     gen_9: 'Generation IX',
     all_gens_label: 'Alle Gens',
-    gen_1_progress: 'Gen 1 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â {pct}%',
+    gen_1_progress: 'Gen 1 - {pct}%',
     all_gens_progress: 'Alle Gens ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â {pct}%',
     pokedex_count: '{count} / {total}',
     team_label: 'TEAM',
@@ -103,7 +103,7 @@ const i18n = {
     btn_retry: 'Nochmal versuchen',
     win_caption: 'GlÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼ckwunsch! Du hast die Top Vier besiegt!',
     btn_play_again: 'Nochmal spielen',
-    battle_tower_title: 'ÃƒÂ¢Ã‹â€ Ã…Â¾ Endless Mode',
+    battle_tower_title: 'Endless Mode',
     battle_tower_subtitle: 'Waehle eine Stufe fuer deinen Gauntlet-Run',
     endless_boon_title: 'Endless Segen',
     endless_boon_subtitle: 'Waehle eine Belohnung fuer den naechsten Kampf',
@@ -206,12 +206,12 @@ const i18n = {
   en: {
     // Title Screen
     game_title: 'RogueMon',
-    game_subtitle: 'Roguelike PokÃƒÆ’Ã‚Â©mon Adventure',
+    game_subtitle: 'Roguelike Pokemon Adventure',
     game_tagline: 'Catch, battle and become the Champion!',
     btn_new_run: 'New Game',
     btn_hard_run: 'Nuzlocke Mode',
     btn_endless_run: 'Endless Mode',
-    btn_continue_run: 'Continue Game',
+    btn_continue_run: 'Continue Run',
     btn_continue_endless: 'Continue Endless',
     btn_back_title: 'Back',
 
@@ -245,23 +245,23 @@ const i18n = {
     
     // Starter Select
     choose_starter: 'Choose your Starter',
-    starter_intro: 'Begin your adventure with one of these PokÃƒÆ’Ã‚Â©mon!',
-    starter_description: 'Pick your partner for this run. Each champion has a different element and battle feel ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â choose the one that fits your strategy.',
-    starter_bulbasaur: 'Bulbasaur ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Grass/Poison ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ The mysterious bulb on its back stores energy, making it a perfect ally for growth and balance.',
-    starter_charmander: 'Charmander ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Fire ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ A loyal fire-type with a burning passion. It ignites with determination and evolves into a mighty dragon.',
-    starter_squirtle: 'Squirtle ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Water ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Protected by its tough shell, this water-type is reliable and adaptable, forming a bond that withstands any challenge.',
-    starter_chikorita: 'Chikorita ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Grass ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Calm, steady and resilient. A strong start for trainers who like control and staying power.',
-    starter_cyndaquil: 'Cyndaquil ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Fire ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Small, fast and explosive. Great for aggressive runs built on speed and pressure.',
-    starter_totodile: 'Totodile ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Water ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Wild, tough and offense-first. It bites through hard fights and stays dangerous deep into the run.',
+    starter_intro: 'Begin your adventure with one of these Pokemon!',
+    starter_description: 'Pick your partner for this run. Each champion has a different element and battle style - choose the one that fits your strategy.',
+    starter_bulbasaur: 'Bulbasaur - Grass/Poison - The mysterious bulb on its back stores energy, making it a perfect ally for growth and balance.',
+    starter_charmander: 'Charmander - Fire - A loyal fire-type with a burning passion. It fights with determination and grows into a mighty dragon.',
+    starter_squirtle: 'Squirtle - Water - Protected by its tough shell, this water-type is reliable and adaptable in any challenge.',
+    starter_chikorita: 'Chikorita - Grass - Calm, steady and resilient. A strong start for trainers who like control and staying power.',
+    starter_cyndaquil: 'Cyndaquil - Fire - Small, fast and explosive. Great for aggressive runs built on speed and pressure.',
+    starter_totodile: 'Totodile - Water - Wild, tough and offense-first. It bites through hard fights and stays dangerous deep into the run.',
     
     // Battle
-    starter_treecko: 'Treecko ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Grass ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Fast, precise and graceful. Great for sharp runs built on speed and clean pressure.',
-    starter_torchic: 'Torchic ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Fire ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Small at first, but it scales hard. Perfect for offensive runs that snowball quickly.',
-    starter_mudkip: 'Mudkip ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Water ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Tough, flexible and extremely reliable. A starter that can carry almost any matchup cleanly.',
+    starter_treecko: 'Treecko - Grass - Fast, precise and graceful. Great for sharp runs built on speed and clean pressure.',
+    starter_torchic: 'Torchic - Fire - Small at first, but it scales hard. Perfect for offensive runs that snowball quickly.',
+    starter_mudkip: 'Mudkip - Water - Tough, flexible and extremely reliable. A starter that can carry almost any matchup cleanly.',
     
-    starter_turtwig: 'Turtwig ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Grass ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Sturdy and patient. A strong defensive starter that scales nicely through a long run.',
-    starter_chimchar: 'Chimchar ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Fire ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Fast, cheeky and aggressive. Great if you want to pressure fights from the opening turns.',
-    starter_piplup: 'Piplup ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Water ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Elegant, safe and reliable. A balanced starter with a very smooth progression curve.',
+    starter_turtwig: 'Turtwig - Grass - Sturdy and patient. A strong defensive starter that scales nicely through a long run.',
+    starter_chimchar: 'Chimchar - Fire - Fast, cheeky and aggressive. Great if you want to pressure fights from the opening turns.',
+    starter_piplup: 'Piplup - Water - Elegant, safe and reliable. A balanced starter with a very smooth progression curve.',
     starter_snivy: 'Snivy - Grass. Elegant, quick and technical. Great for precise runs built on speed and control.',
     starter_tepig: 'Tepig - Fire. Strong, direct and sturdy. Great for offensive runs with steady pressure.',
     starter_oshawott: 'Oshawott - Water. Flexible, clean and reliable. A balanced starter for almost any matchup.',
@@ -275,10 +275,10 @@ const i18n = {
     defeated_msg: '{name} defeated!',
     next_elite: 'Next: {name}...',
     champion_awaits: 'The Champion awaits!',
-    new_pokemon: 'New PokÃƒÆ’Ã‚Â©mon!',
+    new_pokemon: 'New Pokemon!',
     team_full: 'Team Full!',
     add_to_team: 'Add to team or keep team as-is:',
-    choose_release: 'Choose a PokÃƒÆ’Ã‚Â©mon to release:',
+    choose_release: 'Choose a Pokemon to release:',
     continue: 'Continue',
     skip: 'Skip',
     
@@ -295,20 +295,20 @@ const i18n = {
     gen_8: 'Generation VIII',
     gen_9: 'Generation IX',
     all_gens_label: 'All Gens',
-    gen_1_progress: 'Gen 1 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â {pct}%',
-    all_gens_progress: 'All Gens ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â {pct}%',
+    gen_1_progress: 'Gen 1 - {pct}%',
+    all_gens_progress: 'All Gens - {pct}%',
     pokedex_count: '{count} / {total}',
     team_label: 'TEAM',
     items_label: 'ITEMS',
     badges_label: 'BADGES',
-    catch_title: 'ÃƒÂ¢Ã‚Â¬Ã…Â¸ Wild Pokemon Appeared!',
+    catch_title: 'Wild Pokemon Appeared!',
     catch_subtitle: 'Choose one Pokemon to add to your team',
-    item_title: 'ÃƒÂ¢Ã…â€œÃ‚Â¦ Item Found!',
+    item_title: 'Item Found!',
     item_subtitle: 'Choose one item to keep',
     btn_retry: 'Try Again',
     win_caption: 'Congratulations! You defeated the Elite Four!',
     btn_play_again: 'Play Again',
-    battle_tower_title: 'ÃƒÂ¢Ã‹â€ Ã…Â¾ Endless Mode',
+    battle_tower_title: 'Endless Mode',
     battle_tower_subtitle: 'Choose a stage for your gauntlet run',
     endless_boon_title: 'Endless Boon',
     endless_boon_subtitle: 'Choose a reward for the next fight',
@@ -318,12 +318,12 @@ const i18n = {
     endless_boon_training_desc: 'Your whole team gains +1 level and is fully healed.',
     endless_boon_armory: 'Armory Drop',
     endless_boon_armory_desc: 'Choose 1 of 3 real Pokemon items for this run.',
-    btn_back_arrow: 'ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Back',
+    btn_back_arrow: 'Back',
     enemy_label: 'Enemy',
     evo_what: 'What? {name} is evolving!',
     evo_into: '{name} evolved into {into}!',
     evo_choose: '{name} is evolving!<br>Choose its evolution:',
-    bug_trait_level_up: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬Âº Bug Trait ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Level Up!',
+    bug_trait_level_up: 'Bug Trait - Level Up!',
     achievement_unlocked: 'Achievement Unlocked!',
     item_found_toast: 'Item Found!',
     popup_dodge: 'Dodge!',
@@ -341,7 +341,7 @@ const i18n = {
     healed_notification: '{name} was healed!',
     restored_notification: '{name} was fully restored!',
     level_grew_notification: '{name} grew to Lv {level}!',
-    pokecenter_heal: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â¥ Your team was fully healed!',
+    pokecenter_heal: 'Your team was fully healed!',
     learned_move_notification: '{name} learned {move}!',
     continue_ellipsis: 'Continue...',
     region_cleared: 'Region Cleared!',
@@ -350,7 +350,7 @@ const i18n = {
     dex_not_found_battle_tower: 'Not found in Battle Tower',
     dex_battle_tower_label: 'Battle Tower:',
     shiny_charm_locked: 'Shiny Charm - complete the Gen 1 Pokedex to unlock. Doubles all shiny rates.',
-    shiny_charm_active: 'Shiny Charm ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â active! Doubles all shiny rates.',
+    shiny_charm_active: 'Shiny Charm active! Doubles all shiny rates.',
     hof_battle_tower: 'Endless Mode: {stage}',
     hof_championship: 'Championship #{num}',
     win_run_count: '{region} Championship #{num}',
@@ -544,11 +544,11 @@ function renderPokemonCard(pokemon, onClick, selected, dexCaught = false, hofSta
     <div class="poke-sprite-wrap">
       <img src="${pokemon.spriteUrl || ''}" alt="${displayName}" class="poke-sprite${pokemon.isShiny?' shiny':''}"
            onerror="this.src='';this.style.display='none'">
-      ${pokemon.isShiny ? '<span class="shiny-badge">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ Shiny</span>' : ''}
+      ${pokemon.isShiny ? '<span class="shiny-badge">Shiny</span>' : ''}
       ${hofStarterBadge
         ? '<img class="dex-caught-badge" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png" alt="HoF Starter" title="Already in your Hall of Fame PC">'
         : dexCaught
-          ? '<img class="dex-caught-badge" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="Caught" title="Already in PokÃƒÆ’Ã‚Â©dex">'
+          ? '<img class="dex-caught-badge" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="Caught" title="Already in Pokedex">'
           : ''}
     </div>
     <div class="poke-name">${displayName}</div>
@@ -4269,7 +4269,7 @@ function openDexDetailModal(speciesId, name, spriteUrl, shinySpriteUrl, types) {
   // Async: flavor text
   fetchPokemonSpecies(speciesId).then(data => {
     const el = document.getElementById('dex-detail-flavor');
-    if (el) el.textContent = data.flavorText || 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â';
+    if (el) el.textContent = data.flavorText || '-';
   });
 
   // Async: evolution chain
