@@ -869,6 +869,8 @@ function getAdjustedEnemyLevel(level, isBoss = false, encounterType = 'wild') {
     delta = storyRegionId >= 2 ? -3 : -1;
   }
 
+  let adjustedLevel = Math.max(2, safeLevel + delta);
+
   // Keep boss previews and actual boss fights deterministic so the
   // Easy Mode card / map tooltip always match the real battle levels.
   if (isBoss) {

@@ -709,33 +709,6 @@ function renderMap(map, container, onNodeClick) {
     }
   }
 
-  const bgGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  bgGroup.setAttribute('opacity', '0.12');
-  for (let l = 0; l < map.layers.length; l++) {
-    const ids = map.layers[l]
-      .map(entry => resolveMapLayerNode(map, entry))
-      .filter(Boolean)
-      .map(node => positions[node.id])
-      .filter(Boolean);
-    if (!ids.length) continue;
-    const rowY = ids[0].y;
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', W / 2);
-    circle.setAttribute('cy', rowY);
-    circle.setAttribute('r', Math.max(28, Math.min(70, H / (map.layers.length * 1.5))));
-    circle.setAttribute('fill', storyTheme.aura || theme.accent);
-    circle.setAttribute('filter', 'url(#mapGlow)');
-    bgGroup.appendChild(circle);
-  }
-  svg.appendChild(bgGroup);
-
-  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-  const glowFilter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
-  glowFilter.setAttribute('id', 'mapGlow');
-  glowFilter.innerHTML = '<feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>';
-  defs.appendChild(glowFilter);
-  svg.appendChild(defs);
-
   // Draw ALL edges
   for (const edge of map.edges) {
     const from = positions[edge.from];
@@ -779,10 +752,7 @@ function renderMap(map, container, onNodeClick) {
 
     g.style.cursor = isClickable ? 'pointer' : 'default';
     if (isInaccessible) { g.style.opacity = '0.75'; }
-    if (node.visited) g.style.filter = 'grayscale(0.5) brightness(0.62)';
-    if (isClickable) {
-      g.style.filter = `drop-shadow(0 0 6px ${storyTheme.clickableGlowOuter}) drop-shadow(0 0 3px ${storyTheme.clickableGlowInner})`;
-    }
+    if (node.visited) g.style.opacity = '0.58';
 
     const isBossNode = node.type === NODE_TYPES.BOSS;
     const sprite = getNodeSprite(node);
@@ -794,7 +764,6 @@ function renderMap(map, container, onNodeClick) {
       bossHalo.setAttribute('stroke', storyTheme.bossRing);
       bossHalo.setAttribute('stroke-width', isClickable ? '3' : '2');
       bossHalo.setAttribute('opacity', isClickable ? '0.95' : '0.72');
-      bossHalo.setAttribute('filter', 'url(#mapGlow)');
       g.appendChild(bossHalo);
     }
 
@@ -808,7 +777,9 @@ function renderMap(map, container, onNodeClick) {
       const ih = isHumanFigure ? (isBossNode ? 52 : 52) : (isBossNode ? 52 : 40);
 
       const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-      img.setAttribute('href', sprite.replace(/ /g, '%20'));
+      const encodedSprite = encodeURI(sprite);
+      img.setAttribute('href', encodedSprite);
+      img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', encodedSprite);
       img.setAttribute('x', -(iw / 2));
       img.setAttribute('y', -(ih / 2));
       img.setAttribute('width', iw);
@@ -943,6 +914,8 @@ function renderMap(map, container, onNodeClick) {
 
   container.appendChild(svg);
   } catch (error) {
+    container.dataset.mapRenderError = error?.message || String(error);
+    if (typeof window !== 'undefined') window.__lastMapRenderError = error;
     console.error('renderMap failed, using fallback map renderer:', error);
     renderMapFallback(map, container, onNodeClick);
   }
