@@ -2833,6 +2833,7 @@ h1, h2, .pixel-font {
   }
 
   #map-container {
+    position: relative;
     min-height: 0;
     width: 100%;
     height: min(680px, calc(100vh - 32px));
@@ -2854,6 +2855,18 @@ h1, h2, .pixel-font {
     inset: 0;
     background: transparent;
     pointer-events: none;
+    z-index: 0;
+  }
+
+  #map-container > svg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  #map-container[data-story-region="johto"]::before {
+    inset: 0;
+    z-index: 0;
   }
 
   #map-container[data-story-region="johto"]::before {
@@ -6156,6 +6169,7 @@ h1, h2, .pixel-font {
     gap: 6px;
   }
   #map-container {
+    position: relative;
     min-height: 0;
     width: 100%;
     height: min(58svh, 620px);
@@ -6177,6 +6191,13 @@ h1, h2, .pixel-font {
     inset: 0;
     background: transparent;
     pointer-events: none;
+    z-index: 0;
+  }
+
+  #map-container > svg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
   }
 
   #map-container[data-story-region="johto"]::before {

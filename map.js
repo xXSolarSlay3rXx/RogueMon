@@ -594,6 +594,7 @@ function renderMap(map, container, onNodeClick) {
   svg.style.left = '0';
   svg.style.borderRadius = '26px';
   svg.style.overflow = 'hidden';
+  svg.style.zIndex = '1';
 
   const layerCount = map.layers.length;
   // Keep tall trainer/boss sprites away from the clipped top/bottom edge
@@ -754,7 +755,7 @@ function renderMap(map, container, onNodeClick) {
         check.setAttribute('dominant-baseline', 'central');
         check.setAttribute('font-size', '16');
         check.setAttribute('fill', '#fff');
-        check.textContent = '\u2713';
+        check.textContent = '!';
         g.appendChild(check);
       }
 
@@ -782,7 +783,7 @@ function renderMap(map, container, onNodeClick) {
       text.setAttribute('dominant-baseline', 'central');
       text.setAttribute('font-size', '14');
       text.setAttribute('fill', isInaccessible ? storyTheme.dimText : storyTheme.text);
-      text.textContent = isCurrent ? '\u2713' : getNodeIcon(node);
+      text.textContent = isCurrent ? '!' : getNodeIcon(node);
       g.appendChild(text);
     }
 
@@ -863,7 +864,7 @@ function getNodeColor(node, storyTheme = null) {
 
 
 function getNodeIcon(node) {
-  if (node.visited) return '\u2713';
+  if (node.visited) return 'V';
   const icons = {
     [NODE_TYPES.START]: '\u2605',
     [NODE_TYPES.BATTLE]: '\u2694',

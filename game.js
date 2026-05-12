@@ -209,6 +209,40 @@ const NON_RESUMABLE_SCREENS = new Set([
   'win-screen',
 ]);
 
+
+function hasRenderableStoryMap(map) {
+  if (!map || typeof map !== 'object') return false;
+  if (!map.nodes || !map.edges || !map.layers) return false;
+  if (!Array.isArray(map.edges) || !Array.isArray(map.layers)) return false;
+  const nodeIds = Object.keys(map.nodes || {});
+  if (!nodeIds.length || !map.edges.length || !map.layers.length) return false;
+  const layeredIds = map.layers.flatMap(layer => Array.isArray(layer)
+    ? layer.map(node => typeof node === 'string' ? node : node?.id).filter(Boolean)
+    : []);
+  if (!layeredIds.length) return false;
+  if (!layeredIds.some(id => map.nodes[id])) return false;
+  const hasProgressAnchor = Object.values(map.nodes).some(node => node && (node.visited || node.accessible));
+  if (!hasProgressAnchor) return false;
+  return true;
+}
+
+function rebuildStoryMapForCurrentState() {
+  state.map = generateMap(state.currentMap || 0, !!state.nuzlockeMode);
+  state.currentNode = Object.values(state.map.nodes || {}).find(node => node.accessible && !node.visited) || state.map.nodes?.['n0_0'] || null;
+}
+
+function ensureStoryMapIsRenderable() {
+  if (state?.isEndlessMode) return;
+  if (!hasRenderableStoryMap(state.map)) {
+    rebuildStoryMapForCurrentState();
+    return;
+  }
+  if (!state.currentNode || !state.map.nodes?.[state.currentNode.id]) {
+    state.currentNode = Object.values(state.map.nodes || {}).find(node => node.accessible && !node.visited) || state.map.nodes?.['n0_0'] || null;
+  }
+}
+
+
 function hasSavedStoryRun() {
   try {
     const raw = localStorage.getItem('poke_current_run');
@@ -315,13 +349,8 @@ function loadRun() {
     }
     runPersistenceDisabled = false;
     if (saved.rngSeed) seedRng(saved.rngSeed);
-    if (!saved.isEndlessMode && (!saved.map?.nodes || !saved.map?.edges || !saved.map?.layers || !Object.keys(saved.map?.nodes || {}).length || !(saved.map?.edges || []).length || !(saved.map?.layers || []).length)) {
-      saved.map = generateMap(saved.currentMap || 0, !!saved.nuzlockeMode);
-    }
     state = saved;
-    if (!state.isEndlessMode && (!state.map?.nodes || !state.map?.edges || !state.map?.layers || !Object.keys(state.map?.nodes || {}).length || !(state.map?.edges || []).length || !(state.map?.layers || []).length)) {
-      state.map = generateMap(state.currentMap || 0, !!state.nuzlockeMode);
-    }
+    if (!state.isEndlessMode) ensureStoryMapIsRenderable();
     state.currentNode = saved.currentNodeId ? (state.map?.nodes?.[saved.currentNodeId] || null) : null;
     if (!state.currentNode && state.map?.nodes) {
       state.currentNode = Object.values(state.map.nodes).find(node => node.accessible && !node.visited) || state.map.nodes['n0_0'] || null;
@@ -1030,15 +1059,16 @@ function showMapScreen() {
 
   const mapContainer = document.getElementById('map-container');
   if (mapContainer) {
-    if (!state.map?.nodes || !state.map?.edges || !state.map?.layers || !Object.keys(state.map.nodes || {}).length || !(state.map.edges || []).length || !(state.map.layers || []).length) {
-      state.map = generateMap(state.currentMap || 0, !!state.nuzlockeMode);
-      if (!state.currentNode) {
-        state.currentNode = Object.values(state.map.nodes || {}).find(node => node.accessible && !node.visited) || state.map.nodes?.['n0_0'] || null;
-      }
-    }
+    ensureStoryMapIsRenderable();
     state.map.mapIndex = state.currentMap;
     applyStoryRegionMapBackground(mapContainer);
     renderMap(state.map, mapContainer, onNodeClick);
+    if (!mapContainer.querySelector('svg path, svg circle, svg image, svg text')) {
+      rebuildStoryMapForCurrentState();
+      state.map.mapIndex = state.currentMap;
+      applyStoryRegionMapBackground(mapContainer);
+      renderMap(state.map, mapContainer, onNodeClick);
+    }
   }
   saveRun();
 

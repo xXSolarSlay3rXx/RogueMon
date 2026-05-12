@@ -5,204 +5,7 @@ let currentLanguage = 'en';
 localStorage.setItem('poke_language', 'en');
 
 const i18n = {
-  de: {
-    // Title Screen
-    game_title: 'RogueMon',
-    game_subtitle: 'Roguelike Pokemon Adventure',
-    game_tagline: 'Sammle, kÃƒÆ’Ã‚Â¤mpfe und werde der Champion!',
-    btn_new_run: 'Neues Spiel',
-    btn_hard_run: 'Nuzlocke Mode',
-    btn_endless_run: 'Endless Mode',
-    btn_continue_run: 'Spiel Fortsetzen',
-    btn_continue_endless: 'Endless Fortsetzen',
-    btn_back_title: 'ZurÃƒÆ’Ã‚Â¼ck',
-
-    // Region Select
-    choose_region: 'WÃƒÆ’Ã‚Â¤hle deine Generation',
-    choose_region_description: 'WÃƒÆ’Ã‚Â¤hle die Region fÃƒÆ’Ã‚Â¼r deinen nÃƒÆ’Ã‚Â¤chsten Run. SchlieÃƒÆ’Ã…Â¸e die aktuelle Liga ab, um die nÃƒÆ’Ã‚Â¤chste Generation freizuschalten.',
-    region_unlocked: 'Frei',
-    region_locked: 'Gesperrt',
-    unlock_gen_2: 'Besiege Top Vier und Champion von Gen 1, um Gen 2 freizuschalten.',
-    unlock_gen_3: 'Besiege Top Vier und Champion von Gen 2, um Gen 3 freizuschalten.',
-    unlock_gen_4: 'Besiege Top Vier und Champion von Gen 3, um Gen 4 freizuschalten.',
-    unlock_gen_5: 'Besiege Top Vier und Champion von Gen 4, um Gen 5 freizuschalten.',
-    unlock_gen_6: 'Besiege Top Vier und Champion von Gen 5, um Gen 6 freizuschalten.',
-    region_gen_1_desc: '8 Arenaleiter, Top Vier und Champion.',
-    region_gen_2_desc: 'Neue Starter, neue Arenen und eine neue Liga.',
-    region_gen_3_desc: 'Hoenn-Starter, 8 neue Orden und die Hoenn-Liga.',
-    region_gen_4_desc: 'Sinnoh-Starter, 8 neue Orden und die Sinnoh-Liga.',
-    region_gen_5_desc: 'Einall-Starter, 8 neue Orden und die Einall-Liga.',
-    region_gen_6_desc: 'Kalos-Starter, 8 neue Orden und die Kalos-Liga.',
-    
-    // Trainer Select
-    choose_trainer: 'WÃƒÆ’Ã‚Â¤hle deinen Trainer',
-    trainer_boy: 'Junge',
-    trainer_girl: 'MÃƒÆ’Ã‚Â¤dchen',
-    
-    // Starter Select
-    choose_starter: 'WÃƒÆ’Ã‚Â¤hle deinen Starter',
-    starter_intro: 'Beginne dein Abenteuer mit einem dieser PokÃƒÆ’Ã‚Â©mon!',
-    starter_description: 'WÃƒÆ’Ã‚Â¤hle deinen Partner fÃƒÆ’Ã‚Â¼r diesen Durchlauf. Jeder Champion hat ein anderes Element und Kampfstil ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â wÃƒÆ’Ã‚Â¤hle den, der zu deiner Strategie passt.',
-    starter_bulbasaur: 'Bisaknosp ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Pflanze/Gift ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Die mystische Knolle auf seinem RÃƒÆ’Ã‚Â¼cken speichert Energie und macht es zum perfekten Begleiter fÃƒÆ’Ã‚Â¼r Wachstum und Balance.',
-    starter_charmander: 'Glumanda ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Feuer ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Ein loyaler Feuer-Typ mit einer brennenden inneren Flamme. Es entzÃƒÆ’Ã‚Â¼ndet sich mit Leidenschaft und entwickelt sich zu einem mÃƒÆ’Ã‚Â¤chtigen Drachen.',
-    starter_squirtle: 'Schiggy ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Wasser ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ GeschÃƒÆ’Ã‚Â¼tzt durch seinen harten Panzer ist dieser Wasser-Typ zuverlÃƒÆ’Ã‚Â¤ssig und anpassungsfÃƒÆ’Ã‚Â¤hig, formt eine Bindung, die jede Herausforderung ÃƒÆ’Ã‚Â¼bersteht.',
-    starter_chikorita: 'Endivie ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Pflanze ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Ruhig, standhaft und defensiv stark. Ein sicherer Start fÃƒÆ’Ã‚Â¼r Trainer, die Kontrolle und Ausdauer mÃƒÆ’Ã‚Â¶gen.',
-    starter_cyndaquil: 'Feurigel ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Feuer ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Klein, schnell und explosiv. Perfekt fÃƒÆ’Ã‚Â¼r aggressive Runs mit viel Tempo und Druck.',
-    starter_totodile: 'Karnimani ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Wasser ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Wild, robust und offensiv. Es beiÃƒÆ’Ã…Â¸t sich durch harte KÃƒÆ’Ã‚Â¤mpfe und bleibt auch im Late Game gefÃƒÆ’Ã‚Â¤hrlich.',
-    starter_treecko: 'Geckarbor ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Pflanze ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Schnell, prÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤zise und elegant. Ideal fÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼r clevere Runs mit Tempo und sicherem Druck.',
-    starter_torchic: 'Flemmli ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Feuer ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Klein am Anfang, aber mit starkem Scaling. Perfekt fÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼r offensiven Schneeball im Run.',
-    starter_mudkip: 'Hydropi ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Wasser ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Robust, vielseitig und extrem verlÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤sslich. Ein Starter, der fast jedes Matchup sauber tragen kann.',
-    
-    starter_turtwig: 'Chelast ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Pflanze ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Robust und geduldig. Ein defensiv starker Starter, der im langen Run immer besser wird.',
-    starter_chimchar: 'Panflam ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Feuer ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Schnell, frech und offensiv. Ideal, wenn du von Anfang an Druck machen willst.',
-    starter_piplup: 'Plinfa ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Wasser ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Elegant, sicher und sehr zuverlÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤ssig. Ein starker Allrounder mit guter Entwicklungskurve.',
-    starter_snivy: 'Serpifeu - Pflanze. Elegant, schnell und technisch stark. Perfekt fuer cleane Runs mit Tempo und Kontrolle.',
-    starter_tepig: 'Floink - Feuer. Kraftvoll, direkt und robust. Gut fuer offensive Runs mit viel Druck und sicherem Schaden.',
-    starter_oshawott: 'Ottaro - Wasser. Flexibel, sauber und verlaesslich. Ein starker Allround-Starter fuer fast jedes Matchup.',
-    // Battle
-    wild_appeared: 'Wildes {name} erschien!',
-    level_label: 'Level {level}',
-    gym_battle_vs: 'Arena-Kampf gegen {name}!',
-    badge_on_line: '{badge} steht auf dem Spiel!',
-    elite_battle: '{title}: {name}!',
-    final_battle: 'Finaler Kampf!',
-    elite_four_battle: 'Top Vier - Kampf {num}/4',
-    defeated_msg: '{name} besiegt!',
-    next_elite: 'NÃƒÆ’Ã‚Â¤chster: {name}...',
-    champion_awaits: 'Der Champion erwartet dich!',
-    new_pokemon: 'Neues PokÃƒÆ’Ã‚Â©mon!',
-    team_full: 'Team voll!',
-    add_to_team: 'Zum Team hinzufÃƒÆ’Ã‚Â¼gen oder Team so lassen:',
-    choose_release: 'WÃƒÆ’Ã‚Â¤hle ein PokÃƒÆ’Ã‚Â©mon zum Freilassen:',
-    continue: 'Fortsetzen',
-    skip: 'ÃƒÆ’Ã…â€œberspringen',
-    
-    // Languages
-    lang_de: 'Deutsch',
-    lang_en: 'English',
-    gen_1: 'Generation I',
-    gen_2: 'Generation II',
-    gen_3: 'Generation III',
-    gen_4: 'Generation IV',
-    gen_5: 'Generation V',
-    gen_6: 'Generation VI',
-    gen_7: 'Generation VII',
-    gen_8: 'Generation VIII',
-    gen_9: 'Generation IX',
-    all_gens_label: 'Alle Gens',
-    gen_1_progress: 'Gen 1 - {pct}%',
-    all_gens_progress: 'Alle Gens ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â {pct}%',
-    pokedex_count: '{count} / {total}',
-    team_label: 'TEAM',
-    items_label: 'GEGENSTÃƒÆ’Ã¢â‚¬Å¾NDE',
-    badges_label: 'ORDEN',
-    catch_title: 'ÃƒÂ¢Ã‚Â¬Ã…Â¸ Wildes PokÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©mon erschienen!',
-    catch_subtitle: 'WÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤hle ein PokÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©mon fÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼r dein Team',
-    item_title: 'ÃƒÂ¢Ã…â€œÃ‚Â¦ Item gefunden!',
-    item_subtitle: 'WÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤hle ein Item zum Behalten',
-    btn_retry: 'Nochmal versuchen',
-    win_caption: 'GlÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼ckwunsch! Du hast die Top Vier besiegt!',
-    btn_play_again: 'Nochmal spielen',
-    battle_tower_title: 'Endless Mode',
-    battle_tower_subtitle: 'Waehle eine Stufe fuer deinen Gauntlet-Run',
-    endless_boon_title: 'Endless Segen',
-    endless_boon_subtitle: 'Waehle eine Belohnung fuer den naechsten Kampf',
-    endless_boon_recovery: 'Versorgungs-Kiste',
-    endless_boon_recovery_desc: 'Belebt dein Team wieder, heilt es komplett und entfernt Statusprobleme.',
-    endless_boon_training: 'Trainings-Schub',
-    endless_boon_training_desc: 'Das ganze Team erhaelt +1 Level und wird voll geheilt.',
-    endless_boon_armory: 'Arsenal-Abwurf',
-    endless_boon_armory_desc: 'Waehle 1 von 3 echten Pokemon-Items fuer deinen Run.',
-    btn_back_arrow: 'ÃƒÂ¢Ã¢â‚¬Â Ã‚Â ZurÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼ck',
-    enemy_label: 'Gegner',
-    evo_what: 'Was? {name} entwickelt sich!',
-    evo_into: '{name} hat sich zu {into} entwickelt!',
-    evo_choose: '{name} entwickelt sich!<br>WÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤hle seine Entwicklung:',
-    bug_trait_level_up: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬Âº KÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤fer-Trait ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Levelaufstieg!',
-    achievement_unlocked: 'Achievement freigeschaltet!',
-    item_found_toast: 'Item gefunden!',
-    popup_dodge: 'Ausgewichen!',
-    popup_struggle: 'Verzweifler!',
-    popup_critical: 'Volltreffer!',
-    popup_confusion: 'Verwirrung!',
-    popup_thawed: 'Aufgetaut!',
-    tutorial_auto_skip: 'ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ffne die Einstellungen und aktiviere Auto Skip!',
-    tutorial_swap_team: 'Klicke auf ein PokÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©mon, um die Team-Position zu tauschen',
-    tutorial_dismiss: 'Zum SchlieÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â¸en irgendwo klicken',
-    reroll: 'Neu wÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼rfeln',
-    joined_team: '{name} ist deinem Team beigetreten!',
-    add_to_team_named: 'FÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼ge {name} deinem Team hinzu!',
-    revived_notification: '{name} wurde wiederbelebt!',
-    healed_notification: '{name} wurde geheilt!',
-    restored_notification: '{name} wurde vollstaendig versorgt!',
-    level_grew_notification: '{name} erreichte Lv {level}!',
-    pokecenter_heal: 'ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â¥ Dein Team wurde vollstÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤ndig geheilt!',
-    learned_move_notification: '{name} hat {move} gelernt!',
-    continue_ellipsis: 'Weiter...',
-    region_cleared: 'Region geschafft!',
-    choose_power_up: 'WÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤hle ein PokÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©mon zum VerstÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤rken (Limit: {cap} Punkte)',
-    unlock_buffs: 'Gewinne eine Stufe, um Buffs freizuschalten',
-    dex_not_found_battle_tower: 'Nicht im Kampfturm gefunden',
-    dex_battle_tower_label: 'Kampfturm:',
-    shiny_charm_locked: 'Shiny Charm - Vervollstaendige den Gen-1-Pokedex zum Freischalten. Verdoppelt alle Shiny-Raten.',
-    shiny_charm_active: 'Shiny Charm ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â aktiv! Verdoppelt alle Shiny-Raten.',
-    hof_battle_tower: 'Endless Mode: {stage}',
-    hof_championship: 'Championschaft #{num}',
-    win_run_count: '{region} Championschaft #{num}',
-    badge_earned: 'Du hast den {badge} erhalten!',
-    region_gym_progress: '{region} Arena {count}/8',
-    badges_progress: 'Orden: {count}/8',
-    unlock_after_win: 'Besiege zuerst das Spiel, um es freizuschalten',
-    no_saved_run_yet: 'Noch kein gespeicherter Run',
-    continue_run_summary: 'Run fortsetzen - {region} {badges}/8',
-    your_team: 'Dein Team',
-    btn_skip_flee: 'Ueberspringen (fliehen)',
-    keep_team_as_is: 'Team so behalten',
-    trade_offer: 'Tausch-Angebot',
-    btn_decline: 'Ablehnen',
-    evo_choice_static: 'Waehle seine Entwicklung:',
-    traits_after: 'TRAITS DANACH',
-    no_active_traits: 'Keine aktiven Traits',
-    usable_item: 'SOFORT NUTZBAR',
-    item_btn_holding: 'Getragen',
-    item_btn_swap: 'Tauschen',
-    item_btn_equip: 'Anlegen',
-    item_slot_empty: '- leer -',
-    item_btn_unequip: 'Ablegen',
-    item_btn_unequip_title: '{name} ablegen',
-    item_return_to_bag: 'Ablegen (zurueck in Tasche)',
-    item_keep_in_bag: 'In Tasche behalten',
-    btn_cancel: 'Abbrechen',
-    item_status_fainted: 'Besiegt',
-    trainer_wants_to_battle: '{name} will kaempfen!',
-    trainer_team_summary: '{count} Pokemon - Lv ~{level}',
-    legendary_appeared: 'Ein legendres {name} ist erschienen!',
-    legendary_subtitle: 'Lv {level} - Besiege es, um es deinem Team hinzuzufuegen!',
-    move_tutor_title: 'Attacken-Lehrer',
-    move_tutor_desc: 'Bringe einem Pokemon eine staerkere Attacke bei.',
-    move_tutor_mastered: 'Bereits gemeistert!',
-    bag_empty: 'Tasche leer',
-    sent_out: '{name} wurde in den Kampf geschickt!',
-    trade_received: 'Du hast {name} erhalten!',
-    trade_sent_away: '{name} wurde weggetauscht.',
-    shiny_appeared: 'Ein Shiny-{name} ist erschienen!',
-    hall_of_fame_title: 'Hall of Fame',
-    hall_of_fame_empty: 'Noch keine Siege gespeichert.',
-    hall_of_fame_empty_sub: 'Besiege Top Vier und Champion, um hier verewigt zu werden!',
-    hall_of_fame_story: 'Regionen',
-    hall_of_fame_tower: 'Endless Mode',
-    hall_of_fame_legacy: 'Fruehere Runs',
-    hall_of_fame_no_entries: 'Noch keine Eintraege',
-    hall_of_fame_run_count: '{count} Siege',
-    dex_empty_shiny: 'Noch keine Shiny-Pokemon gefangen. Normale Pokemon zaehlen hier nicht.',
-    dex_not_found_regular: 'Im normalen Modus nicht gefunden',
-    dex_not_available: 'Nicht verfuegbar',
-    loading: 'Laedt...',
-    dex_toggle_shiny: 'Shiny umschalten',
-    dex_evolution_chain: 'Entwicklungskette',
-    dex_where_to_find: 'Fundorte',
-    dex_regular_label: 'Normal:',
-  },
+  de: {},
   en: {
     // Title Screen
     game_title: 'RogueMon',
@@ -3785,7 +3588,7 @@ function openSettingsModal() {
       <div class="settings-modal-box">
         <div class="settings-modal-header">
           <span>Settings</span>
-          <button class="ach-modal-close" onclick="document.getElementById('settings-modal').remove()">ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¢</button>
+          <button class="ach-modal-close" onclick="document.getElementById('settings-modal').remove()">&times;</button>
         </div>
         <div class="settings-section-title">Auto-Skip</div>
         ${row('Regular Trainers', 'autoSkipBattles', s.autoSkipAllBattles)}
@@ -3930,7 +3733,7 @@ function openAchievementsModal() {
     <div class="ach-modal-box">
       <div class="ach-modal-header">
         <span>Achievements (${unlocked.size}/${ACHIEVEMENTS.length})</span>
-        <button class="ach-modal-close" onclick="document.getElementById('achievements-modal').remove()">X</button>
+        <button class="ach-modal-close" onclick="document.getElementById('achievements-modal').remove()">&times;</button>
       </div>
       <div class="ach-modal-body">${categorySections}</div>
     </div>`;
@@ -4060,7 +3863,7 @@ function openPokedexModal(initialTab = 'normal') {
           <button class="dex-tab" data-tab="shiny">Shiny</button>
         </div>
         <span class="dex-counts" id="dex-count-label"></span>
-        <button class="ach-modal-close" onclick="document.getElementById('pokedex-modal').remove()">X</button>
+        <button class="ach-modal-close" onclick="document.getElementById('pokedex-modal').remove()">&times;</button>
       </div>
       <div class="dex-progress-area">
         <div class="dex-progress-row dex-progress-row-top">
@@ -4186,13 +3989,13 @@ function openDexDetailModal(speciesId, name, spriteUrl, shinySpriteUrl, types) {
     <div class="dex-detail-box">
       <div class="dex-detail-header">
         <span class="dex-detail-title">${numStr} ${name}</span>
-        <button class="ach-modal-close" id="dex-detail-close">ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¢</button>
+        <button class="ach-modal-close" id="dex-detail-close">&times;</button>
       </div>
       <div class="dex-detail-body">
         <div class="dex-detail-top">
           <div class="dex-detail-sprite-wrap">
             <img id="dex-detail-sprite" class="dex-detail-sprite" src="${spriteUrl}" alt="${name}">
-            <button class="dex-detail-shiny-btn" id="dex-detail-shiny-btn" title="${getText('dex_toggle_shiny')}">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦</button>
+            <button class="dex-detail-shiny-btn" id="dex-detail-shiny-btn" title="${getText('dex_toggle_shiny')}">Shiny</button>
           </div>
           <div class="dex-detail-info">
             <div class="dex-detail-name">${name}</div>
@@ -4778,7 +4581,7 @@ function openHallOfFameModal() {
         <div class="hof-entry-header">
           <div class="hof-entry-title-row">
             <span class="hof-entry-title">${title}</span>
-            ${e.hardMode ? '<span class="hof-entry-skull">ÃƒÂ¢Ã‹Å“Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â</span>' : ''}
+            ${e.hardMode ? '<span class="hof-entry-skull">HARD</span>' : ''}
           </div>
           <span class="hof-entry-date">${e.date}</span>
         </div>
@@ -4831,9 +4634,9 @@ function openHallOfFameModal() {
       <div class="hof-modal-header">
         <div>
           <div class="hof-modal-title">${getText('hall_of_fame_title')}</div>
-          <div class="hof-modal-subtitle">Gen 1 - Gen 5 Archiv</div>
+          <div class="hof-modal-subtitle">Gen 1 - Gen 6 Archive</div>
         </div>
-        <button class="hof-modal-close" onclick="document.getElementById('hof-modal').remove()">ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¢</button>
+        <button class="hof-modal-close" onclick="document.getElementById('hof-modal').remove()">&times;</button>
       </div>
       <div class="hof-modal-body">${contentHtml}</div>
     </div>`;
