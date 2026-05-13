@@ -5051,10 +5051,12 @@ h1, h2, .pixel-font {
 }
 #item-tooltip,
 #trait-tooltip {
-  background: #e8e4d8;
-  border: 2px solid #181410;
-  color: #181410;
-  box-shadow: 2px 2px 0 0 #181410;
+  background:
+    radial-gradient(circle at top left, rgba(139, 232, 255, 0.12), transparent 36%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+  border: 1px solid rgba(139, 232, 255, 0.26);
+  color: #edf5ff;
+  box-shadow: 0 0 0 1px rgba(7,13,26,0.95), 0 16px 32px rgba(0,0,0,0.35);
 }
 
 /* ---- Battle side ---- */
