@@ -5503,25 +5503,33 @@ h1, h2, .pixel-font {
 #trade-screen #trade-desc {
   color: var(--text-dim);
 }
+#trade-screen {
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
 #trade-screen #trade-team-list {
+  width: min(100%, 960px);
   background: transparent;
   border-radius: 12px;
-  padding: 6px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 6px 0 2px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  align-items: start;
+  overflow: visible;
+  max-height: none;
 }
 #trade-screen .trade-member-row {
-  width: min(100%, 260px);
+  width: 100%;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none;
   padding: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  align-items: stretch;
+  gap: 8px;
 }
 #trade-screen .trade-member-row:hover {
   background: transparent !important;
@@ -5532,8 +5540,8 @@ h1, h2, .pixel-font {
 }
 #trade-screen .trade-member-card-wrap .poke-card {
   width: 100%;
-  min-height: 100%;
-  padding: 16px 14px 14px;
+  min-height: 0;
+  padding: 14px 12px 12px;
   gap: 8px;
   border-radius: 20px;
   border: 1px solid rgba(139, 232, 255, 0.24);
@@ -5571,6 +5579,14 @@ h1, h2, .pixel-font {
     0 0 26px rgba(139, 232, 255, 0.18);
   transform: translateY(-6px) scale(1.01);
 }
+#trade-screen .trade-member-card-wrap .poke-stats,
+#trade-screen .trade-member-card-wrap .poke-move {
+  display: none;
+}
+#trade-screen .trade-member-card-wrap .poke-card .poke-sprite {
+  width: 58px;
+  height: 58px;
+}
 #trade-screen .trade-member-card-wrap .poke-name,
 #trade-screen .trade-member-card-wrap .move-name {
   color: #eef6ff;
@@ -5591,6 +5607,7 @@ h1, h2, .pixel-font {
   font-size: 9px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-align: center;
 }
 
 #trade-screen > .poke-card,
@@ -5632,6 +5649,47 @@ h1, h2, .pixel-font {
   background: rgba(6, 12, 24, 0.68);
   border: 1px solid rgba(139, 232, 255, 0.14);
   border-radius: 14px;
+}
+
+@media (max-width: 768px) {
+  #trade-screen {
+    padding-top: 18px;
+    gap: 10px;
+  }
+
+  #trade-screen #trade-team-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 10px;
+  }
+
+  #trade-screen .trade-member-card-wrap .poke-card {
+    padding: 12px 10px 10px;
+    border-radius: 18px;
+  }
+
+  #trade-screen .trade-member-card-wrap .poke-card .poke-sprite {
+    width: 48px;
+    height: 48px;
+  }
+
+  #trade-screen .trade-member-card-wrap .poke-card .poke-name {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  #trade-screen .trade-member-card-wrap .poke-card .type-badges {
+    gap: 3px;
+  }
+
+  #trade-screen .trade-member-card-wrap .poke-card .type-badge {
+    font-size: 6px;
+    padding: 2px 4px;
+  }
+
+  #trade-screen .trade-member-action {
+    font-size: 8px;
+  }
 }
 
 /* ---- Toasts (keep dark for floating visibility) ---- */
