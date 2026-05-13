@@ -3684,6 +3684,24 @@ function renderEndlessCollectionCards(entries = [], emptyLabel = 'No recruits ye
   `).join('');
 }
 
+function renderCoinSkinCards(entries = [], currentSkinId = '') {
+  if (!entries.length) {
+    return `<div class="collection-empty">No coin skins unlocked yet.</div>`;
+  }
+
+  return entries.map(entry => `
+    <div class="coin-skin-card ${entry.skinId === currentSkinId ? 'is-active' : ''}">
+      <div class="coin-skin-preview" style="--coin-accent:${entry.accent || '#ffd36c'}">
+        <img src="${entry.spriteUrl}" alt="${entry.name}">
+      </div>
+      <div class="coin-skin-name">${entry.name}</div>
+      <button class="btn-secondary coin-skin-btn" data-skin-id="${entry.skinId}">
+        ${entry.skinId === currentSkinId ? 'Active' : 'Use'}
+      </button>
+    </div>
+  `).join('');
+}
+
 function openRosterModal() {
   const existing = document.getElementById('roster-modal');
   if (existing) { existing.remove(); return; }
@@ -3706,6 +3724,8 @@ function openRosterModal() {
   const render = (lastSale = null) => {
     const collection = getEndlessCollection();
     const coins = getCoinBalance();
+    const coinSkins = getUnlockedCoinSkins();
+    const currentCoinSkin = getCurrentCoinSkin();
 
     modal.innerHTML = `
       <div class="shop-modal-box roster-modal-box">
@@ -3760,6 +3780,11 @@ function openRosterModal() {
               </div>
             `).join('') : '<div class="collection-empty">Your Endless roster is empty.</div>'}
           </div>
+
+          <div class="shop-section-title">Coin Skins</div>
+          <div class="coin-skin-grid">
+            ${renderCoinSkinCards(coinSkins, currentCoinSkin.skinId)}
+          </div>
         </div>
       </div>
     `;
@@ -3767,6 +3792,12 @@ function openRosterModal() {
     modal.querySelector('#roster-modal-close')?.addEventListener('click', close);
     modal.querySelectorAll('.roster-sell-btn').forEach(btn => {
       btn.addEventListener('click', () => handleSell(btn.dataset.entryId));
+    });
+    modal.querySelectorAll('.coin-skin-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setCurrentCoinSkin(btn.dataset.skinId);
+        render();
+      });
     });
   };
 
@@ -3788,12 +3819,22 @@ function animateBoosterOpening(modal, result) {
           <div class="booster-pack-label">${result.pack.label}</div>
         </div>
         <div class="booster-reveal-row">
-          ${result.pulls.map((pull, index) => `
-            <div class="booster-reveal-card reveal-${index + 1}">
-              <img src="${pull.spriteUrl}" alt="${pull.name}">
-              <span>${pull.name}</span>
-            </div>
-          `).join('')}
+          ${result.pulls.map((pull, index) => result.rewardKind === 'coinskin'
+            ? `
+              <div class="booster-reveal-card booster-reveal-card--coin reveal-${index + 1}">
+                <div class="coin-skin-preview" style="--coin-accent:${pull.accent || '#ffd36c'}">
+                  <img src="${pull.spriteUrl}" alt="${pull.name}">
+                </div>
+                <span>${pull.name} Coin</span>
+              </div>
+            `
+            : `
+              <div class="booster-reveal-card reveal-${index + 1}">
+                <img src="${pull.spriteUrl}" alt="${pull.name}">
+                <span>${pull.name}</span>
+              </div>
+            `
+          ).join('')}
         </div>
       </div>
     `;
@@ -3819,21 +3860,34 @@ function animateArcadePlay(modal, gameId, result) {
 
     let inner = '';
     if (gameId === 'coinflip') {
+      const skin = getCurrentCoinSkin();
       inner = `
         <div class="arcade-animation-box">
           <div class="arcade-animation-title">Coin Flip</div>
-          <div class="coin-spinner ${result.outcome}"></div>
+          <div class="coin-spinner ${result.outcome}" style="--coin-accent:${skin.accent || '#ffd36c'}">
+            <div class="coin-spinner-face">
+              <img src="${skin.spriteUrl}" alt="${skin.name}">
+            </div>
+          </div>
           <div class="arcade-animation-copy">${result.outcome === 'loss' ? 'The house wins this one.' : result.outcome === 'jackpot' ? 'Triple payout!' : 'Heads! Double up.'}</div>
         </div>
       `;
     } else if (gameId === 'slots') {
+      const slotSymbols = result.reels || [];
       inner = `
         <div class="arcade-animation-box">
           <div class="arcade-animation-title">Slot Machine</div>
           <div class="slot-reels">
-            ${(result.reels || []).map((symbol, index) => `
+            ${slotSymbols.map((symbol, index) => `
               <div class="slot-reel reel-${index + 1}">
-                <span>${symbol}</span>
+                <div class="slot-strip">
+                  <span>Berry</span>
+                  <span>Star</span>
+                  <span>Ball</span>
+                  <span>Seven</span>
+                  <span>Crown</span>
+                  <span class="slot-hit">${symbol}</span>
+                </div>
               </div>
             `).join('')}
           </div>
@@ -3931,9 +3985,9 @@ function openShopModal() {
                 <div class="shop-pack-cost">${pack.cost} Coins</div>
                 <div class="shop-pack-copy">${pack.description}</div>
                 <div class="shop-pack-stats">
-                  <span>BST ${pack.minBst}-${pack.maxBst}</span>
-                  <span>+${pack.levelBonusMin} to +${pack.levelBonusMax} Lv</span>
-                  <span>+${pack.statBonusMin} to +${pack.statBonusMax} Stats</span>
+                  ${pack.kind === 'coinskin'
+                    ? '<span>3 collectible Pokemon coin skins</span><span>Use them in Coin Flip and the Game Corner</span><span>Cosmetic but high style</span>'
+                    : `<span>BST ${pack.minBst}-${pack.maxBst}</span><span>+${pack.levelBonusMin} to +${pack.levelBonusMax} Lv</span><span>+${pack.statBonusMin} to +${pack.statBonusMax} Stats</span>`}
                 </div>
                 <button class="btn-secondary shop-pack-btn" data-pack-id="${pack.id}" ${coins < pack.cost ? 'disabled' : ''}>
                   Open Pack
@@ -3984,6 +4038,8 @@ function openArcadeModal() {
 
   const close = () => modal.remove();
   let currentGame = 'coinflip';
+  let craneRound = null;
+  let craneCursor = 1;
 
   const gameConfig = {
     coinflip: {
@@ -4006,9 +4062,9 @@ function openArcadeModal() {
     },
     crane: {
       title: 'Crane Game',
-      subtitle: 'A softer game with smaller wins, rare spikes, and plush-machine vibes.',
+      subtitle: 'Steer the claw, line up your drop, and try to grab the prize lane.',
       chances: ['45% small prize', '22% rare figure', '5% jackpot'],
-      play: bet => playCraneGame(bet),
+      play: bet => startCraneRound(bet),
       resultLabel: result => result.prize || 'Miss',
       resultCopy: result => `${result.net >= 0 ? '+' : ''}${result.net} coins`,
       historyLabel: entry => entry.prize || 'Miss',
@@ -4019,6 +4075,13 @@ function openArcadeModal() {
     const result = gameConfig[currentGame].play(bet);
     if (!result.ok) {
       alert(result.error || 'That bet could not be played.');
+      return;
+    }
+    if (currentGame === 'crane') {
+      craneRound = result.round;
+      craneCursor = 1;
+      render();
+      refreshTitleMetaBar();
       return;
     }
     animateArcadePlay(modal, currentGame, result).then(() => {
@@ -4032,12 +4095,33 @@ function openArcadeModal() {
     const coins = getCoinBalance();
     const history = meta.gambleHistory || [];
     const config = gameConfig[currentGame];
+    const visibleHistory = history.filter(entry => (entry.game || 'coinflip') === currentGame);
     const latestMarkup = latestResult
       ? `<div class="coinflip-result ${latestResult.outcome}">
           <strong>${config.resultLabel(latestResult)}</strong>
           <span>${config.resultCopy(latestResult)}</span>
         </div>`
       : `<div class="coinflip-result idle"><strong>${config.title}</strong><span>${config.subtitle}</span></div>`;
+
+    const craneControlMarkup = currentGame === 'crane' && craneRound
+      ? `
+        <div class="crane-control-panel">
+          <div class="crane-machine crane-machine--interactive">
+            <div class="crane-lane-marker lane-${craneCursor}"></div>
+            <div class="crane-arm"></div>
+            <div class="crane-prize lane lane-0 ${craneRound.targetLane === 0 ? 'target-hint' : ''}">?</div>
+            <div class="crane-prize lane lane-1 ${craneRound.targetLane === 1 ? 'target-hint' : ''}">?</div>
+            <div class="crane-prize lane lane-2 ${craneRound.targetLane === 2 ? 'target-hint' : ''}">?</div>
+          </div>
+          <div class="crane-control-row">
+            <button class="arcade-mode-btn" data-crane-move="left">Left</button>
+            <button class="arcade-mode-btn is-active" data-crane-drop="true">Drop</button>
+            <button class="arcade-mode-btn" data-crane-move="right">Right</button>
+          </div>
+          <div class="arcade-animation-copy">Line the claw up with the lane you want, then drop.</div>
+        </div>
+      `
+      : '';
 
     modal.innerHTML = `
       <div class="shop-modal-box gamble-modal-box">
@@ -4079,15 +4163,17 @@ function openArcadeModal() {
           <div class="shop-section-title">Pick a Bet</div>
           <div class="gamble-bet-grid">
             ${[10, 25, 50, 100, 200].map(bet => `
-              <button class="gamble-bet-btn" data-bet="${bet}" ${coins < bet ? 'disabled' : ''}>
+              <button class="gamble-bet-btn" data-bet="${bet}" ${(coins < bet || (currentGame === 'crane' && craneRound)) ? 'disabled' : ''}>
                 ${bet} Coins
               </button>
             `).join('')}
           </div>
 
+          ${craneControlMarkup}
+
           <div class="shop-section-title">Recent Results</div>
           <div class="gamble-history-list">
-            ${history.length ? history.filter(entry => (entry.game || 'coinflip') === currentGame).map(entry => `
+            ${visibleHistory.length ? visibleHistory.map(entry => `
               <div class="gamble-history-row ${entry.outcome}">
                 <span>${config.historyLabel(entry)}</span>
                 <span>Bet ${entry.bet}</span>
@@ -4103,11 +4189,29 @@ function openArcadeModal() {
     modal.querySelectorAll('.arcade-mode-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         currentGame = btn.dataset.game;
+        craneRound = null;
         render();
       });
     });
     modal.querySelectorAll('.gamble-bet-btn').forEach(btn => {
       btn.addEventListener('click', () => play(Number(btn.dataset.bet)));
+    });
+    modal.querySelector('[data-crane-move="left"]')?.addEventListener('click', () => {
+      craneCursor = Math.max(0, craneCursor - 1);
+      render();
+    });
+    modal.querySelector('[data-crane-move="right"]')?.addEventListener('click', () => {
+      craneCursor = Math.min(2, craneCursor + 1);
+      render();
+    });
+    modal.querySelector('[data-crane-drop="true"]')?.addEventListener('click', () => {
+      if (!craneRound) return;
+      const result = resolveCraneRound(craneRound, craneCursor);
+      craneRound = null;
+      animateArcadePlay(modal, 'crane', result).then(() => {
+        render(result);
+        refreshTitleMetaBar();
+      });
     });
   };
 

@@ -1156,6 +1156,26 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
     accent: '#ffd36c',
     description: 'Top-shelf pulls with a real shot at legendary power.',
   },
+  {
+    id: 'coinmint',
+    label: 'Coin Mint Pack',
+    cost: 60,
+    kind: 'coinskin',
+    minBst: 0,
+    maxBst: 0,
+    statBonusMin: 0,
+    statBonusMax: 0,
+    levelBonusMin: 0,
+    levelBonusMax: 0,
+    legendaryChance: 0,
+    accent: '#8ff7ff',
+    description: 'Unlock 3 collectible Pokemon coin skins for the Game Corner.',
+  },
+]);
+
+const COIN_SKIN_SOURCE_IDS = Object.freeze([
+  25, 133, 4, 7, 1, 39, 52, 54, 58, 94, 131, 143, 150,
+  155, 158, 175, 197, 248, 257, 282, 376, 384, 448, 493, 658, 700,
 ]);
 
 function normalizeMetaProgress(meta = {}) {
@@ -1164,6 +1184,8 @@ function normalizeMetaProgress(meta = {}) {
     endlessCollection: Array.isArray(meta.endlessCollection) ? meta.endlessCollection : [],
     openedBoosters: Math.max(0, Math.floor(Number(meta.openedBoosters) || 0)),
     gambleHistory: Array.isArray(meta.gambleHistory) ? meta.gambleHistory.slice(0, 12) : [],
+    unlockedCoinSkins: Array.isArray(meta.unlockedCoinSkins) ? meta.unlockedCoinSkins : [],
+    currentCoinSkin: meta.currentCoinSkin && typeof meta.currentCoinSkin === 'object' ? meta.currentCoinSkin : null,
   };
 }
 
@@ -1200,6 +1222,34 @@ function spendCoins(amount) {
 
 function getEndlessCollection() {
   return getMetaProgress().endlessCollection || [];
+}
+
+function getDefaultCoinSkin() {
+  return {
+    skinId: 'default-pokeball',
+    speciesId: 0,
+    name: 'Poke Ball',
+    spriteUrl: 'ui/pokeball.svg',
+    accent: '#ffd36c',
+  };
+}
+
+function getUnlockedCoinSkins() {
+  const meta = getMetaProgress();
+  return meta.unlockedCoinSkins?.length ? meta.unlockedCoinSkins : [getDefaultCoinSkin()];
+}
+
+function getCurrentCoinSkin() {
+  const meta = getMetaProgress();
+  return meta.currentCoinSkin || getUnlockedCoinSkins()[0] || getDefaultCoinSkin();
+}
+
+function setCurrentCoinSkin(skinId) {
+  const meta = getMetaProgress();
+  const skin = (meta.unlockedCoinSkins || []).find(entry => entry.skinId === skinId) || getDefaultCoinSkin();
+  meta.currentCoinSkin = skin;
+  saveMetaProgress(meta);
+  return skin;
 }
 
 function getEndlessEntrySellValue(entry) {
@@ -1269,6 +1319,14 @@ async function pickBoosterSpecies(pack, blockedIds = new Set()) {
   return fallback || fetchPokemonById(133);
 }
 
+async function pickCoinSkinSpecies(blockedIds = new Set()) {
+  const maxDexId = getUnlockedBoosterMaxDexId();
+  const pool = COIN_SKIN_SOURCE_IDS.filter(id => id <= maxDexId && !blockedIds.has(id));
+  const fallbackId = pool[0] || 25;
+  const speciesId = pool.length ? pool[metaRandomInt(0, pool.length - 1)] : fallbackId;
+  return fetchPokemonById(speciesId);
+}
+
 function createEndlessCollectionEntry(species, pack, statBonus, levelBonus) {
   const now = Date.now();
   return {
@@ -1290,6 +1348,19 @@ function createEndlessCollectionEntry(species, pack, statBonus, levelBonus) {
   };
 }
 
+function createCoinSkinEntry(species) {
+  return {
+    skinId: `coin_${species.id}`,
+    speciesId: species.id,
+    name: species.name,
+    spriteUrl: species.spriteUrl,
+    accent: (species.types || []).includes('Electric') ? '#ffd36c' :
+      (species.types || []).includes('Water') ? '#7dd7ff' :
+      (species.types || []).includes('Fire') ? '#ff9a7d' :
+      (species.types || []).includes('Grass') ? '#83ef9a' : '#d0b8ff',
+  };
+}
+
 async function openEndlessBoosterPack(packId) {
   const pack = ENDLESS_BOOSTER_PACKS.find(entry => entry.id === packId);
   if (!pack) return { ok: false, error: 'Pack not found.' };
@@ -1300,26 +1371,42 @@ async function openEndlessBoosterPack(packId) {
   }
 
   try {
+    const meta = getMetaProgress();
     const pulls = [];
     const usedIds = new Set();
-    for (let slot = 0; slot < 3; slot++) {
-      const species = await pickBoosterSpecies(pack, usedIds);
-      if (!species) continue;
-      usedIds.add(species.id);
-      pulls.push(createEndlessCollectionEntry(
-        species,
-        pack,
-        metaRandomInt(pack.statBonusMin, pack.statBonusMax),
-        metaRandomInt(pack.levelBonusMin, pack.levelBonusMax)
-      ));
+    if (pack.kind === 'coinskin') {
+      const unlockedIds = new Set((meta.unlockedCoinSkins || []).map(entry => entry.speciesId));
+      for (let slot = 0; slot < 3; slot++) {
+        const species = await pickCoinSkinSpecies(new Set([...usedIds, ...unlockedIds]));
+        if (!species) continue;
+        usedIds.add(species.id);
+        pulls.push(createCoinSkinEntry(species));
+      }
+      meta.unlockedCoinSkins = [...pulls, ...(meta.unlockedCoinSkins || [])]
+        .filter((entry, index, arr) => arr.findIndex(other => other.skinId === entry.skinId) === index)
+        .slice(0, 64);
+      if (!meta.currentCoinSkin) {
+        meta.currentCoinSkin = pulls[0] || getDefaultCoinSkin();
+      }
+    } else {
+      for (let slot = 0; slot < 3; slot++) {
+        const species = await pickBoosterSpecies(pack, usedIds);
+        if (!species) continue;
+        usedIds.add(species.id);
+        pulls.push(createEndlessCollectionEntry(
+          species,
+          pack,
+          metaRandomInt(pack.statBonusMin, pack.statBonusMax),
+          metaRandomInt(pack.levelBonusMin, pack.levelBonusMax)
+        ));
+      }
+      meta.endlessCollection = [...pulls, ...(meta.endlessCollection || [])].slice(0, 600);
     }
 
-    const meta = getMetaProgress();
     meta.openedBoosters += 1;
-    meta.endlessCollection = [...pulls, ...(meta.endlessCollection || [])].slice(0, 600);
     saveMetaProgress(meta);
 
-    return { ok: true, pack, pulls, coins: meta.coins };
+    return { ok: true, pack, pulls, coins: meta.coins, rewardKind: pack.kind || 'roster' };
   } catch (error) {
     awardCoins(pack.cost, 'Booster refund');
     return { ok: false, error: 'Pack opening failed. Coins were refunded.' };
@@ -1450,6 +1537,71 @@ function playCraneGame(betAmount) {
     outcome,
     prize,
     net: payout - bet,
+  };
+  meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
+  saveMetaProgress(meta);
+  return { ok: true, ...result, coins: meta.coins };
+}
+
+function startCraneRound(betAmount) {
+  const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
+  const meta = getMetaProgress();
+  if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
+  if (meta.coins < bet) return { ok: false, error: 'You need ' + bet + ' coins for that bet.', coins: meta.coins };
+
+  meta.coins -= bet;
+  saveMetaProgress(meta);
+
+  const rewardRoll = metaRandomUnit();
+  let prizeTier = { payout: 0, outcome: 'miss', prize: 'Nothing' };
+  if (rewardRoll < 0.45) prizeTier = { payout: Math.floor(bet * 1.5), outcome: 'small', prize: 'Small Plush' };
+  else if (rewardRoll < 0.68) prizeTier = { payout: bet * 2, outcome: 'medium', prize: 'Rare Figure' };
+  else if (rewardRoll < 0.8) prizeTier = { payout: bet * 3, outcome: 'large', prize: 'Huge Prize' };
+  else if (rewardRoll < 0.86) prizeTier = { payout: bet * 6, outcome: 'jackpot', prize: 'Master Jackpot' };
+
+  return {
+    ok: true,
+    round: {
+      bet,
+      targetLane: metaRandomInt(0, 2),
+      prizeTier,
+    },
+    coins: meta.coins,
+  };
+}
+
+function resolveCraneRound(round, cursorLane) {
+  const meta = getMetaProgress();
+  if (!round || typeof round.bet !== 'number') {
+    return { ok: false, error: 'No active crane round.', coins: meta.coins };
+  }
+
+  const distance = Math.abs((cursorLane ?? 1) - round.targetLane);
+  let payout = 0;
+  let outcome = 'miss';
+  let prize = 'Nothing';
+
+  if (distance === 0) {
+    payout = round.prizeTier.payout;
+    outcome = round.prizeTier.outcome;
+    prize = round.prizeTier.prize;
+  } else if (distance === 1 && round.prizeTier.payout > 0) {
+    payout = Math.floor(round.prizeTier.payout * 0.4);
+    outcome = 'graze';
+    prize = 'Glancing Grab';
+  }
+
+  meta.coins += payout;
+  const result = {
+    at: Date.now(),
+    game: 'crane',
+    bet: round.bet,
+    payout,
+    outcome,
+    prize,
+    net: payout - round.bet,
+    lane: cursorLane,
+    targetLane: round.targetLane,
   };
   meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
   saveMetaProgress(meta);
