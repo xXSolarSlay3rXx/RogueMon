@@ -1226,17 +1226,20 @@ function getEndlessCollection() {
 
 function getDefaultCoinSkin() {
   return {
-    skinId: 'default-pokeball',
+    skinId: 'default-roguemon',
     speciesId: 0,
-    name: 'Poke Ball',
-    spriteUrl: 'ui/pokeball.svg',
+    name: 'RogueMon Coin',
+    spriteUrl: 'rogue-mon-logo.png',
     accent: '#ffd36c',
   };
 }
 
 function getUnlockedCoinSkins() {
   const meta = getMetaProgress();
-  return meta.unlockedCoinSkins?.length ? meta.unlockedCoinSkins : [getDefaultCoinSkin()];
+  const defaultSkin = getDefaultCoinSkin();
+  const extraSkins = Array.isArray(meta.unlockedCoinSkins) ? meta.unlockedCoinSkins : [];
+  const merged = [defaultSkin, ...extraSkins].filter((entry, index, arr) => arr.findIndex(other => other.skinId === entry.skinId) === index);
+  return merged;
 }
 
 function getCurrentCoinSkin() {
@@ -1246,7 +1249,7 @@ function getCurrentCoinSkin() {
 
 function setCurrentCoinSkin(skinId) {
   const meta = getMetaProgress();
-  const skin = (meta.unlockedCoinSkins || []).find(entry => entry.skinId === skinId) || getDefaultCoinSkin();
+  const skin = getUnlockedCoinSkins().find(entry => entry.skinId === skinId) || getDefaultCoinSkin();
   meta.currentCoinSkin = skin;
   saveMetaProgress(meta);
   return skin;

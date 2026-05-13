@@ -3690,7 +3690,7 @@ function renderCoinSkinCards(entries = [], currentSkinId = '') {
   }
 
   return entries.map(entry => `
-    <div class="coin-skin-card ${entry.skinId === currentSkinId ? 'is-active' : ''}">
+    <div class="coin-skin-card ${entry.skinId === currentSkinId ? 'is-active' : ''} ${entry.skinId === 'default-roguemon' ? 'coin-skin-card--default' : ''}">
       <div class="coin-skin-preview" style="--coin-accent:${entry.accent || '#ffd36c'}">
         <img src="${entry.spriteUrl}" alt="${entry.name}">
       </div>
@@ -3890,7 +3890,7 @@ function animateArcadePlay(modal, gameId, result) {
       const slotSymbols = result.reels || [];
       inner = `
         <div class="arcade-animation-box arcade-animation-box--slots">
-          <div class="arcade-animation-title">Slot Machine</div>
+          <div class="arcade-animation-title">Celadon Slots</div>
           <div class="slot-machine-shell">
             <div class="slot-machine-header">
               <span>Lucky Lanes</span>
@@ -3920,7 +3920,7 @@ function animateArcadePlay(modal, gameId, result) {
       const laneLabels = ['Left', 'Center', 'Right'];
       inner = `
         <div class="arcade-animation-box arcade-animation-box--crane">
-          <div class="arcade-animation-title">Crane Game</div>
+          <div class="arcade-animation-title">Prize Catcher</div>
           <div class="crane-machine crane-machine--result">
             <div class="crane-track"></div>
             <div class="crane-arm crane-arm--result lane-${result.lane ?? 1}"></div>
