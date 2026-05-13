@@ -1330,6 +1330,105 @@ function playCoinFlip(betAmount) {
   return { ok: true, ...result, coins: meta.coins };
 }
 
+function playSlotMachine(betAmount) {
+  const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
+  const meta = getMetaProgress();
+  if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
+  if (meta.coins < bet) return { ok: false, error: 'You need ' + bet + ' coins for that bet.', coins: meta.coins };
+
+  const symbols = ['Berry', 'Star', 'Ball', 'Seven', 'Crown'];
+  const reels = [
+    symbols[metaRandomInt(0, symbols.length - 1)],
+    symbols[metaRandomInt(0, symbols.length - 1)],
+    symbols[metaRandomInt(0, symbols.length - 1)],
+  ];
+
+  meta.coins -= bet;
+
+  let payout = 0;
+  let outcome = 'loss';
+
+  if (reels.every(symbol => symbol === 'Seven')) {
+    payout = bet * 8;
+    outcome = 'jackpot';
+  } else if (reels.every(symbol => symbol === 'Crown')) {
+    payout = bet * 6;
+    outcome = 'grand';
+  } else if (reels.every(symbol => symbol === reels[0])) {
+    payout = bet * 4;
+    outcome = 'triple';
+  } else {
+    const counts = reels.reduce((acc, symbol) => {
+      acc[symbol] = (acc[symbol] || 0) + 1;
+      return acc;
+    }, {});
+    const maxMatch = Math.max(...Object.values(counts));
+    if (maxMatch === 2) {
+      payout = Math.floor(bet * 1.5);
+      outcome = 'pair';
+    }
+  }
+
+  meta.coins += payout;
+  const result = {
+    at: Date.now(),
+    game: 'slots',
+    bet,
+    payout,
+    outcome,
+    net: payout - bet,
+    reels,
+  };
+  meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
+  saveMetaProgress(meta);
+  return { ok: true, ...result, coins: meta.coins };
+}
+
+function playCraneGame(betAmount) {
+  const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
+  const meta = getMetaProgress();
+  if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
+  if (meta.coins < bet) return { ok: false, error: 'You need ' + bet + ' coins for that bet.', coins: meta.coins };
+
+  meta.coins -= bet;
+  const roll = metaRandomUnit();
+  let payout = 0;
+  let outcome = 'miss';
+  let prize = 'Nothing';
+
+  if (roll < 0.45) {
+    payout = Math.floor(bet * 1.5);
+    outcome = 'small';
+    prize = 'Small Plush';
+  } else if (roll < 0.67) {
+    payout = bet * 2;
+    outcome = 'medium';
+    prize = 'Rare Figure';
+  } else if (roll < 0.78) {
+    payout = bet * 3;
+    outcome = 'large';
+    prize = 'Huge Prize';
+  } else if (roll < 0.83) {
+    payout = bet * 6;
+    outcome = 'jackpot';
+    prize = 'Master Jackpot';
+  }
+
+  meta.coins += payout;
+  const result = {
+    at: Date.now(),
+    game: 'crane',
+    bet,
+    payout,
+    outcome,
+    prize,
+    net: payout - bet,
+  };
+  meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
+  saveMetaProgress(meta);
+  return { ok: true, ...result, coins: meta.coins };
+}
+
 // BST ranges per map
 const MAP_BST_RANGES = [
   { min: 200, max: 310 },   // Map 1

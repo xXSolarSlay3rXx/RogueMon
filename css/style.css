@@ -7080,32 +7080,43 @@ h1, h2, .pixel-font {
 .title-meta-bar {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
-  margin: 12px 0 16px;
+  margin: 10px 0 12px;
 }
 
-.title-meta-chip {
-  min-width: 136px;
-  padding: 10px 14px;
-  border: 2px solid rgba(124, 209, 255, 0.35);
-  border-radius: 12px;
-  background: linear-gradient(180deg, rgba(10, 18, 39, 0.92), rgba(8, 14, 30, 0.9));
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
-  text-align: center;
+.title-meta-strip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(124, 209, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(8, 16, 34, 0.76);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+}
+
+.title-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(17, 28, 54, 0.82);
 }
 
 .title-meta-label {
-  display: block;
-  margin-bottom: 6px;
+  display: inline-block;
   color: #93d9ff;
-  font-size: 9px;
+  font-size: 8px;
+  text-transform: uppercase;
 }
 
 .title-meta-value {
-  display: block;
+  display: inline-block;
   color: #fff9cf;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .shop-modal-overlay {
@@ -7358,6 +7369,52 @@ h1, h2, .pixel-font {
 .coinflip-result.jackpot { border-color: rgba(255, 210, 109, 0.5); }
 .coinflip-result.loss { border-color: rgba(255, 132, 161, 0.38); }
 
+.arcade-mode-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.arcade-mode-btn {
+  padding: 13px 10px;
+  border: 1px solid rgba(124, 209, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(11, 21, 43, 0.9);
+  color: #cfe8ff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.arcade-mode-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(124, 209, 255, 0.34);
+}
+
+.arcade-mode-btn.is-active {
+  border-color: rgba(255, 215, 111, 0.46);
+  background: linear-gradient(180deg, rgba(28, 53, 96, 0.94), rgba(13, 24, 49, 0.94));
+  color: #fff6bf;
+}
+
+.arcade-odds-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.arcade-odds-pill {
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(124, 209, 255, 0.16);
+  background: rgba(9, 18, 38, 0.84);
+  color: #a9d0f7;
+  font-size: 8px;
+}
+
 .gamble-bet-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -7417,13 +7474,19 @@ h1, h2, .pixel-font {
 @media (max-width: 720px) {
   .title-meta-bar {
     gap: 8px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
-  .title-meta-chip {
-    min-width: 0;
+  .title-meta-strip {
+    width: 100%;
+    border-radius: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .title-meta-pill {
     flex: 1 1 calc(50% - 8px);
-    padding: 9px 10px;
+    justify-content: center;
   }
 
   .shop-modal-overlay {
@@ -7443,6 +7506,7 @@ h1, h2, .pixel-font {
   }
 
   .shop-balance-row,
+  .arcade-mode-row,
   .gamble-bet-grid,
   .collection-grid--recent,
   .collection-grid--roster {

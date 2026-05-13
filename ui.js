@@ -258,22 +258,30 @@ function refreshTitleMetaBar() {
   const bar = document.getElementById('title-meta-bar');
   if (!bar) return;
 
+  const titleScreen = document.getElementById('title-screen');
+  const anchor = titleScreen?.querySelector('.button-row-small');
+  if (titleScreen && anchor && bar.nextElementSibling !== anchor) {
+    titleScreen.insertBefore(bar, anchor);
+  }
+
   const coins = typeof getCoinBalance === 'function' ? getCoinBalance() : 0;
   const collection = typeof getEndlessCollection === 'function' ? getEndlessCollection() : [];
   const meta = typeof getMetaProgress === 'function' ? getMetaProgress() : { openedBoosters: 0 };
 
   bar.innerHTML = `
-    <div class="title-meta-chip">
-      <span class="title-meta-label">Coins</span>
-      <span class="title-meta-value">${coins}</span>
-    </div>
-    <div class="title-meta-chip">
-      <span class="title-meta-label">Endless Roster</span>
-      <span class="title-meta-value">${collection.length}</span>
-    </div>
-    <div class="title-meta-chip">
-      <span class="title-meta-label">Boosters Opened</span>
-      <span class="title-meta-value">${meta.openedBoosters || 0}</span>
+    <div class="title-meta-strip">
+      <span class="title-meta-pill">
+        <span class="title-meta-label">Coins</span>
+        <span class="title-meta-value">${coins}</span>
+      </span>
+      <span class="title-meta-pill">
+        <span class="title-meta-label">Roster</span>
+        <span class="title-meta-value">${collection.length}</span>
+      </span>
+      <span class="title-meta-pill">
+        <span class="title-meta-label">Boosters</span>
+        <span class="title-meta-value">${meta.openedBoosters || 0}</span>
+      </span>
     </div>
   `;
 }
@@ -3776,7 +3784,7 @@ function openShopModal() {
   document.body.appendChild(modal);
 }
 
-function openCoinFlipModal() {
+function openArcadeModal() {
   const existing = document.getElementById('coin-flip-modal');
   if (existing) { existing.remove(); return; }
 
@@ -3785,8 +3793,40 @@ function openCoinFlipModal() {
   modal.className = 'shop-modal-overlay';
 
   const close = () => modal.remove();
+  let currentGame = 'coinflip';
+
+  const gameConfig = {
+    coinflip: {
+      title: 'Coin Flip',
+      subtitle: 'Clean odds and fast bets when you want a quick double-up.',
+      chances: ['45% double', '7% triple', '48% miss'],
+      play: bet => playCoinFlip(bet),
+      resultLabel: result => result.outcome === 'loss' ? 'Miss' : result.outcome === 'jackpot' ? 'Jackpot' : 'Double Up',
+      resultCopy: result => `${result.net >= 0 ? '+' : ''}${result.net} coins`,
+      historyLabel: entry => entry.outcome === 'loss' ? 'Loss' : entry.outcome === 'jackpot' ? 'Jackpot' : 'Double',
+    },
+    slots: {
+      title: 'Slot Machine',
+      subtitle: 'Three reels, bigger swings, and a real jackpot ceiling.',
+      chances: ['Pair pays 1.5x', 'Triple pays 4x', '777 pays 8x'],
+      play: bet => playSlotMachine(bet),
+      resultLabel: result => result.outcome === 'jackpot' ? '777 Jackpot' : result.outcome === 'grand' ? 'Royal Crown' : result.outcome === 'triple' ? 'Triple Match' : result.outcome === 'pair' ? 'Pair Match' : 'No Match',
+      resultCopy: result => `${(result.reels || []).join(' - ')} | ${result.net >= 0 ? '+' : ''}${result.net} coins`,
+      historyLabel: entry => entry.outcome === 'jackpot' ? '777' : entry.outcome === 'grand' ? 'Crown' : entry.outcome === 'triple' ? 'Triple' : entry.outcome === 'pair' ? 'Pair' : 'Miss',
+    },
+    crane: {
+      title: 'Crane Game',
+      subtitle: 'A softer game with smaller wins, rare spikes, and plush-machine vibes.',
+      chances: ['45% small prize', '22% rare figure', '5% jackpot'],
+      play: bet => playCraneGame(bet),
+      resultLabel: result => result.prize || 'Miss',
+      resultCopy: result => `${result.net >= 0 ? '+' : ''}${result.net} coins`,
+      historyLabel: entry => entry.prize || 'Miss',
+    },
+  };
+
   const play = (bet) => {
-    const result = playCoinFlip(bet);
+    const result = gameConfig[currentGame].play(bet);
     if (!result.ok) {
       alert(result.error || 'That bet could not be played.');
       return;
@@ -3799,19 +3839,20 @@ function openCoinFlipModal() {
     const meta = getMetaProgress();
     const coins = getCoinBalance();
     const history = meta.gambleHistory || [];
+    const config = gameConfig[currentGame];
     const latestMarkup = latestResult
       ? `<div class="coinflip-result ${latestResult.outcome}">
-          <strong>${latestResult.outcome === 'loss' ? 'Miss' : latestResult.outcome === 'jackpot' ? 'Jackpot' : 'Double Up'}</strong>
-          <span>${latestResult.net >= 0 ? '+' : ''}${latestResult.net} coins</span>
+          <strong>${config.resultLabel(latestResult)}</strong>
+          <span>${config.resultCopy(latestResult)}</span>
         </div>`
-      : `<div class="coinflip-result idle"><strong>Heads or tails vibes</strong><span>45% double, 7% triple, otherwise the house keeps the bet.</span></div>`;
+      : `<div class="coinflip-result idle"><strong>${config.title}</strong><span>${config.subtitle}</span></div>`;
 
     modal.innerHTML = `
       <div class="shop-modal-box gamble-modal-box">
         <div class="shop-modal-header">
           <div>
-            <h2>Coin Flip</h2>
-            <p>Take a risk with story coins and stack up your future Endless budget.</p>
+            <h2>Game Corner</h2>
+            <p>Take story coins for a spin and build up the budget for your future Endless roster.</p>
           </div>
           <button class="ach-modal-close" id="coin-flip-close">&times;</button>
         </div>
@@ -3822,16 +3863,26 @@ function openCoinFlipModal() {
               <strong>${coins}</strong>
             </div>
             <div class="shop-balance-chip">
-              <span class="shop-balance-label">Double Chance</span>
-              <strong>45%</strong>
+              <span class="shop-balance-label">Mode</span>
+              <strong>${config.title}</strong>
             </div>
             <div class="shop-balance-chip">
-              <span class="shop-balance-label">Jackpot Chance</span>
-              <strong>7%</strong>
+              <span class="shop-balance-label">Mood</span>
+              <strong>High Risk</strong>
             </div>
           </div>
 
+          <div class="arcade-mode-row">
+            <button class="arcade-mode-btn ${currentGame === 'coinflip' ? 'is-active' : ''}" data-game="coinflip">Coin Flip</button>
+            <button class="arcade-mode-btn ${currentGame === 'slots' ? 'is-active' : ''}" data-game="slots">Slots</button>
+            <button class="arcade-mode-btn ${currentGame === 'crane' ? 'is-active' : ''}" data-game="crane">Crane Game</button>
+          </div>
+
           ${latestMarkup}
+
+          <div class="arcade-odds-row">
+            ${config.chances.map(line => `<span class="arcade-odds-pill">${line}</span>`).join('')}
+          </div>
 
           <div class="shop-section-title">Pick a Bet</div>
           <div class="gamble-bet-grid">
@@ -3844,19 +3895,25 @@ function openCoinFlipModal() {
 
           <div class="shop-section-title">Recent Results</div>
           <div class="gamble-history-list">
-            ${history.length ? history.map(entry => `
+            ${history.length ? history.filter(entry => (entry.game || 'coinflip') === currentGame).map(entry => `
               <div class="gamble-history-row ${entry.outcome}">
-                <span>${entry.outcome === 'loss' ? 'Loss' : entry.outcome === 'jackpot' ? 'Jackpot' : 'Double'}</span>
+                <span>${config.historyLabel(entry)}</span>
                 <span>Bet ${entry.bet}</span>
                 <span>${entry.net >= 0 ? '+' : ''}${entry.net}</span>
               </div>
-            `).join('') : '<div class="collection-empty">No coin flips yet.</div>'}
+            `).join('') || '<div class="collection-empty">No results for this game yet.</div>' : '<div class="collection-empty">No results for this game yet.</div>'}
           </div>
         </div>
       </div>
     `;
 
     modal.querySelector('#coin-flip-close')?.addEventListener('click', close);
+    modal.querySelectorAll('.arcade-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentGame = btn.dataset.game;
+        render();
+      });
+    });
     modal.querySelectorAll('.gamble-bet-btn').forEach(btn => {
       btn.addEventListener('click', () => play(Number(btn.dataset.bet)));
     });
@@ -3865,6 +3922,10 @@ function openCoinFlipModal() {
   render();
   modal.addEventListener('click', e => { if (e.target === modal) close(); });
   document.body.appendChild(modal);
+}
+
+function openCoinFlipModal() {
+  openArcadeModal();
 }
 
 // ---- Achievements Modal ----
