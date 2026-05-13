@@ -1089,6 +1089,7 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
   {
     id: 'common',
     label: 'Scout Pack',
+    spriteUrl: 'sprites/Booster/Scout Pack.png',
     cost: 20,
     minBst: 220,
     maxBst: 360,
@@ -1103,6 +1104,7 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
   {
     id: 'uncommon',
     label: 'Trainer Pack',
+    spriteUrl: 'sprites/Booster/Trainer Pack.png',
     cost: 45,
     minBst: 320,
     maxBst: 440,
@@ -1117,6 +1119,7 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
   {
     id: 'rare',
     label: 'Ace Pack',
+    spriteUrl: 'sprites/Booster/Ace Pack.png',
     cost: 80,
     minBst: 420,
     maxBst: 540,
@@ -1131,6 +1134,7 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
   {
     id: 'epic',
     label: 'Champion Pack',
+    spriteUrl: 'sprites/Booster/Champion Pack.png',
     cost: 135,
     minBst: 520,
     maxBst: 620,
@@ -1145,6 +1149,7 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
   {
     id: 'mythic',
     label: 'Mythic Pack',
+    spriteUrl: 'sprites/Booster/Mythic Pack.png',
     cost: 220,
     minBst: 580,
     maxBst: 720,
@@ -1159,6 +1164,7 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
   {
     id: 'coinmint',
     label: 'Coin Mint Pack',
+    spriteUrl: 'sprites/Booster/Coin Mint Pack.png',
     cost: 60,
     kind: 'coinskin',
     minBst: 0,

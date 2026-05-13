@@ -3816,6 +3816,7 @@ function animateBoosterOpening(modal, result) {
         <div class="shop-reveal-title">Opening ${result.pack.label}</div>
         <div class="booster-pack-shell rarity-${result.pack.id}" style="--pack-accent:${result.pack.accent}">
           <div class="booster-pack-glow"></div>
+          ${result.pack.spriteUrl ? `<img class="booster-pack-art" src="${result.pack.spriteUrl}" alt="${result.pack.label}">` : ''}
           <div class="booster-pack-label">${result.pack.label}</div>
         </div>
         <div class="booster-reveal-row">
@@ -4008,6 +4009,9 @@ function openShopModal() {
           <div class="shop-pack-grid">
             ${ENDLESS_BOOSTER_PACKS.map(pack => `
               <div class="shop-pack-card rarity-${pack.id}" style="--pack-accent:${pack.accent}">
+                <div class="shop-pack-art-wrap">
+                  ${pack.spriteUrl ? `<img class="shop-pack-art" src="${pack.spriteUrl}" alt="${pack.label}">` : ''}
+                </div>
                 <div class="shop-pack-rarity">${pack.id.toUpperCase()}</div>
                 <div class="shop-pack-name">${pack.label}</div>
                 <div class="shop-pack-cost">${pack.cost} Coins</div>
