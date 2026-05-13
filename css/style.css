@@ -7102,8 +7102,17 @@ h1, h2, .pixel-font {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
+  border: 1px solid rgba(124, 209, 255, 0.12);
   border-radius: 999px;
   background: rgba(17, 28, 54, 0.82);
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.title-meta-pill:hover {
+  transform: translateY(-1px);
+  border-color: rgba(124, 209, 255, 0.24);
+  background: rgba(24, 39, 71, 0.88);
 }
 
 .title-meta-label {
@@ -7204,6 +7213,16 @@ h1, h2, .pixel-font {
   color: #c8dfff;
   font-size: 11px;
   line-height: 1.7;
+}
+
+.shop-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+.shop-toolbar-btn {
+  min-width: 160px;
 }
 
 .shop-section-title {
@@ -7347,6 +7366,43 @@ h1, h2, .pixel-font {
   font-size: 10px;
 }
 
+.roster-modal-box {
+  width: min(1040px, 95vw);
+}
+
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.roster-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.roster-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.roster-card-value {
+  color: #fff0a8;
+  font-size: 8px;
+}
+
+.roster-sell-btn {
+  padding: 8px 12px;
+}
+
+.roster-sale-banner {
+  margin-top: 16px;
+}
+
 .gamble-modal-box {
   width: min(760px, 94vw);
 }
@@ -7368,6 +7424,204 @@ h1, h2, .pixel-font {
 .coinflip-result.double { border-color: rgba(122, 244, 170, 0.4); }
 .coinflip-result.jackpot { border-color: rgba(255, 210, 109, 0.5); }
 .coinflip-result.loss { border-color: rgba(255, 132, 161, 0.38); }
+
+.shop-reveal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 10, 22, 0.84);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.shop-reveal-overlay.is-visible {
+  opacity: 1;
+}
+
+.shop-reveal-overlay.is-fading {
+  opacity: 0;
+}
+
+.shop-reveal-box,
+.arcade-animation-box {
+  width: min(680px, 92%);
+  padding: 24px;
+  border: 1px solid rgba(124, 209, 255, 0.2);
+  border-radius: 18px;
+  background: rgba(9, 18, 40, 0.96);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.32);
+  text-align: center;
+}
+
+.shop-reveal-title,
+.arcade-animation-title {
+  color: #fff3a9;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.booster-pack-shell {
+  position: relative;
+  width: 180px;
+  height: 240px;
+  margin: 0 auto 20px;
+  border: 2px solid color-mix(in srgb, var(--pack-accent, #7dd7ff) 55%, #1c2c4a);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(17, 30, 58, 0.98), rgba(10, 19, 38, 0.98));
+  overflow: hidden;
+  animation: boosterFloat 1.8s ease-in-out infinite;
+}
+
+.booster-pack-glow {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--pack-accent, #7dd7ff) 55%, transparent) 0%, transparent 65%);
+  opacity: 0.6;
+  animation: boosterPulse 1.25s ease-in-out infinite;
+}
+
+.booster-pack-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff6cf;
+  font-size: 12px;
+  width: 80%;
+}
+
+.booster-reveal-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.booster-reveal-card {
+  padding: 12px;
+  border: 1px solid rgba(124, 209, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(12, 21, 43, 0.9);
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+  animation: revealCardIn 360ms ease forwards;
+}
+
+.booster-reveal-card.reveal-1 { animation-delay: 0.65s; }
+.booster-reveal-card.reveal-2 { animation-delay: 1s; }
+.booster-reveal-card.reveal-3 { animation-delay: 1.35s; }
+
+.booster-reveal-card img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.booster-reveal-card span {
+  display: block;
+  margin-top: 8px;
+  color: #ffffff;
+  font-size: 10px;
+}
+
+.arcade-reveal-overlay .arcade-animation-box {
+  width: min(560px, 92%);
+}
+
+.coin-spinner {
+  width: 110px;
+  height: 110px;
+  margin: 8px auto 16px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 214, 115, 0.5);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7), transparent 28%),
+    linear-gradient(180deg, #ffd46e, #d38f26);
+  box-shadow: 0 0 24px rgba(255, 199, 93, 0.35);
+  animation: coinSpin 1.1s ease-in-out 1;
+}
+
+.slot-reels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 10px auto 16px;
+  max-width: 360px;
+}
+
+.slot-reel {
+  padding: 24px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(124, 209, 255, 0.2);
+  background: rgba(13, 24, 48, 0.92);
+  color: #fff6cf;
+  font-size: 12px;
+  animation: reelDrop 700ms ease both;
+}
+
+.slot-reel.reel-2 { animation-delay: 130ms; }
+.slot-reel.reel-3 { animation-delay: 260ms; }
+
+.crane-machine {
+  position: relative;
+  width: 260px;
+  height: 180px;
+  margin: 10px auto 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(124, 209, 255, 0.2);
+  background: linear-gradient(180deg, rgba(17, 30, 58, 0.95), rgba(10, 18, 39, 0.94));
+  overflow: hidden;
+}
+
+.crane-arm {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 6px;
+  height: 104px;
+  background: #d3e8ff;
+  transform: translateX(-50%);
+  animation: craneDrop 1.5s ease-in-out 1;
+}
+
+.crane-arm::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 36px;
+  height: 18px;
+  border: 3px solid #d3e8ff;
+  border-top: 0;
+  border-radius: 0 0 18px 18px;
+  transform: translateX(-50%);
+}
+
+.crane-prize {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  width: 48px;
+  height: 48px;
+  margin-left: -24px;
+  border-radius: 12px;
+  background: rgba(255, 212, 110, 0.16);
+  color: #fff6cf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  animation: prizePop 1.6s ease-in-out 1;
+}
+
+.arcade-animation-copy {
+  color: #d8ebff;
+  font-size: 10px;
+}
 
 .arcade-mode-row {
   display: grid;
@@ -7457,6 +7711,45 @@ h1, h2, .pixel-font {
 .gamble-history-row.jackpot { border-left: 3px solid #ffd36c; }
 .gamble-history-row.loss { border-left: 3px solid #ff8da3; }
 
+@keyframes boosterFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes boosterPulse {
+  0%, 100% { transform: scale(0.95); opacity: 0.45; }
+  50% { transform: scale(1.08); opacity: 0.8; }
+}
+
+@keyframes revealCardIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes coinSpin {
+  0% { transform: rotateY(0deg) scale(0.9); }
+  35% { transform: rotateY(180deg) scale(1.08); }
+  70% { transform: rotateY(360deg) scale(0.96); }
+  100% { transform: rotateY(540deg) scale(1); }
+}
+
+@keyframes reelDrop {
+  0% { opacity: 0; transform: translateY(-18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes craneDrop {
+  0%, 100% { height: 86px; }
+  45% { height: 130px; }
+  65% { height: 98px; }
+}
+
+@keyframes prizePop {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+  40% { transform: translateY(-10px) scale(1.08); opacity: 1; }
+  70% { transform: translateY(-4px) scale(0.98); }
+}
+
 @media (max-width: 1100px) {
   .shop-pack-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -7467,6 +7760,10 @@ h1, h2, .pixel-font {
   }
 
   .collection-grid--roster {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .roster-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
@@ -7487,6 +7784,7 @@ h1, h2, .pixel-font {
   .title-meta-pill {
     flex: 1 1 calc(50% - 8px);
     justify-content: center;
+    padding: 8px 10px;
   }
 
   .shop-modal-overlay {
@@ -7513,8 +7811,20 @@ h1, h2, .pixel-font {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .roster-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .shop-pack-grid {
     grid-template-columns: 1fr;
+  }
+
+  .booster-reveal-row {
+    grid-template-columns: 1fr;
+  }
+
+  .slot-reels {
+    max-width: 100%;
   }
 }
 

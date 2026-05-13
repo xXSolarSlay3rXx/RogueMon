@@ -1202,6 +1202,32 @@ function getEndlessCollection() {
   return getMetaProgress().endlessCollection || [];
 }
 
+function getEndlessEntrySellValue(entry) {
+  if (!entry) return 0;
+  const rarityBase = {
+    common: 8,
+    uncommon: 18,
+    rare: 34,
+    epic: 58,
+    mythic: 95,
+  };
+  const base = rarityBase[entry.rarity] || 10;
+  return Math.max(5, base + ((entry.levelBonus || 0) * 3) + ((entry.statBonus || 0) * 4));
+}
+
+function sellEndlessCollectionEntry(entryId) {
+  const meta = getMetaProgress();
+  const index = (meta.endlessCollection || []).findIndex(entry => entry.entryId === entryId);
+  if (index === -1) {
+    return { ok: false, error: 'That roster entry no longer exists.', coins: meta.coins };
+  }
+  const [entry] = meta.endlessCollection.splice(index, 1);
+  const value = getEndlessEntrySellValue(entry);
+  meta.coins += value;
+  saveMetaProgress(meta);
+  return { ok: true, sold: entry, amount: value, coins: meta.coins };
+}
+
 function getUnlockedBoosterMaxDexId() {
   const dexCaps = { 1: 151, 2: 251, 3: 386, 4: 493, 5: 649, 6: 721 };
   try {
@@ -1320,6 +1346,7 @@ function playCoinFlip(betAmount) {
   meta.coins += payout;
   const result = {
     at: Date.now(),
+    game: 'coinflip',
     bet,
     payout,
     outcome,

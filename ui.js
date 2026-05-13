@@ -270,20 +270,24 @@ function refreshTitleMetaBar() {
 
   bar.innerHTML = `
     <div class="title-meta-strip">
-      <span class="title-meta-pill">
+      <button class="title-meta-pill" data-meta-action="arcade">
         <span class="title-meta-label">Coins</span>
         <span class="title-meta-value">${coins}</span>
-      </span>
-      <span class="title-meta-pill">
+      </button>
+      <button class="title-meta-pill" data-meta-action="roster">
         <span class="title-meta-label">Roster</span>
         <span class="title-meta-value">${collection.length}</span>
-      </span>
-      <span class="title-meta-pill">
+      </button>
+      <button class="title-meta-pill" data-meta-action="shop">
         <span class="title-meta-label">Boosters</span>
         <span class="title-meta-value">${meta.openedBoosters || 0}</span>
-      </span>
+      </button>
     </div>
   `;
+
+  bar.querySelector('[data-meta-action="arcade"]')?.addEventListener('click', () => openArcadeModal());
+  bar.querySelector('[data-meta-action="roster"]')?.addEventListener('click', () => openRosterModal());
+  bar.querySelector('[data-meta-action="shop"]')?.addEventListener('click', () => openShopModal());
 }
 
 // Speed multiplier for battle animation (1 = normal, SKIP_SPEED = fast/skip)
@@ -3680,6 +3684,186 @@ function renderEndlessCollectionCards(entries = [], emptyLabel = 'No recruits ye
   `).join('');
 }
 
+function openRosterModal() {
+  const existing = document.getElementById('roster-modal');
+  if (existing) { existing.remove(); return; }
+
+  const modal = document.createElement('div');
+  modal.id = 'roster-modal';
+  modal.className = 'shop-modal-overlay';
+
+  const close = () => modal.remove();
+  const handleSell = (entryId) => {
+    const result = sellEndlessCollectionEntry(entryId);
+    if (!result.ok) {
+      alert(result.error || 'That recruit could not be sold.');
+      return;
+    }
+    render(result);
+    if (typeof refreshTitleMetaBar === 'function') refreshTitleMetaBar();
+  };
+
+  const render = (lastSale = null) => {
+    const collection = getEndlessCollection();
+    const coins = getCoinBalance();
+
+    modal.innerHTML = `
+      <div class="shop-modal-box roster-modal-box">
+        <div class="shop-modal-header">
+          <div>
+            <h2>Endless Roster</h2>
+            <p>These recruits are waiting for the new Endless mode. Sell extras for more story coins whenever you want.</p>
+          </div>
+          <button class="ach-modal-close" id="roster-modal-close">&times;</button>
+        </div>
+        <div class="shop-modal-body">
+          <div class="shop-balance-row">
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Coins</span>
+              <strong>${coins}</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Roster Size</span>
+              <strong>${collection.length}</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Sell Tip</span>
+              <strong>Rarity + bonuses</strong>
+            </div>
+          </div>
+
+          ${lastSale ? `
+            <div class="coinflip-result double roster-sale-banner">
+              <strong>Sold ${lastSale.sold.name}</strong>
+              <span>+${lastSale.amount} coins</span>
+            </div>
+          ` : ''}
+
+          <div class="shop-section-title">Your Recruits</div>
+          <div class="roster-grid">
+            ${collection.length ? collection.map(entry => `
+              <div class="collection-card roster-card rarity-${entry.rarity || 'common'}">
+                <div class="collection-card-accent" style="--collection-accent:${entry.rarityAccent || '#7dd7ff'}"></div>
+                <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
+                <div class="collection-card-name">${entry.name}</div>
+                <div class="collection-card-types">
+                  ${(entry.types || []).map(type => `<span class="type-badge type-${String(type).toLowerCase()}">${type}</span>`).join('')}
+                </div>
+                <div class="collection-card-meta">
+                  <span>+${entry.levelBonus || 0} Lv</span>
+                  <span>+${entry.statBonus || 0} Stats</span>
+                </div>
+                <div class="roster-card-footer">
+                  <span class="roster-card-value">${getEndlessEntrySellValue(entry)} Coins</span>
+                  <button class="btn-secondary roster-sell-btn" data-entry-id="${entry.entryId}">Sell</button>
+                </div>
+              </div>
+            `).join('') : '<div class="collection-empty">Your Endless roster is empty.</div>'}
+          </div>
+        </div>
+      </div>
+    `;
+
+    modal.querySelector('#roster-modal-close')?.addEventListener('click', close);
+    modal.querySelectorAll('.roster-sell-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleSell(btn.dataset.entryId));
+    });
+  };
+
+  render();
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.body.appendChild(modal);
+}
+
+function animateBoosterOpening(modal, result) {
+  return new Promise(resolve => {
+    if (!modal) return resolve();
+    const overlay = document.createElement('div');
+    overlay.className = 'shop-reveal-overlay';
+    overlay.innerHTML = `
+      <div class="shop-reveal-box">
+        <div class="shop-reveal-title">Opening ${result.pack.label}</div>
+        <div class="booster-pack-shell rarity-${result.pack.id}" style="--pack-accent:${result.pack.accent}">
+          <div class="booster-pack-glow"></div>
+          <div class="booster-pack-label">${result.pack.label}</div>
+        </div>
+        <div class="booster-reveal-row">
+          ${result.pulls.map((pull, index) => `
+            <div class="booster-reveal-card reveal-${index + 1}">
+              <img src="${pull.spriteUrl}" alt="${pull.name}">
+              <span>${pull.name}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    modal.appendChild(overlay);
+    setTimeout(() => {
+      overlay.classList.add('is-visible');
+    }, 20);
+    setTimeout(() => {
+      overlay.classList.add('is-fading');
+    }, 2200);
+    setTimeout(() => {
+      overlay.remove();
+      resolve();
+    }, 2800);
+  });
+}
+
+function animateArcadePlay(modal, gameId, result) {
+  return new Promise(resolve => {
+    if (!modal) return resolve();
+    const overlay = document.createElement('div');
+    overlay.className = 'shop-reveal-overlay arcade-reveal-overlay';
+
+    let inner = '';
+    if (gameId === 'coinflip') {
+      inner = `
+        <div class="arcade-animation-box">
+          <div class="arcade-animation-title">Coin Flip</div>
+          <div class="coin-spinner ${result.outcome}"></div>
+          <div class="arcade-animation-copy">${result.outcome === 'loss' ? 'The house wins this one.' : result.outcome === 'jackpot' ? 'Triple payout!' : 'Heads! Double up.'}</div>
+        </div>
+      `;
+    } else if (gameId === 'slots') {
+      inner = `
+        <div class="arcade-animation-box">
+          <div class="arcade-animation-title">Slot Machine</div>
+          <div class="slot-reels">
+            ${(result.reels || []).map((symbol, index) => `
+              <div class="slot-reel reel-${index + 1}">
+                <span>${symbol}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="arcade-animation-copy">${result.outcome === 'loss' ? 'No line this time.' : result.outcome === 'jackpot' ? '777 jackpot!' : result.outcome === 'grand' ? 'Royal crown hit!' : result.outcome === 'triple' ? 'Triple match!' : 'Pair payout!'}</div>
+        </div>
+      `;
+    } else {
+      inner = `
+        <div class="arcade-animation-box">
+          <div class="arcade-animation-title">Crane Game</div>
+          <div class="crane-machine">
+            <div class="crane-arm"></div>
+            <div class="crane-prize">${result.prize === 'Nothing' ? '?' : result.prize[0]}</div>
+          </div>
+          <div class="arcade-animation-copy">${result.prize === 'Nothing' ? 'The claw slipped away.' : `${result.prize} secured!`}</div>
+        </div>
+      `;
+    }
+
+    overlay.innerHTML = inner;
+    modal.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('is-visible'), 20);
+    setTimeout(() => overlay.classList.add('is-fading'), 1800);
+    setTimeout(() => {
+      overlay.remove();
+      resolve();
+    }, 2350);
+  });
+}
+
 function openShopModal() {
   const existing = document.getElementById('shop-modal');
   if (existing) { existing.remove(); return; }
@@ -3695,6 +3879,7 @@ function openShopModal() {
       alert(result.error || 'This pack could not be opened right now.');
       return;
     }
+    await animateBoosterOpening(modal, result);
     render(result);
     refreshTitleMetaBar();
   };
@@ -3727,6 +3912,10 @@ function openShopModal() {
               <span class="shop-balance-label">Boosters Opened</span>
               <strong>${meta.openedBoosters || 0}</strong>
             </div>
+          </div>
+
+          <div class="shop-toolbar">
+            <button class="btn-secondary shop-toolbar-btn" id="btn-open-roster">Open Roster</button>
           </div>
 
           <div class="shop-status-copy">
@@ -3774,6 +3963,7 @@ function openShopModal() {
     `;
 
     modal.querySelector('#shop-modal-close')?.addEventListener('click', close);
+    modal.querySelector('#btn-open-roster')?.addEventListener('click', () => openRosterModal());
     modal.querySelectorAll('.shop-pack-btn').forEach(btn => {
       btn.addEventListener('click', () => buyPack(btn.dataset.packId));
     });
@@ -3831,8 +4021,10 @@ function openArcadeModal() {
       alert(result.error || 'That bet could not be played.');
       return;
     }
-    render(result);
-    refreshTitleMetaBar();
+    animateArcadePlay(modal, currentGame, result).then(() => {
+      render(result);
+      refreshTitleMetaBar();
+    });
   };
 
   const render = (latestResult = null) => {
