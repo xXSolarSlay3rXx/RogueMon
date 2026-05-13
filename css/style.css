@@ -2646,17 +2646,28 @@ h1, h2, .pixel-font {
 }
 .equip-btn:hover { filter: brightness(1.08); }
 .equip-btn-swap { background: linear-gradient(180deg, rgba(244, 217, 127, 0.92), rgba(190, 147, 42, 0.92)); color: #1a1308; }
-.equip-btn-unequip {
+.equip-btn-unequip-full,
+.equip-btn-unequip-icon {
   background: linear-gradient(180deg, rgba(255, 127, 154, 0.92), rgba(178, 52, 78, 0.92));
-  width: 28px;
-  min-width: 28px;
+}
+.equip-btn-unequip-full {
+  min-width: 92px;
+  padding: 7px 12px;
+  font-size: 10px;
+  line-height: 1.2;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 8px 18px rgba(109, 22, 44, 0.24);
+}
+.equip-btn-unequip-icon {
+  width: 30px;
+  min-width: 30px;
   padding: 0;
   justify-content: center;
   font-size: 16px;
   line-height: 1;
   overflow: hidden;
 }
-.equip-btn-unequip:hover { filter: brightness(1.05); }
+.equip-btn-unequip-full:hover,
+.equip-btn-unequip-icon:hover { filter: brightness(1.05); }
 .equip-btn-group { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
 .equip-self-tag { font-size: 9px; color: #7b89a4; font-style: italic; flex-shrink: 0; }
 

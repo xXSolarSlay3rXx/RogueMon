@@ -1944,9 +1944,9 @@ function openItemEquipModal(item, { fromBagIdx = -1, fromPokemonIdx = -1, onComp
       </div>
       <div class="equip-btn-group">
         ${isSelf
-          ? `<button class="equip-btn equip-btn-unequip" data-unequip="${i}">${getText('item_btn_unequip')}</button>`
+          ? `<button class="equip-btn equip-btn-unequip-full" data-unequip="${i}">${getText('item_btn_unequip')}</button>`
           : `<button class="equip-btn${hasHeld ? ' equip-btn-swap' : ''}" data-idx="${i}">${btnLabel}</button>`}
-        ${hasHeld && !isSelf ? `<button class="equip-btn equip-btn-unequip" data-unequip="${i}" title="${getText('item_btn_unequip_title', { name: p.heldItem.name })}">&times;</button>` : ''}
+        ${hasHeld && !isSelf ? `<button class="equip-btn equip-btn-unequip-icon" data-unequip="${i}" title="${getText('item_btn_unequip_title', { name: p.heldItem.name })}">&times;</button>` : ''}
       </div>
     </div>`;
   }).join('');
