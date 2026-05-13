@@ -2554,6 +2554,56 @@ h1, h2, .pixel-font {
 @keyframes shimmer { from { text-shadow: 0 0 10px gold; } to { text-shadow: 0 0 30px gold, 0 0 60px orange; } }
 #shiny-content { display: flex; flex-direction: column; align-items: center; gap: 16px; }
 
+#shiny-screen .poke-card {
+  width: min(100%, 320px);
+  margin: 0 auto;
+  padding: 16px 14px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(139, 232, 255, 0.24);
+  background:
+    radial-gradient(circle at top, rgba(139, 232, 255, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+  color: #edf5ff;
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 18px 36px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+#shiny-screen .poke-card[data-type="grass"] {
+  border-color: rgba(94, 224, 154, 0.28);
+  background:
+    radial-gradient(circle at top, rgba(94, 224, 154, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+}
+#shiny-screen .poke-card[data-type="fire"] {
+  border-color: rgba(255, 138, 117, 0.3);
+  background:
+    radial-gradient(circle at top, rgba(255, 138, 117, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+}
+#shiny-screen .poke-card[data-type="water"] {
+  border-color: rgba(95, 186, 255, 0.3);
+  background:
+    radial-gradient(circle at top, rgba(95, 186, 255, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98));
+}
+#shiny-screen .poke-name,
+#shiny-screen .move-name {
+  color: #f4fbff;
+}
+#shiny-screen .poke-level,
+#shiny-screen .stat-lbl,
+#shiny-screen .stat-val,
+#shiny-screen .move-power-badge,
+#shiny-screen .hp-text {
+  color: #c8d9f6;
+}
+#shiny-screen .poke-move {
+  background: rgba(6, 12, 24, 0.68);
+  border: 1px solid rgba(139, 232, 255, 0.14);
+  border-radius: 14px;
+}
+
 /* ---- Badge Screen ---- */
 #badge-screen { align-items: center; justify-content: center; gap: 20px; text-align: center; }
 .badge-icon { width: 72px; height: 72px; image-rendering: pixelated; animation: bounce 0.5s ease-in-out infinite alternate; }
