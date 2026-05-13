@@ -269,18 +269,18 @@ function refreshTitleMetaBar() {
   const meta = typeof getMetaProgress === 'function' ? getMetaProgress() : { openedBoosters: 0 };
 
   bar.innerHTML = `
-    <div class="title-meta-strip">
-      <button class="title-meta-pill" data-meta-action="arcade">
-        <span class="title-meta-label">Coins</span>
-        <span class="title-meta-value">${coins}</span>
+    <div class="title-meta-panel">
+      <button class="title-meta-chip title-meta-chip--coins" data-meta-action="arcade">
+        <span class="title-meta-chip-label">Coins</span>
+        <span class="title-meta-chip-value">${coins}</span>
       </button>
-      <button class="title-meta-pill" data-meta-action="roster">
-        <span class="title-meta-label">Roster</span>
-        <span class="title-meta-value">${collection.length}</span>
+      <button class="title-meta-chip title-meta-chip--roster" data-meta-action="roster">
+        <span class="title-meta-chip-label">Roster</span>
+        <span class="title-meta-chip-value">${collection.length}</span>
       </button>
-      <button class="title-meta-pill" data-meta-action="shop">
-        <span class="title-meta-label">Boosters</span>
-        <span class="title-meta-value">${meta.openedBoosters || 0}</span>
+      <button class="title-meta-chip title-meta-chip--boosters" data-meta-action="shop">
+        <span class="title-meta-chip-label">Boosters</span>
+        <span class="title-meta-chip-value">${meta.openedBoosters || 0}</span>
       </button>
     </div>
   `;

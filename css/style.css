@@ -7080,60 +7080,69 @@ h1, h2, .pixel-font {
 .title-meta-bar {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 10px 0 12px;
+  margin: 12px 0 16px;
 }
 
-.title-meta-strip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.title-meta-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: min(420px, 92vw);
   padding: 8px;
-  border: 1px solid rgba(124, 209, 255, 0.2);
-  border-radius: 999px;
-  background: rgba(8, 16, 34, 0.76);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(124, 209, 255, 0.12);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(8, 16, 34, 0.72), rgba(8, 14, 30, 0.84));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
-.title-meta-pill {
+.title-meta-chip {
   appearance: none;
   -webkit-appearance: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border: 1px solid rgba(124, 209, 255, 0.12);
-  border-radius: 999px;
-  background: rgba(17, 28, 54, 0.82);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid rgba(124, 209, 255, 0.1);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(14, 26, 52, 0.88), rgba(11, 20, 42, 0.88));
   cursor: pointer;
   font-family: inherit;
-  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  text-align: left;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
 }
 
-.title-meta-pill:hover {
+.title-meta-chip:hover {
   transform: translateY(-1px);
-  border-color: rgba(124, 209, 255, 0.24);
-  background: rgba(24, 39, 71, 0.88);
+  border-color: rgba(124, 209, 255, 0.22);
+  background: linear-gradient(180deg, rgba(18, 32, 61, 0.94), rgba(13, 24, 49, 0.94));
+  box-shadow: 0 0 0 1px rgba(124, 209, 255, 0.08) inset;
 }
 
-.title-meta-pill .title-meta-value {
-  min-width: 18px;
-  text-align: center;
+.title-meta-chip--coins {
+  border-color: rgba(255, 214, 115, 0.16);
 }
 
-.title-meta-label {
+.title-meta-chip--roster {
+  border-color: rgba(125, 215, 255, 0.16);
+}
+
+.title-meta-chip--boosters {
+  border-color: rgba(202, 154, 255, 0.16);
+}
+
+.title-meta-chip-label {
   display: inline-block;
-  color: #93d9ff;
-  font-size: 8px;
+  color: #8fc8f4;
+  font-size: 7px;
   text-transform: uppercase;
+  opacity: 0.9;
 }
 
-.title-meta-value {
+.title-meta-chip-value {
   display: inline-block;
-  color: #fff9cf;
-  font-size: 10px;
+  color: #fff6cf;
+  font-size: 11px;
 }
 
 .shop-modal-overlay {
@@ -8381,21 +8390,17 @@ h1, h2, .pixel-font {
 
 @media (max-width: 720px) {
   .title-meta-bar {
-    gap: 8px;
     margin-bottom: 12px;
   }
 
-  .title-meta-strip {
+  .title-meta-panel {
     width: 100%;
+    gap: 8px;
     border-radius: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
   }
 
-  .title-meta-pill {
-    flex: 1 1 calc(50% - 8px);
-    justify-content: center;
-    padding: 8px 10px;
+  .title-meta-chip {
+    padding: 9px 10px;
   }
 
   .shop-modal-overlay {
