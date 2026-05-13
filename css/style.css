@@ -5045,9 +5045,11 @@ h1, h2, .pixel-font {
 
 /* Item badges in HUD */
 .item-badge {
-  background: #d8d4c8;
-  border: 1px solid #c0bcb0;
-  color: #181410;
+  background:
+    radial-gradient(circle at top left, rgba(139, 232, 255, 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(8, 14, 28, 0.96), rgba(14, 22, 40, 0.98));
+  border: 1px solid rgba(139, 232, 255, 0.22);
+  color: #edf5ff;
 }
 #item-tooltip,
 #trait-tooltip {
