@@ -3684,6 +3684,53 @@ function renderEndlessCollectionCards(entries = [], emptyLabel = 'No recruits ye
   `).join('');
 }
 
+function renderCoinSkinPreview(entry, extraClass = '') {
+  const isDefault = entry?.skinId === 'default-roguemon';
+  return `
+    <div class="coin-skin-preview ${isDefault ? 'coin-skin-preview--default' : ''} ${extraClass}" style="--coin-accent:${entry?.accent || '#ffd36c'}">
+      <div class="coin-skin-preview-ring"></div>
+      <div class="coin-skin-preview-face">
+        <div class="coin-skin-preview-emblem ${isDefault ? 'coin-skin-preview-emblem--logo' : ''}">
+          <img src="${entry?.spriteUrl || ''}" alt="${entry?.name || 'Coin'}">
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function getSlotSymbolMeta(symbol) {
+  const symbolMeta = {
+    Berry: { label: 'Rare Candy', tone: 'candy', token: 'candy' },
+    Star: { label: 'Great Ball', tone: 'greatball', token: 'greatball' },
+    Ball: { label: 'Poke Ball', tone: 'pokeball', token: 'pokeball' },
+    Seven: { label: 'Master Ball', tone: 'masterball', token: 'masterball' },
+    Crown: { label: 'Ultra Ball', tone: 'ultraball', token: 'ultraball' },
+  };
+  return symbolMeta[symbol] || symbolMeta.Ball;
+}
+
+function renderSlotSymbol(symbol, isHit = false) {
+  const meta = getSlotSymbolMeta(symbol);
+  return `
+    <div class="slot-cell tone-${meta.tone} ${isHit ? 'slot-hit' : ''}">
+      <span class="slot-token slot-token--${meta.token}">
+        ${meta.token === 'candy' ? '<span class="slot-token-candy-tip"></span>' : '<span class="slot-token-core"></span>'}
+      </span>
+      <span class="slot-token-label">${meta.label}</span>
+    </div>
+  `;
+}
+
+function renderCranePrizeLane(lane, variant = 'pokeball', reveal = false) {
+  return `
+    <div class="crane-prize lane lane-${lane} ${reveal ? 'is-revealed' : ''}">
+      <span class="crane-prize-token crane-prize-token--${variant}">
+        <span class="crane-prize-core"></span>
+      </span>
+    </div>
+  `;
+}
+
 function renderCoinSkinCards(entries = [], currentSkinId = '') {
   if (!entries.length) {
     return `<div class="collection-empty">No coin skins unlocked yet.</div>`;
@@ -3691,9 +3738,7 @@ function renderCoinSkinCards(entries = [], currentSkinId = '') {
 
   return entries.map(entry => `
     <div class="coin-skin-card ${entry.skinId === currentSkinId ? 'is-active' : ''} ${entry.skinId === 'default-roguemon' ? 'coin-skin-card--default' : ''}">
-      <div class="coin-skin-preview" style="--coin-accent:${entry.accent || '#ffd36c'}">
-        <img src="${entry.spriteUrl}" alt="${entry.name}">
-      </div>
+      ${renderCoinSkinPreview(entry)}
       <div class="coin-skin-name">${entry.name}</div>
       <button class="btn-secondary coin-skin-btn" data-skin-id="${entry.skinId}">
         ${entry.skinId === currentSkinId ? 'Active' : 'Use'}
@@ -3823,9 +3868,7 @@ function animateBoosterOpening(modal, result) {
           ${result.pulls.map((pull, index) => result.rewardKind === 'coinskin'
             ? `
               <div class="booster-reveal-card booster-reveal-card--coin reveal-${index + 1}">
-                <div class="coin-skin-preview" style="--coin-accent:${pull.accent || '#ffd36c'}">
-                  <img src="${pull.spriteUrl}" alt="${pull.name}">
-                </div>
+                ${renderCoinSkinPreview(pull, 'coin-skin-preview--reveal')}
                 <span>${pull.name} Coin</span>
               </div>
             `
@@ -3870,7 +3913,9 @@ function animateArcadePlay(modal, gameId, result) {
               <div class="coin-spinner-ring"></div>
               <div class="coin-spinner-face">
                 <div class="coin-spinner-face-inner">
-                  <img src="${skin.spriteUrl}" alt="${skin.name}">
+                  <div class="coin-spinner-emblem ${skin.skinId === 'default-roguemon' ? 'coin-spinner-emblem--logo' : ''}">
+                    <img src="${skin.spriteUrl}" alt="${skin.name}">
+                  </div>
                 </div>
               </div>
             </div>
@@ -3881,20 +3926,13 @@ function animateArcadePlay(modal, gameId, result) {
         </div>
       `;
     } else if (gameId === 'slots') {
-      const symbolMeta = {
-        Berry: { icon: 'Berry', tone: 'berry' },
-        Star: { icon: 'Star', tone: 'star' },
-        Ball: { icon: 'Ball', tone: 'ball' },
-        Seven: { icon: '777', tone: 'seven' },
-        Crown: { icon: 'Crown', tone: 'crown' },
-      };
       const slotSymbols = result.reels || [];
       inner = `
         <div class="arcade-animation-box arcade-animation-box--slots">
-          <div class="arcade-animation-title">Celadon Slots</div>
+          <div class="arcade-animation-title">Pokemon Slots</div>
           <div class="slot-machine-shell">
             <div class="slot-machine-header">
-              <span>Lucky Lanes</span>
+              <span>Game Corner Reels</span>
               <span class="slot-machine-payline">PAYLINE</span>
             </div>
             <div class="slot-machine-window">
@@ -3903,11 +3941,7 @@ function animateArcadePlay(modal, gameId, result) {
                 ${slotSymbols.map((symbol, index) => `
                   <div class="slot-reel reel-${index + 1}">
                     <div class="slot-strip">
-                      ${['Berry', 'Star', 'Ball', 'Seven', 'Crown', symbol].map((entry, rowIndex) => `
-                        <div class="slot-cell tone-${symbolMeta[entry]?.tone || 'ball'} ${rowIndex === 5 ? 'slot-hit' : ''}">
-                          <span class="slot-cell-icon">${symbolMeta[entry]?.icon || entry}</span>
-                        </div>
-                      `).join('')}
+                      ${['Berry', 'Star', 'Ball', 'Seven', 'Crown', symbol].map((entry, rowIndex) => renderSlotSymbol(entry, rowIndex === 5)).join('')}
                     </div>
                   </div>
                 `).join('')}
@@ -3919,16 +3953,21 @@ function animateArcadePlay(modal, gameId, result) {
       `;
     } else {
       const laneLabels = ['Left', 'Center', 'Right'];
+      const prizeVariants = ['pokeball', 'greatball', 'masterball'];
       inner = `
         <div class="arcade-animation-box arcade-animation-box--crane">
           <div class="arcade-animation-title">Prize Catcher</div>
           <div class="crane-machine crane-machine--result">
             <div class="crane-track"></div>
             <div class="crane-arm crane-arm--result lane-${result.lane ?? 1}"></div>
-            <div class="crane-prize lane lane-0 ${result.targetLane === 0 ? 'target-hint' : ''}">?</div>
-            <div class="crane-prize lane lane-1 ${result.targetLane === 1 ? 'target-hint' : ''}">?</div>
-            <div class="crane-prize lane lane-2 ${result.targetLane === 2 ? 'target-hint' : ''}">?</div>
-            <div class="crane-caught-token ${result.outcome !== 'miss' ? 'is-caught' : ''} lane-${result.lane ?? 1}">${result.prize === 'Nothing' ? '?' : result.prize[0]}</div>
+            ${renderCranePrizeLane(0, prizeVariants[0], result.targetLane === 0)}
+            ${renderCranePrizeLane(1, prizeVariants[1], result.targetLane === 1)}
+            ${renderCranePrizeLane(2, prizeVariants[2], result.targetLane === 2)}
+            <div class="crane-caught-token ${result.outcome !== 'miss' ? 'is-caught' : ''} lane-${result.lane ?? 1}">
+              <span class="crane-prize-token crane-prize-token--${prizeVariants[result.lane ?? 1] || 'pokeball'}">
+                <span class="crane-prize-core"></span>
+              </span>
+            </div>
           </div>
           <div class="arcade-animation-copy">${result.prize === 'Nothing' ? 'The claw slipped away.' : `${result.prize} secured!`}</div>
           <div class="arcade-animation-subcopy">Dropped on ${laneLabels[result.lane ?? 1]} lane</div>
@@ -4089,7 +4128,7 @@ function openArcadeModal() {
       chances: ['Pair pays 1.5x', 'Triple pays 4x', '777 pays 8x'],
       play: bet => playSlotMachine(bet),
       resultLabel: result => result.outcome === 'jackpot' ? '777 Jackpot' : result.outcome === 'grand' ? 'Royal Crown' : result.outcome === 'triple' ? 'Triple Match' : result.outcome === 'pair' ? 'Pair Match' : 'No Match',
-      resultCopy: result => `${(result.reels || []).join(' - ')} | ${result.net >= 0 ? '+' : ''}${result.net} coins`,
+      resultCopy: result => `${(result.reels || []).map(symbol => getSlotSymbolMeta(symbol).label).join(' - ')} | ${result.net >= 0 ? '+' : ''}${result.net} coins`,
       historyLabel: entry => entry.outcome === 'jackpot' ? '777' : entry.outcome === 'grand' ? 'Crown' : entry.outcome === 'triple' ? 'Triple' : entry.outcome === 'pair' ? 'Pair' : 'Miss',
     },
     crane: {
@@ -4140,15 +4179,15 @@ function openArcadeModal() {
         <div class="crane-control-panel">
           <div class="crane-machine crane-machine--interactive">
             <div class="crane-lane-marker lane-${craneCursor}"></div>
-            <div class="crane-arm"></div>
-            <div class="crane-prize lane lane-0 ${craneRound.targetLane === 0 ? 'target-hint' : ''}">?</div>
-            <div class="crane-prize lane lane-1 ${craneRound.targetLane === 1 ? 'target-hint' : ''}">?</div>
-            <div class="crane-prize lane lane-2 ${craneRound.targetLane === 2 ? 'target-hint' : ''}">?</div>
+            <div class="crane-arm lane-${craneCursor}"></div>
+            ${renderCranePrizeLane(0, 'pokeball')}
+            ${renderCranePrizeLane(1, 'greatball')}
+            ${renderCranePrizeLane(2, 'masterball')}
           </div>
           <div class="crane-control-row">
-            <button class="arcade-mode-btn" data-crane-move="left">Left</button>
-            <button class="arcade-mode-btn is-active" data-crane-drop="true">Drop</button>
-            <button class="arcade-mode-btn" data-crane-move="right">Right</button>
+            <button class="btn-secondary crane-control-btn" data-crane-move="left">Left</button>
+            <button class="btn-secondary crane-control-btn crane-control-btn--drop" data-crane-drop="true">Drop</button>
+            <button class="btn-secondary crane-control-btn" data-crane-move="right">Right</button>
           </div>
           <div class="arcade-animation-copy">Line the claw up with the lane you want, then drop.</div>
         </div>
@@ -4218,7 +4257,7 @@ function openArcadeModal() {
     `;
 
     modal.querySelector('#coin-flip-close')?.addEventListener('click', close);
-    modal.querySelectorAll('.arcade-mode-btn').forEach(btn => {
+    modal.querySelectorAll('.arcade-mode-btn[data-game]').forEach(btn => {
       btn.addEventListener('click', () => {
         currentGame = btn.dataset.game;
         craneRound = null;
