@@ -249,6 +249,33 @@ function updateUILanguage() {
   } else if (document.getElementById('starter-screen')?.classList.contains('active') && typeof showStarterSelect === 'function') {
     showStarterSelect();
   }
+  if (typeof refreshTitleMetaBar === 'function') {
+    refreshTitleMetaBar();
+  }
+}
+
+function refreshTitleMetaBar() {
+  const bar = document.getElementById('title-meta-bar');
+  if (!bar) return;
+
+  const coins = typeof getCoinBalance === 'function' ? getCoinBalance() : 0;
+  const collection = typeof getEndlessCollection === 'function' ? getEndlessCollection() : [];
+  const meta = typeof getMetaProgress === 'function' ? getMetaProgress() : { openedBoosters: 0 };
+
+  bar.innerHTML = `
+    <div class="title-meta-chip">
+      <span class="title-meta-label">Coins</span>
+      <span class="title-meta-value">${coins}</span>
+    </div>
+    <div class="title-meta-chip">
+      <span class="title-meta-label">Endless Roster</span>
+      <span class="title-meta-value">${collection.length}</span>
+    </div>
+    <div class="title-meta-chip">
+      <span class="title-meta-label">Boosters Opened</span>
+      <span class="title-meta-value">${meta.openedBoosters || 0}</span>
+    </div>
+  `;
 }
 
 // Speed multiplier for battle animation (1 = normal, SKIP_SPEED = fast/skip)
@@ -3621,6 +3648,222 @@ function openSettingsModal() {
   }
 
   render();
+  document.body.appendChild(modal);
+}
+
+function renderEndlessCollectionCards(entries = [], emptyLabel = 'No recruits yet.') {
+  if (!entries.length) {
+    return `<div class="collection-empty">${emptyLabel}</div>`;
+  }
+
+  return entries.map(entry => `
+    <div class="collection-card rarity-${entry.rarity || 'common'}">
+      <div class="collection-card-accent" style="--collection-accent:${entry.rarityAccent || '#7dd7ff'}"></div>
+      <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
+      <div class="collection-card-name">${entry.name}</div>
+      <div class="collection-card-types">
+        ${(entry.types || []).map(type => `<span class="type-badge type-${String(type).toLowerCase()}">${type}</span>`).join('')}
+      </div>
+      <div class="collection-card-meta">
+        <span>+${entry.levelBonus || 0} Lv</span>
+        <span>+${entry.statBonus || 0} Stats</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openShopModal() {
+  const existing = document.getElementById('shop-modal');
+  if (existing) { existing.remove(); return; }
+
+  const modal = document.createElement('div');
+  modal.id = 'shop-modal';
+  modal.className = 'shop-modal-overlay';
+
+  const close = () => modal.remove();
+  const buyPack = async (packId) => {
+    const result = await openEndlessBoosterPack(packId);
+    if (!result.ok) {
+      alert(result.error || 'This pack could not be opened right now.');
+      return;
+    }
+    render(result);
+    refreshTitleMetaBar();
+  };
+
+  const render = (latestResult = null) => {
+    const meta = getMetaProgress();
+    const coins = getCoinBalance();
+    const collection = getEndlessCollection();
+
+    modal.innerHTML = `
+      <div class="shop-modal-box">
+        <div class="shop-modal-header">
+          <div>
+            <h2>Booster Shop</h2>
+            <p>Spend story coins on Endless recruits before the mode opens up.</p>
+          </div>
+          <button class="ach-modal-close" id="shop-modal-close">&times;</button>
+        </div>
+        <div class="shop-modal-body">
+          <div class="shop-balance-row">
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Coins</span>
+              <strong>${coins}</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Roster</span>
+              <strong>${collection.length}</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Boosters Opened</span>
+              <strong>${meta.openedBoosters || 0}</strong>
+            </div>
+          </div>
+
+          <div class="shop-status-copy">
+            Each pack opens 3 Pokemon for your future Endless roster. Higher tiers cost more, but the pulls get stronger and come with bigger level and stat bonuses.
+          </div>
+
+          <div class="shop-section-title">Packs</div>
+          <div class="shop-pack-grid">
+            ${ENDLESS_BOOSTER_PACKS.map(pack => `
+              <div class="shop-pack-card rarity-${pack.id}" style="--pack-accent:${pack.accent}">
+                <div class="shop-pack-rarity">${pack.id.toUpperCase()}</div>
+                <div class="shop-pack-name">${pack.label}</div>
+                <div class="shop-pack-cost">${pack.cost} Coins</div>
+                <div class="shop-pack-copy">${pack.description}</div>
+                <div class="shop-pack-stats">
+                  <span>BST ${pack.minBst}-${pack.maxBst}</span>
+                  <span>+${pack.levelBonusMin} to +${pack.levelBonusMax} Lv</span>
+                  <span>+${pack.statBonusMin} to +${pack.statBonusMax} Stats</span>
+                </div>
+                <button class="btn-secondary shop-pack-btn" data-pack-id="${pack.id}" ${coins < pack.cost ? 'disabled' : ''}>
+                  Open Pack
+                </button>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="shop-two-col">
+            <div class="shop-side-panel">
+              <div class="shop-section-title">Latest Pulls</div>
+              <div class="collection-grid collection-grid--recent">
+                ${latestResult?.pulls?.length
+                  ? renderEndlessCollectionCards(latestResult.pulls, 'No pulls yet.')
+                  : `<div class="collection-empty">Open a booster pack to see your newest recruits here.</div>`}
+              </div>
+            </div>
+            <div class="shop-side-panel">
+              <div class="shop-section-title">Roster Preview</div>
+              <div class="collection-grid collection-grid--roster">
+                ${renderEndlessCollectionCards(collection.slice(0, 8), 'Your Endless roster is empty.')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    modal.querySelector('#shop-modal-close')?.addEventListener('click', close);
+    modal.querySelectorAll('.shop-pack-btn').forEach(btn => {
+      btn.addEventListener('click', () => buyPack(btn.dataset.packId));
+    });
+  };
+
+  render();
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.body.appendChild(modal);
+}
+
+function openCoinFlipModal() {
+  const existing = document.getElementById('coin-flip-modal');
+  if (existing) { existing.remove(); return; }
+
+  const modal = document.createElement('div');
+  modal.id = 'coin-flip-modal';
+  modal.className = 'shop-modal-overlay';
+
+  const close = () => modal.remove();
+  const play = (bet) => {
+    const result = playCoinFlip(bet);
+    if (!result.ok) {
+      alert(result.error || 'That bet could not be played.');
+      return;
+    }
+    render(result);
+    refreshTitleMetaBar();
+  };
+
+  const render = (latestResult = null) => {
+    const meta = getMetaProgress();
+    const coins = getCoinBalance();
+    const history = meta.gambleHistory || [];
+    const latestMarkup = latestResult
+      ? `<div class="coinflip-result ${latestResult.outcome}">
+          <strong>${latestResult.outcome === 'loss' ? 'Miss' : latestResult.outcome === 'jackpot' ? 'Jackpot' : 'Double Up'}</strong>
+          <span>${latestResult.net >= 0 ? '+' : ''}${latestResult.net} coins</span>
+        </div>`
+      : `<div class="coinflip-result idle"><strong>Heads or tails vibes</strong><span>45% double, 7% triple, otherwise the house keeps the bet.</span></div>`;
+
+    modal.innerHTML = `
+      <div class="shop-modal-box gamble-modal-box">
+        <div class="shop-modal-header">
+          <div>
+            <h2>Coin Flip</h2>
+            <p>Take a risk with story coins and stack up your future Endless budget.</p>
+          </div>
+          <button class="ach-modal-close" id="coin-flip-close">&times;</button>
+        </div>
+        <div class="shop-modal-body">
+          <div class="shop-balance-row">
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Coins</span>
+              <strong>${coins}</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Double Chance</span>
+              <strong>45%</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Jackpot Chance</span>
+              <strong>7%</strong>
+            </div>
+          </div>
+
+          ${latestMarkup}
+
+          <div class="shop-section-title">Pick a Bet</div>
+          <div class="gamble-bet-grid">
+            ${[10, 25, 50, 100, 200].map(bet => `
+              <button class="gamble-bet-btn" data-bet="${bet}" ${coins < bet ? 'disabled' : ''}>
+                ${bet} Coins
+              </button>
+            `).join('')}
+          </div>
+
+          <div class="shop-section-title">Recent Results</div>
+          <div class="gamble-history-list">
+            ${history.length ? history.map(entry => `
+              <div class="gamble-history-row ${entry.outcome}">
+                <span>${entry.outcome === 'loss' ? 'Loss' : entry.outcome === 'jackpot' ? 'Jackpot' : 'Double'}</span>
+                <span>Bet ${entry.bet}</span>
+                <span>${entry.net >= 0 ? '+' : ''}${entry.net}</span>
+              </div>
+            `).join('') : '<div class="collection-empty">No coin flips yet.</div>'}
+          </div>
+        </div>
+      </div>
+    `;
+
+    modal.querySelector('#coin-flip-close')?.addEventListener('click', close);
+    modal.querySelectorAll('.gamble-bet-btn').forEach(btn => {
+      btn.addEventListener('click', () => play(Number(btn.dataset.bet)));
+    });
+  };
+
+  render();
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
   document.body.appendChild(modal);
 }
 

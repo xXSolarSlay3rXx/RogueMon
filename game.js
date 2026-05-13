@@ -1,4 +1,4 @@
-﻿// game.js - Central game state and entry point
+// game.js - Central game state and entry point
 
 function getText(key, args = {}) {
   const text = i18n[currentLanguage]?.[key] || i18n['en'][key] || `[${key}]`;
@@ -450,6 +450,7 @@ async function initGame() {
   document.getElementById('btn-new-run').onclick = () => startNewRun(false);
   document.getElementById('btn-hard-run').onclick = () => startNewRun(true);
   refreshTitleScreenPokedexButton();
+  if (typeof refreshTitleMetaBar === 'function') refreshTitleMetaBar();
   refreshEndlessButton();
   refreshContinueButtons();
 }
@@ -1418,8 +1419,11 @@ async function doBossNode(node) {
   document.getElementById('battle-subtitle').textContent = getText('badge_on_line', {badge: leader.badge});
   await runBattleScreen(enemyTeam, true, () => {
     state.badges++;
+    const reward = STORY_COIN_REWARDS.gym;
+    awardCoins(reward, `${leader.name} gym clear`);
     advanceFromNode(state.map, node.id);
-    showBadgeScreen(leader);
+    showBadgeScreen(leader, reward);
+    if (typeof refreshTitleMetaBar === 'function') refreshTitleMetaBar();
     const ach = unlockAchievement(`gym_${state.currentMap}`);
     if (ach) showAchievementToast(ach);
   }, () => {
@@ -1429,6 +1433,7 @@ async function doBossNode(node) {
 
 async function doElite4() {
   const bosses = getCurrentEliteFour();
+  let totalCoinReward = 0;
   if (state.eliteIndex === 0) {
     fullyHealTeam();
   }
@@ -1445,13 +1450,17 @@ async function doElite4() {
     });
 
     if (!won) { showGameOver(); return; }
+    const reward = i === bosses.length - 1 ? STORY_COIN_REWARDS.champion : STORY_COIN_REWARDS.elite;
+    awardCoins(reward, `${boss.name} elite clear`);
+    totalCoinReward += reward;
     if (i < bosses.length - 1) {
       await showEliteTransition(boss.name, i + 1);
     }
   }
+  if (typeof refreshTitleMetaBar === 'function') refreshTitleMetaBar();
   const eliteAch = unlockAchievement('elite_four');
   if (eliteAch) showAchievementToast(eliteAch);
-  showWinScreen();
+  showWinScreen(totalCoinReward);
 }
 
 function showEliteTransition(defeatedName, nextIndex) {
@@ -2607,13 +2616,13 @@ function fullyHealTeam() {
   }
 }
 
-function showBadgeScreen(leader) {
+function showBadgeScreen(leader, coinReward = 0) {
   fullyHealTeam();
   showScreen('badge-screen');
   const region = getCurrentStoryRegion();
   document.getElementById('badge-msg').textContent = getText('badge_earned', { badge: leader.badge });
   document.getElementById('badge-leader').textContent = getText('region_gym_progress', { region: region.name, count: state.badges });
-  document.getElementById('badge-count-display').textContent = getText('badges_progress', { count: state.badges });
+  document.getElementById('badge-count-display').textContent = getText('badges_progress', { count: state.badges }) + (coinReward > 0 ? ' - +' + coinReward + ' Coins' : '');
   const badgeImg = document.getElementById('badge-icon-img');
   if (badgeImg) {
     if (region.badgeDisplay === 'sprite') {
@@ -2646,7 +2655,7 @@ async function showGameOver() {
   initGame();
 }
 
-function showWinScreen() {
+function showWinScreen(coinReward = 0) {
   clearSavedRun();
   showScreen('win-screen');
   const region = getCurrentStoryRegion();
@@ -2666,7 +2675,7 @@ function showWinScreen() {
   saveHallOfFameEntry(state.team, wins, state.nuzlockeMode, false, null, state.starterSpeciesId, state.storyRegionId || 1);
   refreshEndlessButton();
   const winsEl = document.getElementById('win-run-count');
-  if (winsEl) winsEl.textContent = getText('win_run_count', { region: region.name, num: wins });
+  if (winsEl) winsEl.textContent = getText('win_run_count', { region: region.name, num: wins }) + (coinReward > 0 ? ' - +' + coinReward + ' Coins' : '');
   if (wins === 10) {
     const ach = unlockAchievement('elite_10');
     if (ach) setTimeout(() => showAchievementToast(ach), 3000);

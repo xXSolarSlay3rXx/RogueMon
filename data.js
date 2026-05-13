@@ -1083,6 +1083,253 @@ function getSettings() {
 }
 function saveSettings(s) { setCached('poke_settings', s); }
 
+const META_PROGRESS_KEY = 'poke_meta_progress';
+const STORY_COIN_REWARDS = Object.freeze({ gym: 10, elite: 15, champion: 30 });
+const ENDLESS_BOOSTER_PACKS = Object.freeze([
+  {
+    id: 'common',
+    label: 'Scout Pack',
+    cost: 20,
+    minBst: 220,
+    maxBst: 360,
+    statBonusMin: 0,
+    statBonusMax: 1,
+    levelBonusMin: 0,
+    levelBonusMax: 1,
+    legendaryChance: 0,
+    accent: '#7dd7ff',
+    description: 'Reliable early picks with light stat tuning.',
+  },
+  {
+    id: 'uncommon',
+    label: 'Trainer Pack',
+    cost: 45,
+    minBst: 320,
+    maxBst: 440,
+    statBonusMin: 1,
+    statBonusMax: 2,
+    levelBonusMin: 1,
+    levelBonusMax: 2,
+    legendaryChance: 0,
+    accent: '#79f0a7',
+    description: 'Stronger mid-tier pulls with steadier upgrades.',
+  },
+  {
+    id: 'rare',
+    label: 'Ace Pack',
+    cost: 80,
+    minBst: 420,
+    maxBst: 540,
+    statBonusMin: 2,
+    statBonusMax: 3,
+    levelBonusMin: 2,
+    levelBonusMax: 3,
+    legendaryChance: 0,
+    accent: '#a98cff',
+    description: 'Higher BST pulls for the backbone of a future run.',
+  },
+  {
+    id: 'epic',
+    label: 'Champion Pack',
+    cost: 135,
+    minBst: 520,
+    maxBst: 620,
+    statBonusMin: 3,
+    statBonusMax: 5,
+    levelBonusMin: 3,
+    levelBonusMax: 4,
+    legendaryChance: 0.04,
+    accent: '#ff8db2',
+    description: 'Elite-ready pulls with chunky stat bonuses.',
+  },
+  {
+    id: 'mythic',
+    label: 'Mythic Pack',
+    cost: 220,
+    minBst: 580,
+    maxBst: 720,
+    statBonusMin: 4,
+    statBonusMax: 6,
+    levelBonusMin: 4,
+    levelBonusMax: 6,
+    legendaryChance: 0.12,
+    accent: '#ffd36c',
+    description: 'Top-shelf pulls with a real shot at legendary power.',
+  },
+]);
+
+function normalizeMetaProgress(meta = {}) {
+  return {
+    coins: Math.max(0, Math.floor(Number(meta.coins) || 0)),
+    endlessCollection: Array.isArray(meta.endlessCollection) ? meta.endlessCollection : [],
+    openedBoosters: Math.max(0, Math.floor(Number(meta.openedBoosters) || 0)),
+    gambleHistory: Array.isArray(meta.gambleHistory) ? meta.gambleHistory.slice(0, 12) : [],
+  };
+}
+
+function getMetaProgress() {
+  return normalizeMetaProgress(getCached(META_PROGRESS_KEY) || {});
+}
+
+function saveMetaProgress(meta) {
+  const normalized = normalizeMetaProgress(meta);
+  setCached(META_PROGRESS_KEY, normalized);
+  return normalized;
+}
+
+function getCoinBalance() {
+  return getMetaProgress().coins;
+}
+
+function awardCoins(amount, source = '') {
+  const delta = Math.max(0, Math.floor(Number(amount) || 0));
+  const meta = getMetaProgress();
+  meta.coins += delta;
+  saveMetaProgress(meta);
+  return { amount: delta, total: meta.coins, source };
+}
+
+function spendCoins(amount) {
+  const cost = Math.max(0, Math.floor(Number(amount) || 0));
+  const meta = getMetaProgress();
+  if (meta.coins < cost) return { ok: false, total: meta.coins, cost };
+  meta.coins -= cost;
+  saveMetaProgress(meta);
+  return { ok: true, total: meta.coins, cost };
+}
+
+function getEndlessCollection() {
+  return getMetaProgress().endlessCollection || [];
+}
+
+function getUnlockedBoosterMaxDexId() {
+  const dexCaps = { 1: 151, 2: 251, 3: 386, 4: 493, 5: 649, 6: 721 };
+  try {
+    const raw = JSON.parse(localStorage.getItem('poke_story_regions_unlocked') || '[1]');
+    const ids = Array.isArray(raw) ? raw.map(Number).filter(Boolean) : [1];
+    const highest = Math.max(1, ...ids);
+    return dexCaps[highest] || 721;
+  } catch {
+    return 151;
+  }
+}
+
+function metaRandomUnit() {
+  return typeof rng === 'function' ? rng() : Math.random();
+}
+
+function metaRandomInt(min, max) {
+  return Math.floor(metaRandomUnit() * (max - min + 1)) + min;
+}
+
+async function pickBoosterSpecies(pack, blockedIds = new Set()) {
+  const maxDexId = getUnlockedBoosterMaxDexId();
+  const allowLegendary = pack.legendaryChance > 0 && metaRandomUnit() < pack.legendaryChance;
+  let fallback = null;
+
+  for (let attempt = 0; attempt < 60; attempt++) {
+    const speciesId = metaRandomInt(1, maxDexId);
+    if (blockedIds.has(speciesId)) continue;
+    if (!allowLegendary && typeof LEGENDARY_ID_SET !== 'undefined' && LEGENDARY_ID_SET.has(speciesId)) continue;
+    const species = await fetchPokemonById(speciesId);
+    if (!species || !species.baseStats) continue;
+    const bst = species.bst || Object.values(species.baseStats).reduce((sum, value) => sum + value, 0);
+    if (!fallback) fallback = species;
+    if (!allowLegendary && (bst < pack.minBst || bst > pack.maxBst)) continue;
+    if (allowLegendary && typeof LEGENDARY_ID_SET !== 'undefined' && LEGENDARY_ID_SET.has(speciesId)) return species;
+    if (bst >= pack.minBst) return species;
+  }
+
+  return fallback || fetchPokemonById(133);
+}
+
+function createEndlessCollectionEntry(species, pack, statBonus, levelBonus) {
+  const now = Date.now();
+  return {
+    entryId: 'endless_' + now + '_' + Math.floor(metaRandomUnit() * 1000000),
+    speciesId: species.id,
+    name: species.name,
+    defaultName: species.defaultName || species.name,
+    localizedNames: species.localizedNames || { en: species.name, de: species.name },
+    spriteUrl: species.spriteUrl,
+    shinySpriteUrl: species.shinySpriteUrl,
+    types: species.types || [],
+    bst: species.bst || Object.values(species.baseStats || {}).reduce((sum, value) => sum + value, 0),
+    rarity: pack.id,
+    rarityLabel: pack.label,
+    rarityAccent: pack.accent,
+    statBonus,
+    levelBonus,
+    obtainedAt: now,
+  };
+}
+
+async function openEndlessBoosterPack(packId) {
+  const pack = ENDLESS_BOOSTER_PACKS.find(entry => entry.id === packId);
+  if (!pack) return { ok: false, error: 'Pack not found.' };
+
+  const payment = spendCoins(pack.cost);
+  if (!payment.ok) {
+    return { ok: false, error: 'You need ' + pack.cost + ' coins for this pack.', coins: payment.total };
+  }
+
+  try {
+    const pulls = [];
+    const usedIds = new Set();
+    for (let slot = 0; slot < 3; slot++) {
+      const species = await pickBoosterSpecies(pack, usedIds);
+      if (!species) continue;
+      usedIds.add(species.id);
+      pulls.push(createEndlessCollectionEntry(
+        species,
+        pack,
+        metaRandomInt(pack.statBonusMin, pack.statBonusMax),
+        metaRandomInt(pack.levelBonusMin, pack.levelBonusMax)
+      ));
+    }
+
+    const meta = getMetaProgress();
+    meta.openedBoosters += 1;
+    meta.endlessCollection = [...pulls, ...(meta.endlessCollection || [])].slice(0, 600);
+    saveMetaProgress(meta);
+
+    return { ok: true, pack, pulls, coins: meta.coins };
+  } catch (error) {
+    awardCoins(pack.cost, 'Booster refund');
+    return { ok: false, error: 'Pack opening failed. Coins were refunded.' };
+  }
+}
+
+function playCoinFlip(betAmount) {
+  const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
+  const meta = getMetaProgress();
+  if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
+  if (meta.coins < bet) return { ok: false, error: 'You need ' + bet + ' coins for that bet.', coins: meta.coins };
+
+  meta.coins -= bet;
+  const roll = metaRandomUnit();
+  let payout = 0;
+  let outcome = 'loss';
+  if (roll < 0.45) {
+    payout = bet * 2;
+    outcome = 'double';
+  } else if (roll < 0.52) {
+    payout = bet * 3;
+    outcome = 'jackpot';
+  }
+  meta.coins += payout;
+  const result = {
+    at: Date.now(),
+    bet,
+    payout,
+    outcome,
+    net: payout - bet,
+  };
+  meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
+  saveMetaProgress(meta);
+  return { ok: true, ...result, coins: meta.coins };
+}
+
 // BST ranges per map
 const MAP_BST_RANGES = [
   { min: 200, max: 310 },   // Map 1
