@@ -3862,47 +3862,75 @@ function animateArcadePlay(modal, gameId, result) {
     if (gameId === 'coinflip') {
       const skin = getCurrentCoinSkin();
       inner = `
-        <div class="arcade-animation-box">
+        <div class="arcade-animation-box arcade-animation-box--coin">
           <div class="arcade-animation-title">Coin Flip</div>
-          <div class="coin-spinner ${result.outcome}" style="--coin-accent:${skin.accent || '#ffd36c'}">
-            <div class="coin-spinner-face">
-              <img src="${skin.spriteUrl}" alt="${skin.name}">
+          <div class="coin-stage">
+            <div class="coin-spinner ${result.outcome}" style="--coin-accent:${skin.accent || '#ffd36c'}">
+              <div class="coin-spinner-ring"></div>
+              <div class="coin-spinner-face">
+                <div class="coin-spinner-face-inner">
+                  <img src="${skin.spriteUrl}" alt="${skin.name}">
+                </div>
+              </div>
             </div>
+            <div class="coin-shadow"></div>
           </div>
           <div class="arcade-animation-copy">${result.outcome === 'loss' ? 'The house wins this one.' : result.outcome === 'jackpot' ? 'Triple payout!' : 'Heads! Double up.'}</div>
+          <div class="arcade-animation-subcopy">Active coin skin: ${skin.name}</div>
         </div>
       `;
     } else if (gameId === 'slots') {
+      const symbolMeta = {
+        Berry: { icon: 'Berry', tone: 'berry' },
+        Star: { icon: 'Star', tone: 'star' },
+        Ball: { icon: 'Ball', tone: 'ball' },
+        Seven: { icon: '777', tone: 'seven' },
+        Crown: { icon: 'Crown', tone: 'crown' },
+      };
       const slotSymbols = result.reels || [];
       inner = `
-        <div class="arcade-animation-box">
+        <div class="arcade-animation-box arcade-animation-box--slots">
           <div class="arcade-animation-title">Slot Machine</div>
-          <div class="slot-reels">
-            ${slotSymbols.map((symbol, index) => `
-              <div class="slot-reel reel-${index + 1}">
-                <div class="slot-strip">
-                  <span>Berry</span>
-                  <span>Star</span>
-                  <span>Ball</span>
-                  <span>Seven</span>
-                  <span>Crown</span>
-                  <span class="slot-hit">${symbol}</span>
-                </div>
+          <div class="slot-machine-shell">
+            <div class="slot-machine-header">
+              <span>Lucky Lanes</span>
+              <span class="slot-machine-payline">PAYLINE</span>
+            </div>
+            <div class="slot-machine-window">
+              <div class="slot-payline"></div>
+              <div class="slot-reels">
+                ${slotSymbols.map((symbol, index) => `
+                  <div class="slot-reel reel-${index + 1}">
+                    <div class="slot-strip">
+                      ${['Berry', 'Star', 'Ball', 'Seven', 'Crown', symbol].map((entry, rowIndex) => `
+                        <div class="slot-cell tone-${symbolMeta[entry]?.tone || 'ball'} ${rowIndex === 5 ? 'slot-hit' : ''}">
+                          <span class="slot-cell-icon">${symbolMeta[entry]?.icon || entry}</span>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                `).join('')}
               </div>
-            `).join('')}
+            </div>
           </div>
           <div class="arcade-animation-copy">${result.outcome === 'loss' ? 'No line this time.' : result.outcome === 'jackpot' ? '777 jackpot!' : result.outcome === 'grand' ? 'Royal crown hit!' : result.outcome === 'triple' ? 'Triple match!' : 'Pair payout!'}</div>
         </div>
       `;
     } else {
+      const laneLabels = ['Left', 'Center', 'Right'];
       inner = `
-        <div class="arcade-animation-box">
+        <div class="arcade-animation-box arcade-animation-box--crane">
           <div class="arcade-animation-title">Crane Game</div>
-          <div class="crane-machine">
-            <div class="crane-arm"></div>
-            <div class="crane-prize">${result.prize === 'Nothing' ? '?' : result.prize[0]}</div>
+          <div class="crane-machine crane-machine--result">
+            <div class="crane-track"></div>
+            <div class="crane-arm crane-arm--result lane-${result.lane ?? 1}"></div>
+            <div class="crane-prize lane lane-0 ${result.targetLane === 0 ? 'target-hint' : ''}">?</div>
+            <div class="crane-prize lane lane-1 ${result.targetLane === 1 ? 'target-hint' : ''}">?</div>
+            <div class="crane-prize lane lane-2 ${result.targetLane === 2 ? 'target-hint' : ''}">?</div>
+            <div class="crane-caught-token ${result.outcome !== 'miss' ? 'is-caught' : ''} lane-${result.lane ?? 1}">${result.prize === 'Nothing' ? '?' : result.prize[0]}</div>
           </div>
           <div class="arcade-animation-copy">${result.prize === 'Nothing' ? 'The claw slipped away.' : `${result.prize} secured!`}</div>
+          <div class="arcade-animation-subcopy">Dropped on ${laneLabels[result.lane ?? 1]} lane</div>
         </div>
       `;
     }
