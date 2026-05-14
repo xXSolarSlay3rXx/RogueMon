@@ -174,6 +174,371 @@ function choiceAddsNewCoverage(species, coveredTypes) {
   return (species?.types || []).some(type => !coveredTypes.has(type));
 }
 
+const EXPEDITION_ROLE_RULES = [
+  {
+    id: 'vanguard',
+    labelKey: 'endless_expedition_role_vanguard',
+    types: ['Fire', 'Fighting', 'Electric', 'Dragon', 'Dark'],
+    apply(team) {
+      for (const pokemon of team) {
+        pokemon.tempBattleStages = pokemon.tempBattleStages || {};
+        pokemon.tempBattleStages.atk = (pokemon.tempBattleStages.atk || 0) + 1;
+        pokemon.tempBattleStages.special = (pokemon.tempBattleStages.special || 0) + 1;
+      }
+    },
+  },
+  {
+    id: 'bulwark',
+    labelKey: 'endless_expedition_role_bulwark',
+    types: ['Rock', 'Ground', 'Steel', 'Ice'],
+    apply(team) {
+      for (const pokemon of team) {
+        pokemon.tempBattleStages = pokemon.tempBattleStages || {};
+        pokemon.tempBattleStages.def = (pokemon.tempBattleStages.def || 0) + 1;
+        pokemon.tempBattleStages.spdef = (pokemon.tempBattleStages.spdef || 0) + 1;
+      }
+    },
+  },
+  {
+    id: 'sustain',
+    labelKey: 'endless_expedition_role_sustain',
+    types: ['Water', 'Grass', 'Fairy', 'Normal'],
+    apply(team) {
+      for (const pokemon of team) {
+        const heal = Math.max(1, Math.floor((pokemon.maxHp || 1) * 0.12));
+        pokemon.currentHp = Math.min(pokemon.maxHp, (pokemon.currentHp || 0) + heal);
+      }
+    },
+  },
+  {
+    id: 'tempo',
+    labelKey: 'endless_expedition_role_tempo',
+    types: ['Flying', 'Psychic', 'Ghost', 'Poison', 'Bug'],
+    apply(team) {
+      for (const pokemon of team) {
+        pokemon.tempBattleStages = pokemon.tempBattleStages || {};
+        pokemon.tempBattleStages.speed = (pokemon.tempBattleStages.speed || 0) + 1;
+      }
+    },
+  },
+];
+
+function getHighestUnlockedStoryRegionId() {
+  return Math.max(1, ...getUnlockedStoryRegionIds());
+}
+
+function hasSavedEndlessRun() {
+  try {
+    return !!localStorage.getItem('poke_endless_state') && !!localStorage.getItem('poke_current_run');
+  } catch {
+    return false;
+  }
+}
+
+function getSavedEndlessRunSummary() {
+  try {
+    const endlessRaw = localStorage.getItem('poke_endless_state');
+    if (!endlessRaw) return null;
+    const saved = JSON.parse(endlessRaw);
+    if (!saved?.active) return null;
+    if (saved.mode === 'expedition') {
+      return `Continue Expedition - ${getStageName(saved.stageNumber || 1)} R${saved.regionNumber || 1}`;
+    }
+    return `Continue Endless - ${getStageName(saved.stageNumber || 1)} R${saved.regionNumber || 1}`;
+  } catch {
+    return null;
+  }
+}
+
+function getExpeditionCaptainRole(types = []) {
+  const matched = EXPEDITION_ROLE_RULES.find(rule => (types || []).some(type => rule.types.includes(type)));
+  const fallback = EXPEDITION_ROLE_RULES[0];
+  const rule = matched || fallback;
+  return {
+    id: rule.id,
+    label: getText(rule.labelKey),
+    apply: rule.apply,
+  };
+}
+
+function getExpeditionFatigue(entryId) {
+  return Math.max(0, Number(endlessState?.fatigue?.[entryId]) || 0);
+}
+
+function getExpeditionFatiguePenalty(entryId) {
+  const fatigue = getExpeditionFatigue(entryId);
+  if (fatigue >= 4) return 2;
+  if (fatigue >= 2) return 1;
+  return 0;
+}
+
+function spreadExpeditionStatBuffs(species, bonusPoints) {
+  const points = Math.max(0, Math.floor(Number(bonusPoints) || 0));
+  const spread = { hp: 0, atk: 0, def: 0, speed: 0, spdef: 0, special: 0 };
+  if (!species?.baseStats || points <= 0) return spread;
+
+  const ranked = [
+    { key: 'hp', value: species.baseStats.hp || 0 },
+    { key: 'atk', value: Math.max(species.baseStats.atk || 0, species.baseStats.special || 0) },
+    { key: 'def', value: species.baseStats.def || 0 },
+    { key: 'speed', value: species.baseStats.speed || 0 },
+    { key: 'spdef', value: species.baseStats.spdef || 0 },
+  ].sort((a, b) => b.value - a.value);
+
+  const targets = ranked.slice(0, 3);
+  for (let i = 0; i < points; i++) {
+    const target = targets[i % targets.length];
+    spread[target.key] += 1;
+    if (target.key === 'atk') spread.special += 1;
+  }
+  return spread;
+}
+
+async function createExpeditionPokemonFromEntry(entry, stageNum = 1) {
+  const species = await fetchPokemonById(entry.speciesId);
+  if (!species) return null;
+  const baseLevel = Math.max(5, 8 + stageNum + (entry.levelBonus || 0));
+  const pokemon = createInstance(species, baseLevel, false, 2);
+  pokemon.endlessEntryId = entry.entryId;
+  pokemon.endlessBaseLevel = baseLevel;
+  pokemon.endlessRarity = entry.rarity;
+  pokemon.endlessSourceName = entry.name;
+  pokemon.statBuffs = spreadExpeditionStatBuffs(species, entry.statBonus || 0);
+  const hpBuff = pokemon.statBuffs?.hp ?? 0;
+  if (hpBuff > 0) {
+    pokemon.maxHp = Math.floor(calcHp(pokemon.baseStats.hp, pokemon.level) * (1 + 0.1 * hpBuff));
+    pokemon.currentHp = pokemon.maxHp;
+  }
+  return pokemon;
+}
+
+function applyExpeditionRosterState() {
+  if (!state?.isEndlessMode || endlessState?.mode !== 'expedition' || !Array.isArray(state.team)) return;
+
+  const captainId = endlessState.captainEntryId;
+  const role = getExpeditionCaptainRole((state.team.find(pokemon => pokemon.endlessEntryId === captainId)?.types) || []);
+  endlessState.captainRole = role.id;
+  for (const pokemon of state.team) {
+    const baseLevel = Math.max(5, pokemon.endlessBaseLevel || pokemon.level || 5);
+    let fatiguePenalty = getExpeditionFatiguePenalty(pokemon.endlessEntryId);
+    if (role.id === 'tempo') fatiguePenalty = Math.max(0, fatiguePenalty - 1);
+    const captainBonus = pokemon.endlessEntryId === captainId ? 1 : 0;
+    const roleLevelBonus = role.id === 'vanguard' ? 1 : 0;
+    const oldMaxHp = Math.max(1, pokemon.maxHp || 1);
+    const oldCurrent = Math.max(0, pokemon.currentHp || 0);
+    const hpRatio = oldCurrent / oldMaxHp;
+    pokemon.level = Math.max(5, baseLevel - fatiguePenalty + captainBonus + roleLevelBonus);
+    const hpBuff = (pokemon.statBuffs?.hp ?? 0) + (role.id === 'bulwark' ? 1 : 0);
+    pokemon.maxHp = Math.floor(calcHp(pokemon.baseStats.hp, pokemon.level) * (1 + 0.1 * hpBuff));
+    pokemon.currentHp = Math.max(1, Math.min(pokemon.maxHp, Math.floor(pokemon.maxHp * Math.max(0.2, hpRatio || 1))));
+  }
+}
+
+function applyExpeditionPostMapWear() {
+  if (!state?.isEndlessMode || endlessState?.mode !== 'expedition' || !Array.isArray(state.team)) return;
+  endlessState.battleCount = (endlessState.battleCount || 0) + 1;
+  endlessState.fatigue = endlessState.fatigue || {};
+  for (const pokemon of state.team) {
+    if (!pokemon?.endlessEntryId) continue;
+    const current = getExpeditionFatigue(pokemon.endlessEntryId);
+    endlessState.fatigue[pokemon.endlessEntryId] = Math.min(5, current + 1);
+  }
+
+  const captain = state.team.find(pokemon => pokemon.endlessEntryId === endlessState.captainEntryId);
+  const role = getExpeditionCaptainRole(captain?.types || []);
+  endlessState.captainRole = role.id;
+  if (role.id === 'sustain') {
+    role.apply(state.team);
+  }
+}
+
+function getExpeditionReadyEntries() {
+  return getEndlessCollection()
+    .slice()
+    .sort((a, b) => {
+      const rarityRank = { mythic: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
+      const rarityDiff = (rarityRank[b.rarity] || 0) - (rarityRank[a.rarity] || 0);
+      if (rarityDiff !== 0) return rarityDiff;
+      return (b.levelBonus + b.statBonus) - (a.levelBonus + a.statBonus);
+    });
+}
+
+function openEndlessExpeditionModal() {
+  const existing = document.getElementById('expedition-modal');
+  if (existing) {
+    existing.remove();
+    return;
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'expedition-modal';
+  modal.className = 'shop-modal-overlay';
+  const close = () => modal.remove();
+
+  let selectedIds = [];
+  let captainId = null;
+  let stageNum = Math.min(getHighestUnlockedStoryRegionId(), 6);
+
+  const render = () => {
+    const collection = getExpeditionReadyEntries();
+    const selectedEntries = collection.filter(entry => selectedIds.includes(entry.entryId));
+    const selectedCaptain = selectedEntries.find(entry => entry.entryId === captainId) || null;
+    const captainRole = selectedCaptain ? getExpeditionCaptainRole(selectedCaptain.types || []) : null;
+    const stageButtons = Array.from({ length: Math.min(getHighestUnlockedStoryRegionId(), 6) }, (_, i) => i + 1)
+      .map(num => `<button class="expedition-stage-btn ${stageNum === num ? 'is-active' : ''}" data-stage-num="${num}">${getText('endless_expedition_stage')} ${num}</button>`)
+      .join('');
+
+    modal.innerHTML = `
+      <div class="shop-modal-box roster-modal-box expedition-modal-box">
+        <div class="shop-modal-header">
+          <div>
+            <h2>${getText('endless_expedition_title')}</h2>
+            <p>${getText('endless_expedition_subtitle')}</p>
+          </div>
+          <button class="ach-modal-close" id="expedition-modal-close">&times;</button>
+        </div>
+        <div class="shop-modal-body">
+          <div class="shop-balance-row expedition-balance-row">
+            <div class="shop-balance-chip"><span class="shop-balance-label">${getText('endless_expedition_stage')}</span><strong>${getStageName(stageNum)}</strong></div>
+            <div class="shop-balance-chip"><span class="shop-balance-label">${getText('endless_expedition_selected')}</span><strong>${selectedEntries.length}/6</strong></div>
+            <div class="shop-balance-chip"><span class="shop-balance-label">${getText('endless_expedition_captain')}</span><strong>${selectedCaptain ? selectedCaptain.name : 'None'}</strong></div>
+          </div>
+
+          <div class="expedition-stage-row">${stageButtons}</div>
+
+          <div class="shop-status-copy expedition-status-copy">
+            ${collection.length < 6 ? getText('endless_expedition_need_roster') : getText('endless_expedition_roster_tip')}
+          </div>
+
+          ${selectedCaptain && captainRole ? `
+            <div class="coinflip-result double expedition-captain-banner">
+              <strong>${selectedCaptain.name}</strong>
+              <span>${captainRole.label}</span>
+            </div>
+          ` : `<div class="collection-empty expedition-captain-empty">${getText('endless_expedition_pick_captain')}</div>`}
+
+          <div class="roster-grid expedition-grid">
+            ${collection.length ? collection.map(entry => {
+              const isSelected = selectedIds.includes(entry.entryId);
+              const isCaptain = captainId === entry.entryId;
+              const fatigue = getExpeditionFatigue(entry.entryId);
+              return `
+                <div class="collection-card roster-card rarity-${entry.rarity || 'common'} expedition-pick-card ${isSelected ? 'is-selected' : ''} ${isCaptain ? 'is-captain' : ''}" data-entry-id="${entry.entryId}">
+                  <div class="collection-card-accent" style="--collection-accent:${entry.rarityAccent || '#7dd7ff'}"></div>
+                  <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
+                  <div class="collection-card-name">${entry.name}</div>
+                  <div class="collection-card-types">
+                    ${(entry.types || []).map(type => `<span class="type-badge type-${String(type).toLowerCase()}">${type}</span>`).join('')}
+                  </div>
+                  <div class="collection-card-meta">
+                    <span>+${entry.levelBonus || 0} Lv</span>
+                    <span>+${entry.statBonus || 0} Stats</span>
+                  </div>
+                  <div class="collection-card-meta expedition-pick-meta">
+                    <span>${getText('endless_expedition_fatigue')}: ${fatigue}</span>
+                    <span>${entry.rarityLabel || entry.rarity}</span>
+                  </div>
+                  <div class="roster-card-footer expedition-pick-footer">
+                    <button class="btn-secondary expedition-select-btn" data-entry-id="${entry.entryId}">${isSelected ? 'Remove' : 'Select'}</button>
+                    <button class="btn-secondary expedition-captain-btn" data-entry-id="${entry.entryId}" ${!isSelected ? 'disabled' : ''}>${isCaptain ? 'Captain' : 'Make Captain'}</button>
+                  </div>
+                </div>
+              `;
+            }).join('') : `<div class="collection-empty">${getText('endless_expedition_need_roster')}</div>`}
+          </div>
+
+          <div class="shop-toolbar expedition-toolbar">
+            <button class="btn-secondary shop-toolbar-btn" id="btn-expedition-open-shop">${getText('endless_expedition_open_shop')}</button>
+            <button class="btn-primary shop-toolbar-btn" id="btn-expedition-launch" ${selectedEntries.length !== 6 || !selectedCaptain ? 'disabled' : ''}>${getText('endless_expedition_launch')}</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    modal.querySelector('#expedition-modal-close')?.addEventListener('click', close);
+    modal.querySelector('#btn-expedition-open-shop')?.addEventListener('click', () => openShopModal());
+    modal.querySelector('#btn-expedition-launch')?.addEventListener('click', async () => {
+      const entries = getExpeditionReadyEntries().filter(entry => selectedIds.includes(entry.entryId));
+      if (entries.length !== 6 || !captainId) return;
+      close();
+      await startEndlessExpedition(stageNum, entries, captainId);
+    });
+    modal.querySelectorAll('.expedition-stage-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        stageNum = Number(btn.dataset.stageNum) || 1;
+        render();
+      });
+    });
+    modal.querySelectorAll('.expedition-select-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const entryId = btn.dataset.entryId;
+        const isSelected = selectedIds.includes(entryId);
+        if (isSelected) {
+          selectedIds = selectedIds.filter(id => id !== entryId);
+          if (captainId === entryId) captainId = selectedIds[0] || null;
+        } else if (selectedIds.length < 6) {
+          selectedIds = [...selectedIds, entryId];
+          if (!captainId) captainId = entryId;
+        }
+        render();
+      });
+    });
+    modal.querySelectorAll('.expedition-captain-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const entryId = btn.dataset.entryId;
+        if (!selectedIds.includes(entryId)) return;
+        captainId = entryId;
+        render();
+      });
+    });
+  };
+
+  render();
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.body.appendChild(modal);
+}
+
+async function startEndlessExpedition(stageNum, selectedEntries, captainEntryId) {
+  const seed = (Date.now() ^ (Math.random() * 0x100000000 | 0)) >>> 0;
+  seedRng(seed);
+  const savedTrainer = localStorage.getItem('poke_trainer') || 'boy';
+  const builtTeam = [];
+  for (const entry of selectedEntries) {
+    const pokemon = await createExpeditionPokemonFromEntry(entry, stageNum);
+    if (pokemon) builtTeam.push(pokemon);
+  }
+  if (builtTeam.length !== 6) {
+    alert('The expedition could not be prepared from your roster.');
+    return;
+  }
+
+  const captain = builtTeam.find(pokemon => pokemon.endlessEntryId === captainEntryId) || builtTeam[0];
+  const captainRole = getExpeditionCaptainRole(captain.types || []);
+
+  state = {
+    currentMap: 0, currentNode: null, team: builtTeam, items: [], badges: 0,
+    map: null, eliteIndex: 0, trainer: savedTrainer, starterSpeciesId: captain.speciesId,
+    maxTeamSize: 6, nuzlockeMode: false, usedPokecenter: false, pickedUpItem: false,
+    runSeed: seed, isEndlessMode: true,
+  };
+  endlessState = {
+    active: true,
+    mode: 'expedition',
+    stageNumber: stageNum,
+    regionNumber: 1,
+    mapIndexInRegion: 0,
+    currentRegion: null,
+    traitTiers: {},
+    captainEntryId: captain.endlessEntryId,
+    captainRole: captainRole.id,
+    fatigue: Object.fromEntries(selectedEntries.map(entry => [entry.entryId, getExpeditionFatigue(entry.entryId)])),
+    battleCount: 0,
+  };
+  saveEndlessState();
+  saveRun();
+  startEndlessRegion();
+}
+
 function getUnlockedStoryRegionIds() {
   try {
     const raw = JSON.parse(localStorage.getItem('poke_story_regions_unlocked') || '[1]');
@@ -295,8 +660,11 @@ function getSavedStoryRunSummary() {
 function refreshContinueButtons() {
   const continueEndlessBtn = document.getElementById('btn-continue-endless');
   if (continueEndlessBtn) {
-    continueEndlessBtn.style.display = 'none';
-    continueEndlessBtn.onclick = null;
+    const hasEndless = hasSavedEndlessRun();
+    continueEndlessBtn.style.display = hasEndless ? '' : 'none';
+    continueEndlessBtn.disabled = !hasEndless;
+    continueEndlessBtn.textContent = hasEndless ? (getSavedEndlessRunSummary() || getText('btn_continue_endless')) : getText('btn_continue_endless');
+    continueEndlessBtn.onclick = hasEndless ? (() => continueEndlessRun()) : null;
   }
 
   const continueBtn = document.getElementById('btn-continue-run');
@@ -324,15 +692,30 @@ function hasUnlockedEndlessMode() {
 function refreshEndlessButton() {
   const endlessBtn = document.getElementById('btn-endless-run');
   if (!endlessBtn) return;
+  const wrap = endlessBtn.closest('.lock-wrap');
+  const note = wrap?.querySelector('.locked-note');
+  const overlay = wrap?.querySelector('.locked-overlay');
 
-  endlessBtn.onclick = null;
-  endlessBtn.disabled = true;
-  endlessBtn.setAttribute('disabled', '');
-  endlessBtn.classList.add('btn-disabled');
-  endlessBtn.style.opacity = '0.45';
-  endlessBtn.style.pointerEvents = 'none';
-  const note = endlessBtn.closest('.lock-wrap')?.querySelector('.locked-note');
-  if (note) note.textContent = getText('endless_coming_soon_desc');
+  if (!hasUnlockedEndlessMode()) {
+    endlessBtn.onclick = null;
+    endlessBtn.disabled = true;
+    endlessBtn.setAttribute('disabled', '');
+    endlessBtn.classList.add('btn-disabled');
+    endlessBtn.style.opacity = '0.45';
+    endlessBtn.style.pointerEvents = 'none';
+    if (note) note.textContent = getText('endless_coming_soon_desc');
+    if (overlay) overlay.style.display = '';
+    return;
+  }
+
+  endlessBtn.disabled = false;
+  endlessBtn.removeAttribute('disabled');
+  endlessBtn.classList.remove('btn-disabled');
+  endlessBtn.style.opacity = '';
+  endlessBtn.style.pointerEvents = '';
+  endlessBtn.onclick = () => openEndlessExpeditionModal();
+  if (note) note.textContent = getText('endless_expedition_desc');
+  if (overlay) overlay.style.display = 'none';
 }
 
 // ---- Run persistence ----
@@ -3090,6 +3473,7 @@ function startEndlessMap() {
   state.currentMap = fakeMapIndex;
   state.map = generateMap(fakeMapIndex, false);
   state.endlessLevelRange = getEndlessLevelRange(endlessState.stageNumber, endlessState.regionNumber, endlessState.mapIndexInRegion);
+  applyExpeditionRosterState();
 
   // Pick map background based on trainer type; finalBoss for stage final boss
   const _btTrainer    = endlessState.currentRegion?.trainers[endlessState.mapIndexInRegion];
@@ -3460,6 +3844,10 @@ function applyStatBuff(pokemon, statKey) {
 }
 
 function advanceEndless() {
+  const endlessModeType = endlessState.mode || 'legacy';
+  if (endlessModeType === 'expedition') {
+    applyExpeditionPostMapWear();
+  }
   endlessState.mapIndexInRegion++;
   saveEndlessState();
 
@@ -3481,7 +3869,11 @@ function advanceEndless() {
       clearSavedRun();
       if (typeof syncToCloud === 'function') syncToCloud();
       renderStageComplete(completedStage, state.team, () => {
-        showEndlessStageSelect();
+        if (endlessModeType === 'expedition') {
+          initGame();
+        } else {
+          showEndlessStageSelect();
+        }
       });
     } else {
       startEndlessRegion();
@@ -3569,5 +3961,3 @@ window.addEventListener('beforeunload', autosaveActiveRun);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) autosaveActiveRun();
 });
-
-

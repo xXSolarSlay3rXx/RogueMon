@@ -30,6 +30,22 @@ const i18n = {
     coming_soon: 'Coming Soon',
     coming_soon_note: 'This generation is planned for a future update.',
     endless_coming_soon_desc: 'A reworked version of this mode is on the way.',
+    endless_expedition_desc: 'Build a six-Pokemon expedition from your booster roster.',
+    endless_expedition_title: 'Endless Expedition',
+    endless_expedition_subtitle: 'Pick 6 recruits, choose a Captain, and push as far as your roster can go.',
+    endless_expedition_launch: 'Launch Expedition',
+    endless_expedition_selected: 'Selected',
+    endless_expedition_captain: 'Captain',
+    endless_expedition_stage: 'Tier',
+    endless_expedition_need_roster: 'Open booster packs and recruit at least 6 Pokemon first.',
+    endless_expedition_open_shop: 'Open Shop',
+    endless_expedition_pick_captain: 'Choose one of your selected recruits as Captain.',
+    endless_expedition_roster_tip: 'Your Captain grants a squad aura. Fatigue builds after every cleared map, so depth matters.',
+    endless_expedition_fatigue: 'Fatigue',
+    endless_expedition_role_vanguard: 'Vanguard Aura',
+    endless_expedition_role_bulwark: 'Bulwark Aura',
+    endless_expedition_role_sustain: 'Sustain Aura',
+    endless_expedition_role_tempo: 'Tempo Aura',
     region_gen_1_desc: '8 Gym Leaders, Elite Four and Champion.',
     region_gen_2_desc: 'New starters, new gyms and a new league.',
     region_gen_3_desc: 'Hoenn starters, 8 new badges and the Hoenn League.',
@@ -3188,6 +3204,20 @@ function renderEndlessRegionPanel(region, currentMapIndex) {
   if (!panel || !region) return;
   panel.style.display = '';
 
+  const captain = state?.team?.find(pokemon => pokemon.endlessEntryId === endlessState?.captainEntryId) || null;
+  const expeditionHeader = state?.isEndlessMode && endlessState?.mode === 'expedition'
+    ? `<div class="endless-expedition-summary">
+        <div class="endless-expedition-summary-row">
+          <span class="endless-expedition-summary-label">${getText('endless_expedition_captain')}</span>
+          <strong>${captain?.name || 'Unknown'}</strong>
+        </div>
+        <div class="endless-expedition-summary-row">
+          <span class="endless-expedition-summary-label">${getText('endless_expedition_fatigue')}</span>
+          <strong>${Math.max(0, ...(state.team || []).map(pokemon => Math.max(0, Number(endlessState?.fatigue?.[pokemon.endlessEntryId]) || 0)))}</strong>
+        </div>
+      </div>`
+    : '';
+
   const header = `<div class="hud-label">${getStageName(region.stageNum)} R${region.regionNum}</div>`;
   const rows = region.trainers.map((trainer, i) => {
     const type = trainer.archetype?.type || null;
@@ -3215,7 +3245,7 @@ function renderEndlessRegionPanel(region, currentMapIndex) {
     </div>`;
   }).join('');
 
-  panel.innerHTML = header + `<div class="region-stage-list">${rows}</div>`;
+  panel.innerHTML = header + expeditionHeader + `<div class="region-stage-list">${rows}</div>`;
   attachBossTeamTooltips(panel);
 }
 

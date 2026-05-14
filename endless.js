@@ -2,11 +2,16 @@
 
 let endlessState = {
   active: false,
+  mode: 'legacy',
   stageNumber: 1,
   regionNumber: 1,
   mapIndexInRegion: 0,  // 0-1 = map bosses, 2 = Big Boss
   currentRegion: null,  // { stageNum, regionNum, levelRange, trainers[] }
   traitTiers: {},       // { Fire: 2, Water: 1, ... } — recomputed before each fight
+  captainEntryId: null,
+  captainRole: null,
+  fatigue: {},
+  battleCount: 0,
 };
 
 // ── Trait descriptions (per tier) ─────────────────────────────────────────────

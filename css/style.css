@@ -8844,3 +8844,129 @@ h1, h2, .pixel-font {
   }
 }
 
+.expedition-modal-box {
+  max-width: 1120px;
+}
+
+.expedition-balance-row {
+  margin-bottom: 12px;
+}
+
+.expedition-stage-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.expedition-stage-btn {
+  border: 1px solid rgba(125, 215, 255, 0.35);
+  background: rgba(10, 18, 38, 0.9);
+  color: #dff5ff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.expedition-stage-btn.is-active {
+  background: linear-gradient(180deg, rgba(44, 126, 255, 0.95), rgba(15, 70, 170, 0.95));
+  border-color: rgba(180, 225, 255, 0.9);
+  box-shadow: 0 0 0 2px rgba(120, 205, 255, 0.18);
+}
+
+.expedition-status-copy {
+  margin-bottom: 14px;
+}
+
+.expedition-captain-banner {
+  margin-bottom: 14px;
+}
+
+.expedition-captain-empty {
+  margin-bottom: 14px;
+}
+
+.expedition-grid {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.expedition-pick-card {
+  border-width: 1px;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.expedition-pick-card.is-selected {
+  transform: translateY(-2px);
+  border-color: rgba(108, 232, 171, 0.85);
+  box-shadow: 0 0 0 2px rgba(108, 232, 171, 0.15);
+}
+
+.expedition-pick-card.is-captain {
+  border-color: rgba(255, 211, 108, 0.95);
+  box-shadow: 0 0 0 2px rgba(255, 211, 108, 0.18), 0 0 18px rgba(255, 211, 108, 0.18);
+}
+
+.expedition-pick-meta {
+  opacity: 0.88;
+}
+
+.expedition-pick-footer {
+  gap: 8px;
+}
+
+.expedition-pick-footer .btn-secondary {
+  flex: 1;
+  min-width: 0;
+}
+
+.expedition-toolbar {
+  margin-top: 16px;
+  justify-content: space-between;
+}
+
+.endless-expedition-summary {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 12px;
+  padding: 10px;
+  border: 1px solid rgba(125, 215, 255, 0.18);
+  background: rgba(7, 16, 34, 0.84);
+  border-radius: 10px;
+}
+
+.endless-expedition-summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 8px;
+  color: #dff5ff;
+}
+
+.endless-expedition-summary-label {
+  opacity: 0.72;
+}
+
+@media (max-width: 768px) {
+  .expedition-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .expedition-pick-footer {
+    flex-direction: column;
+  }
+
+  .expedition-stage-row {
+    gap: 6px;
+  }
+
+  .expedition-stage-btn {
+    font-size: 8px;
+    padding: 7px 8px;
+  }
+
+  .expedition-toolbar {
+    flex-direction: column;
+  }
+}
