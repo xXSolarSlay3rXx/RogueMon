@@ -4134,22 +4134,25 @@ function openArcadeModal() {
   const close = () => modal.remove();
   let currentGame = 'coinflip';
   let voltorbRound = null;
+  let slotRound = null;
+  let slotStopIndex = 0;
+  let coinCall = 'heads';
 
   const gameConfig = {
     coinflip: {
       title: 'Coin Flip',
-      subtitle: 'Clean odds and fast bets when you want a quick double-up.',
-      chances: ['45% double', '7% triple', '48% miss'],
-      play: bet => playCoinFlip(bet),
+      subtitle: 'Call heads or tails first, then let the coin decide your fate.',
+      chances: ['Correct call doubles', 'Lucky hit triples', 'Wrong call loses'],
+      play: bet => playCoinFlip(bet, coinCall),
       resultLabel: result => result.outcome === 'loss' ? 'Miss' : result.outcome === 'jackpot' ? 'Jackpot' : 'Double Up',
-      resultCopy: result => `${result.net >= 0 ? '+' : ''}${result.net} coins`,
-      historyLabel: entry => entry.outcome === 'loss' ? 'Loss' : entry.outcome === 'jackpot' ? 'Jackpot' : 'Double',
+      resultCopy: result => `Called ${result.calledSide === 'heads' ? 'Heads' : 'Tails'} | Landed ${result.side === 'heads' ? 'Heads' : 'Tails'} | ${result.net >= 0 ? '+' : ''}${result.net} coins`,
+      historyLabel: entry => entry.outcome === 'loss' ? 'Wrong Call' : entry.outcome === 'jackpot' ? 'Lucky Triple' : 'Correct Call',
     },
     slots: {
       title: 'Slot Machine',
-      subtitle: 'Three reels, bigger swings, and a real jackpot ceiling.',
+      subtitle: 'Start the spin, then stop each reel yourself for a more dramatic pull.',
       chances: ['Pair pays 1.5x', 'Triple pays 4x', '777 pays 8x'],
-      play: bet => playSlotMachine(bet),
+      play: bet => startSlotRound(bet),
       resultLabel: result => result.outcome === 'jackpot' ? '777 Jackpot' : result.outcome === 'grand' ? 'Royal Crown' : result.outcome === 'triple' ? 'Triple Match' : result.outcome === 'pair' ? 'Pair Match' : 'No Match',
       resultCopy: result => `${(result.reels || []).map(symbol => getSlotSymbolMeta(symbol).label).join(' - ')} | ${result.net >= 0 ? '+' : ''}${result.net} coins`,
       historyLabel: entry => entry.outcome === 'jackpot' ? '777' : entry.outcome === 'grand' ? 'Crown' : entry.outcome === 'triple' ? 'Triple' : entry.outcome === 'pair' ? 'Pair' : 'Miss',
@@ -4169,6 +4172,13 @@ function openArcadeModal() {
     const result = gameConfig[currentGame].play(bet);
     if (!result.ok) {
       alert(result.error || 'That bet could not be played.');
+      return;
+    }
+    if (currentGame === 'slots') {
+      slotRound = result.round;
+      slotStopIndex = 0;
+      render();
+      refreshTitleMetaBar();
       return;
     }
     if (currentGame === 'voltorb') {
@@ -4196,11 +4206,56 @@ function openArcadeModal() {
         </div>`
       : `<div class="coinflip-result idle"><strong>${config.title}</strong><span>${config.subtitle}</span></div>`;
 
+    const coinCallMarkup = currentGame === 'coinflip'
+      ? `
+        <div class="coin-call-row">
+          <button class="coin-call-btn ${coinCall === 'heads' ? 'is-active' : ''}" data-coin-call="heads">Heads</button>
+          <button class="coin-call-btn ${coinCall === 'tails' ? 'is-active' : ''}" data-coin-call="tails">Tails</button>
+        </div>
+      `
+      : '';
+
+    const slotControlMarkup = currentGame === 'slots' && slotRound
+      ? `
+        <div class="slot-control-panel">
+          <div class="slot-machine-shell slot-machine-shell--live">
+            <div class="slot-machine-lights">
+              ${Array.from({ length: 10 }, (_, i) => `<span class="slot-light slot-light-${i + 1}"></span>`).join('')}
+            </div>
+            <div class="slot-machine-header">
+              <span>Stop The Reels</span>
+              <span class="slot-machine-payline">REEL ${Math.min(3, slotStopIndex + 1)}</span>
+            </div>
+            <div class="slot-machine-window">
+              <div class="slot-payline"></div>
+              <div class="slot-reels">
+                ${(slotRound.reels || []).map((symbol, index) => `
+                  <div class="slot-reel slot-reel--live ${index < slotStopIndex ? 'is-stopped' : 'is-spinning'}">
+                    <div class="slot-live-window">
+                      ${index < slotStopIndex
+                        ? renderSlotSymbol(symbol, true)
+                        : `<div class="slot-live-mystery">
+                            <img class="slot-live-mystery-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${[25,133,54,94,150][index % 5]}.png" alt="mystery">
+                          </div>`}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+          <div class="arcade-control-row">
+            <button class="btn-secondary arcade-control-btn arcade-control-btn--primary" data-slot-stop="true">Stop Reel ${Math.min(3, slotStopIndex + 1)}</button>
+          </div>
+          <div class="arcade-animation-copy">Stop each reel yourself and chase the line.</div>
+        </div>
+      `
+      : '';
+
     const voltorbControlMarkup = currentGame === 'voltorb' && voltorbRound
       ? `
         <div class="voltorb-control-panel">
           ${renderVoltorbFlipPreview(voltorbRound.cards || [], null, false)}
-          <div class="arcade-animation-copy">Pick one card and hope it is not Voltorb.</div>
+          <div class="arcade-animation-copy">Five cards, one Voltorb. Pick carefully.</div>
         </div>
       `
       : '';
@@ -4242,6 +4297,8 @@ function openArcadeModal() {
             ${config.chances.map(line => `<span class="arcade-odds-pill">${line}</span>`).join('')}
           </div>
 
+          ${coinCallMarkup}
+
           <div class="shop-section-title">Pick a Bet</div>
           <div class="gamble-bet-grid">
             ${[10, 25, 50, 100, 200].map(bet => `
@@ -4251,6 +4308,7 @@ function openArcadeModal() {
             `).join('')}
           </div>
 
+          ${slotControlMarkup}
           ${voltorbControlMarkup}
 
           <div class="shop-section-title">Recent Results</div>
@@ -4272,11 +4330,34 @@ function openArcadeModal() {
       btn.addEventListener('click', () => {
         currentGame = btn.dataset.game;
         voltorbRound = null;
+        slotRound = null;
+        slotStopIndex = 0;
         render();
+      });
+    });
+    modal.querySelectorAll('[data-coin-call]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        coinCall = btn.dataset.coinCall === 'tails' ? 'tails' : 'heads';
+        render(latestResult);
       });
     });
     modal.querySelectorAll('.gamble-bet-btn').forEach(btn => {
       btn.addEventListener('click', () => play(Number(btn.dataset.bet)));
+    });
+    modal.querySelector('[data-slot-stop="true"]')?.addEventListener('click', () => {
+      if (!slotRound) return;
+      slotStopIndex += 1;
+      if (slotStopIndex >= 3) {
+        const result = resolveSlotRound(slotRound);
+        slotRound = null;
+        slotStopIndex = 0;
+        animateArcadePlay(modal, 'slots', result).then(() => {
+          render(result);
+          refreshTitleMetaBar();
+        });
+        return;
+      }
+      render(latestResult);
     });
     modal.querySelectorAll('[data-voltorb-pick]').forEach(btn => {
       btn.addEventListener('click', () => {

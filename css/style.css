@@ -8126,6 +8126,46 @@ h1, h2, .pixel-font {
   box-shadow: 0 0 12px rgba(255, 214, 115, 0.18);
 }
 
+.slot-control-panel {
+  margin-top: 16px;
+}
+
+.slot-machine-shell--live .slot-machine-window {
+  padding-top: 18px;
+}
+
+.slot-reel--live {
+  height: 118px;
+}
+
+.slot-live-window {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88px;
+}
+
+.slot-live-mystery {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid rgba(124, 209, 255, 0.14);
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,0.18), transparent 26%),
+    rgba(255,255,255,0.05);
+  animation: mysteryPulse 0.9s ease-in-out infinite;
+}
+
+.slot-live-mystery-sprite {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
 .arcade-animation-box--crane,
 .arcade-animation-box--voltorb {
   overflow: hidden;
@@ -8527,6 +8567,45 @@ h1, h2, .pixel-font {
   font-size: 10px;
 }
 
+.coin-call-row,
+.arcade-control-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+
+.coin-call-btn,
+.arcade-control-btn {
+  min-width: 128px;
+  padding: 10px 14px;
+  border: 1px solid rgba(124, 209, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(11, 21, 43, 0.92);
+  color: #cfe8ff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.coin-call-btn:hover,
+.arcade-control-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(124, 209, 255, 0.32);
+}
+
+.coin-call-btn.is-active {
+  border-color: rgba(255, 214, 115, 0.42);
+  background: linear-gradient(180deg, rgba(53, 77, 122, 0.98), rgba(18, 30, 57, 0.96));
+  color: #fff4ab;
+  box-shadow: 0 0 16px rgba(255, 214, 115, 0.16);
+}
+
+.arcade-control-btn--primary {
+  min-width: 180px;
+}
+
 .arcade-mode-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -8659,6 +8738,11 @@ h1, h2, .pixel-font {
 @keyframes marqueePulse {
   0%, 100% { opacity: 0.45; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.12); }
+}
+
+@keyframes mysteryPulse {
+  0%, 100% { transform: scale(0.96); opacity: 0.72; }
+  50% { transform: scale(1.04); opacity: 1; }
 }
 
 @keyframes prizePop {

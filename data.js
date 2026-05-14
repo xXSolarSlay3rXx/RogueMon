@@ -1422,25 +1422,25 @@ async function openEndlessBoosterPack(packId) {
   }
 }
 
-function playCoinFlip(betAmount) {
+function playCoinFlip(betAmount, calledSide = 'heads') {
   const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
   const meta = getMetaProgress();
   if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
   if (meta.coins < bet) return { ok: false, error: 'You need ' + bet + ' coins for that bet.', coins: meta.coins };
+  const playerCall = calledSide === 'tails' ? 'tails' : 'heads';
 
   meta.coins -= bet;
-  const roll = metaRandomUnit();
+  const sideRoll = metaRandomUnit();
+  const bonusRoll = metaRandomUnit();
   let payout = 0;
   let outcome = 'loss';
-  let side = 'tails';
-  if (roll < 0.45) {
-    payout = bet * 2;
-    outcome = 'double';
-    side = 'heads';
-  } else if (roll < 0.52) {
+  const side = sideRoll < 0.5 ? 'heads' : 'tails';
+  if (playerCall === side && bonusRoll < 0.14) {
     payout = bet * 3;
     outcome = 'jackpot';
-    side = 'heads';
+  } else if (playerCall === side) {
+    payout = bet * 2;
+    outcome = 'double';
   }
   meta.coins += payout;
   const result = {
@@ -1450,6 +1450,7 @@ function playCoinFlip(betAmount) {
     payout,
     outcome,
     side,
+    calledSide: playerCall,
     net: payout - bet,
   };
   meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
@@ -1457,7 +1458,7 @@ function playCoinFlip(betAmount) {
   return { ok: true, ...result, coins: meta.coins };
 }
 
-function playSlotMachine(betAmount) {
+function startSlotRound(betAmount) {
   const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
   const meta = getMetaProgress();
   if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
@@ -1471,6 +1472,26 @@ function playSlotMachine(betAmount) {
   ];
 
   meta.coins -= bet;
+  saveMetaProgress(meta);
+
+  return {
+    ok: true,
+    round: {
+      bet,
+      reels,
+    },
+    coins: meta.coins,
+  };
+}
+
+function resolveSlotRound(round) {
+  const meta = getMetaProgress();
+  if (!round || typeof round.bet !== 'number' || !Array.isArray(round.reels)) {
+    return { ok: false, error: 'No active slot round.', coins: meta.coins };
+  }
+
+  const bet = round.bet;
+  const reels = round.reels;
 
   let payout = 0;
   let outcome = 'loss';
@@ -1500,10 +1521,10 @@ function playSlotMachine(betAmount) {
   const result = {
     at: Date.now(),
     game: 'slots',
-    bet,
+    bet: round.bet,
     payout,
     outcome,
-    net: payout - bet,
+    net: payout - round.bet,
     reels,
   };
   meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
@@ -1532,6 +1553,8 @@ function startVoltorbRound(betAmount) {
     rewardCard.kind === 'safe'
       ? { kind: 'double', payout: bet * 2, label: '2x' }
       : { kind: 'safe', payout: bet, label: '1x' },
+    { kind: 'safe', payout: bet, label: '1x' },
+    { kind: 'double', payout: bet * 2, label: '2x' },
   ];
 
   for (let i = cards.length - 1; i > 0; i--) {
