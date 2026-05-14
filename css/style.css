@@ -4929,6 +4929,76 @@ h1, h2, .pixel-font {
 .trainer-card:hover,
 .trainer-card:focus   { border-color: #181410; box-shadow: 4px 4px 0 0 #181410; }
 
+/* ---- Endless boon override ---- */
+#stat-buff-screen .item-card.endless-boon-card {
+  width: min(320px, calc(100vw - 56px)) !important;
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 18px 18px 16px !important;
+  text-align: center;
+  background:
+    radial-gradient(circle at top, rgba(139, 232, 255, 0.14), transparent 34%) !important,
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98)) !important;
+  border: 1px solid rgba(139, 232, 255, 0.24) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 18px 36px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+  color: #edf5ff !important;
+}
+#stat-buff-screen .item-card.endless-boon-card:hover {
+  border-color: rgba(139, 232, 255, 0.68) !important;
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 22px 44px rgba(0, 0, 0, 0.4),
+    0 0 28px rgba(139, 232, 255, 0.16) !important;
+  transform: translateY(-3px);
+}
+#stat-buff-screen .endless-boon-card .item-icon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: rgba(10, 16, 30, 0.82);
+  border: 1px solid rgba(139, 232, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 0 18px rgba(139, 232, 255, 0.1);
+}
+#stat-buff-screen .endless-boon-card .item-name,
+#stat-buff-screen .endless-boon-card .item-desc {
+  color: #edf5ff !important;
+}
+#stat-buff-screen .endless-boon-card .item-name {
+  font-size: 11px;
+}
+#stat-buff-screen .endless-boon-card .item-desc {
+  color: #c8d9f6 !important;
+  line-height: 1.55;
+  max-width: 28ch;
+}
+.endless-boon-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 217, 127, 0.22), rgba(255, 217, 127, 0.08));
+  border: 1px solid rgba(255, 217, 127, 0.4);
+  color: #ffd97f;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 /* ---- RogueMon swap screen override ---- */
 #swap-screen .poke-card {
   background:
