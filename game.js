@@ -3463,16 +3463,95 @@ async function startEndlessRegion() {
   startEndlessMap();
 }
 
+function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
+  const routeTemplates = [
+    [
+      [NODE_TYPES.CATCH, NODE_TYPES.ITEM],
+      [NODE_TYPES.TRAINER, NODE_TYPES.QUESTION],
+      [NODE_TYPES.MOVE_TUTOR, NODE_TYPES.POKECENTER],
+    ],
+    [
+      [NODE_TYPES.TRAINER, NODE_TYPES.CATCH],
+      [NODE_TYPES.ITEM, NODE_TYPES.QUESTION],
+      [NODE_TYPES.TRADE, NODE_TYPES.POKECENTER],
+    ],
+    [
+      [NODE_TYPES.ITEM, NODE_TYPES.TRAINER],
+      [NODE_TYPES.QUESTION, NODE_TYPES.MOVE_TUTOR],
+      [NODE_TYPES.POKECENTER, NODE_TYPES.TRADE],
+    ],
+  ];
+  const route = routeTemplates[Math.min(mapIndexInRegion, routeTemplates.length - 1)];
+
+  const makeNode = (id, type, layer, col, extra = {}) => ({
+    id,
+    type,
+    layer,
+    col,
+    visited: false,
+    accessible: false,
+    revealed: true,
+    ...extra,
+  });
+
+  const layers = [
+    [makeNode('n0_0', NODE_TYPES.START, 0, 0)],
+    route[0].map((type, idx) => makeNode(`n1_${idx}`, type, 1, idx)),
+    route[1].map((type, idx) => makeNode(`n2_${idx}`, type, 2, idx)),
+    route[2].map((type, idx) => makeNode(`n3_${idx}`, type, 3, idx)),
+    [makeNode('n4_0', NODE_TYPES.BOSS, 4, 0, { mapIndex: (regionNumber - 1) * 3 + mapIndexInRegion })],
+  ];
+
+  const connectLayers = (fromLayer, toLayer) => {
+    const edges = [];
+    if (fromLayer.length === 1) {
+      for (const target of toLayer) edges.push({ from: fromLayer[0].id, to: target.id });
+      return edges;
+    }
+    for (let i = 0; i < fromLayer.length; i++) {
+      const left = Math.max(0, Math.min(toLayer.length - 1, i));
+      const right = Math.max(0, Math.min(toLayer.length - 1, i + 1));
+      edges.push({ from: fromLayer[i].id, to: toLayer[left].id });
+      if (right !== left) edges.push({ from: fromLayer[i].id, to: toLayer[right].id });
+    }
+    return edges;
+  };
+
+  const edges = [];
+  for (let i = 0; i < layers.length - 1; i++) {
+    edges.push(...connectLayers(layers[i], layers[i + 1]));
+  }
+
+  const nodes = {};
+  for (const layer of layers) {
+    for (const node of layer) nodes[node.id] = node;
+  }
+  nodes['n0_0'].visited = true;
+  for (const edge of edges) {
+    if (edge.from === 'n0_0' && nodes[edge.to]) nodes[edge.to].accessible = true;
+  }
+
+  return {
+    nodes,
+    edges,
+    layers,
+    mapIndex: 90 + (regionNumber - 1) * 3 + mapIndexInRegion,
+  };
+}
+
 function startEndlessMap() {
   // Full heal at the start of every gauntlet in endless mode
   fullyRestoreEndlessTeam();
 
-  // R1M1 always uses fakeMapIndex 2 so move tier and layout stay identical to stage 1.
-  // Other maps scale with stage+region as before.
   const isFirstMap = endlessState.regionNumber === 1 && endlessState.mapIndexInRegion === 0;
   const fakeMapIndex = isFirstMap ? 2 : Math.min(7, endlessState.stageNumber + endlessState.regionNumber);
   state.currentMap = fakeMapIndex;
-  state.map = generateMap(fakeMapIndex, false);
+  state.map = endlessState.mode === 'expedition'
+    ? buildEndlessExpeditionMap(endlessState.regionNumber, endlessState.mapIndexInRegion)
+    : generateMap(fakeMapIndex, false);
+  state.currentNode = state.map.nodes['n0_0'] || null;
+  state.usedPokecenter = false;
+  state.pickedUpItem = false;
   state.endlessLevelRange = getEndlessLevelRange(endlessState.stageNumber, endlessState.regionNumber, endlessState.mapIndexInRegion);
   applyExpeditionRosterState();
 

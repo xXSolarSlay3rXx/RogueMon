@@ -3089,8 +3089,8 @@ function updateBattleStages(pokemonEl, stages) {
     .filter(([, v]) => v !== 0)
     .map(([stat, v]) => {
       const cls = v > 0 ? 'stage-up' : 'stage-down';
-      const arrow = v > 0 ? 'ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â²' : 'ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼';
-      return `<span class="battle-stage-badge ${cls}">${labels[stat] ?? stat} ${arrow}${Math.abs(v)}</span>`;
+      const prefix = v > 0 ? '+' : '-';
+      return `<span class="battle-stage-badge ${cls}">${labels[stat] ?? stat} ${prefix}${Math.abs(v)}</span>`;
     }).join('');
 }
 
@@ -3098,13 +3098,13 @@ function animateStatChange(pokemonEl, stat, change) {
   return new Promise(resolve => {
     const isUp = change > 0;
     const color = isUp ? '#5af055' : '#f05545';
-    const arrow = isUp ? 'ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â²' : 'ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼';
+    const prefix = isUp ? '+' : '-';
     const statLabels = { atk: 'ATK', def: 'DEF', speed: 'SPD', special: 'SP.A', spdef: 'SP.D' };
 
     const popup = document.createElement('div');
     popup.className = 'stat-change-popup';
     popup.style.color = color;
-    popup.textContent = `${arrow} ${statLabels[stat] || stat}`;
+    popup.textContent = `${prefix} ${statLabels[stat] || stat}`;
     pokemonEl.appendChild(popup);
 
     setTimeout(() => { popup.remove(); resolve(); }, 700 / battleSpeedMultiplier);
