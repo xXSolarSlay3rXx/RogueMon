@@ -9040,3 +9040,27 @@ h1, h2, .pixel-font {
     flex-direction: column;
   }
 }
+
+/* ---- Final endless boon theme override ---- */
+#stat-buff-screen #stat-buff-choices .item-card.endless-boon-card {
+  background:
+    radial-gradient(circle at top, rgba(139, 232, 255, 0.14), transparent 34%) !important,
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98)) !important;
+  border: 1px solid rgba(139, 232, 255, 0.24) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 18px 36px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+  color: #edf5ff !important;
+}
+#stat-buff-screen #stat-buff-choices .item-card.endless-boon-card .item-name {
+  color: #f4fbff !important;
+}
+#stat-buff-screen #stat-buff-choices .item-card.endless-boon-card .item-desc {
+  color: #c8d9f6 !important;
+}
+#stat-buff-screen #stat-buff-choices .item-card.endless-boon-card .item-icon {
+  background: rgba(10, 16, 30, 0.82) !important;
+  border-color: rgba(139, 232, 255, 0.18) !important;
+}
