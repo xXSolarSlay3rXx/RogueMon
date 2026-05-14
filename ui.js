@@ -3905,13 +3905,20 @@ function animateArcadePlay(modal, gameId, result) {
     let inner = '';
     if (gameId === 'coinflip') {
       const skin = getCurrentCoinSkin();
+      const landedSide = result.side === 'heads' ? 'Heads' : 'Tails';
       inner = `
         <div class="arcade-animation-box arcade-animation-box--coin">
           <div class="arcade-animation-title">Coin Flip</div>
           <div class="coin-stage">
+            <div class="coin-side-legend">
+              <span class="coin-side-pill ${result.side === 'heads' ? 'is-active' : ''}">Heads</span>
+              <span class="coin-side-pill ${result.side === 'tails' ? 'is-active' : ''}">Tails</span>
+            </div>
             <div class="coin-spinner ${result.outcome} ${skin.skinId === 'default-roguemon' ? 'coin-spinner--default' : ''}" style="--coin-accent:${skin.accent || '#ffd36c'}; --coin-emblem:url('${skin.spriteUrl || ''}')">
               <div class="coin-spinner-ring"></div>
               <div class="coin-spinner-face">
+                <div class="coin-spinner-side coin-spinner-side--top">Heads</div>
+                <div class="coin-spinner-side coin-spinner-side--bottom">Tails</div>
                 <div class="coin-spinner-face-inner">
                   <div class="coin-spinner-emblem ${skin.skinId === 'default-roguemon' ? 'coin-spinner-emblem--logo' : ''}">
                     <span class="coin-spinner-emblem-art" aria-hidden="true"></span>
@@ -3921,7 +3928,7 @@ function animateArcadePlay(modal, gameId, result) {
             </div>
             <div class="coin-shadow"></div>
           </div>
-          <div class="arcade-animation-copy">${result.outcome === 'loss' ? 'The house wins this one.' : result.outcome === 'jackpot' ? 'Triple payout!' : 'Heads! Double up.'}</div>
+          <div class="arcade-animation-copy">${result.outcome === 'loss' ? `${landedSide}. The house takes it.` : result.outcome === 'jackpot' ? `${landedSide}! Triple payout!` : `${landedSide}! Double up.`}</div>
           <div class="arcade-animation-subcopy">Active coin skin: ${skin.name}</div>
         </div>
       `;
@@ -3931,6 +3938,9 @@ function animateArcadePlay(modal, gameId, result) {
         <div class="arcade-animation-box arcade-animation-box--slots">
           <div class="arcade-animation-title">Pokemon Slots</div>
           <div class="slot-machine-shell">
+            <div class="slot-machine-lights">
+              ${Array.from({ length: 10 }, (_, i) => `<span class="slot-light slot-light-${i + 1}"></span>`).join('')}
+            </div>
             <div class="slot-machine-header">
               <span>Celadon Reels</span>
               <span class="slot-machine-payline">PAYLINE</span>
@@ -3962,6 +3972,9 @@ function animateArcadePlay(modal, gameId, result) {
           <div class="crane-machine crane-machine--result">
             <div class="crane-track"></div>
             <div class="crane-marquee">Game Corner Crane</div>
+            <div class="crane-machine-lights">
+              ${Array.from({ length: 8 }, (_, i) => `<span class="crane-light crane-light-${i + 1}"></span>`).join('')}
+            </div>
             <div class="crane-arm crane-arm--result lane-${result.lane ?? 1}"></div>
             ${renderCranePrizeLane(0, prizeVariants[0], result.targetLane === 0)}
             ${renderCranePrizeLane(1, prizeVariants[1], result.targetLane === 1)}

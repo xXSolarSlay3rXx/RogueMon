@@ -1432,12 +1432,15 @@ function playCoinFlip(betAmount) {
   const roll = metaRandomUnit();
   let payout = 0;
   let outcome = 'loss';
+  let side = 'tails';
   if (roll < 0.45) {
     payout = bet * 2;
     outcome = 'double';
+    side = 'heads';
   } else if (roll < 0.52) {
     payout = bet * 3;
     outcome = 'jackpot';
+    side = 'heads';
   }
   meta.coins += payout;
   const result = {
@@ -1446,6 +1449,7 @@ function playCoinFlip(betAmount) {
     bet,
     payout,
     outcome,
+    side,
     net: payout - bet,
   };
   meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
