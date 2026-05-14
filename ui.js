@@ -13,7 +13,7 @@ const i18n = {
     game_tagline: 'Catch, battle and become the Champion!',
     btn_new_run: 'New Game',
     btn_hard_run: 'Nuzlocke Mode',
-    btn_endless_run: 'Endless Mode',
+    btn_endless_run: 'Endless Beta',
     btn_continue_run: 'Continue Run',
     btn_continue_endless: 'Continue Endless',
     btn_back_title: 'Back',
@@ -29,9 +29,9 @@ const i18n = {
     unlock_gen_5: 'Defeat the Gen 4 Elite Four and Champion to unlock Gen 5.',
     coming_soon: 'Coming Soon',
     coming_soon_note: 'This generation is planned for a future update.',
-    endless_coming_soon_desc: 'A reworked version of this mode is on the way.',
-    endless_expedition_desc: 'Build a six-Pokemon expedition from your booster roster.',
-    endless_expedition_title: 'Endless Expedition',
+    endless_coming_soon_desc: 'Beta systems are under review while the main adventure stays the focus.',
+    endless_expedition_desc: 'Beta - build a six-Pokemon expedition from your booster roster.',
+    endless_expedition_title: 'Endless Expedition Beta',
     endless_expedition_subtitle: 'Pick 6 recruits, choose a Captain, and push as far as your roster can go.',
     endless_expedition_launch: 'Launch Expedition',
     endless_expedition_selected: 'Selected',
@@ -4069,8 +4069,8 @@ function openShopModal() {
       <div class="shop-modal-box">
         <div class="shop-modal-header">
           <div>
-            <h2>Booster Shop</h2>
-            <p>Spend story coins on Endless recruits before the mode opens up.</p>
+            <h2>Booster Shop Beta</h2>
+            <p>Beta feature - spend story coins on Endless recruits while we keep tuning the mode.</p>
           </div>
           <button class="ach-modal-close" id="shop-modal-close">&times;</button>
         </div>
@@ -4294,8 +4294,8 @@ function openArcadeModal() {
       <div class="shop-modal-box gamble-modal-box">
         <div class="shop-modal-header">
           <div>
-            <h2>Game Corner</h2>
-            <p>Take story coins for a spin and build up the budget for your future Endless roster.</p>
+            <h2>Game Corner Beta</h2>
+            <p>Beta feature - try the side games while we keep refining the main adventure first.</p>
           </div>
           <button class="ach-modal-close" id="coin-flip-close">&times;</button>
         </div>
@@ -5430,4 +5430,5 @@ function openHallOfFameModal() {
 
   document.body.appendChild(modal);
 }
+
 

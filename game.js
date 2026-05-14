@@ -1248,37 +1248,46 @@ function getAdjustedEnemyLevel(level, isBoss = false, encounterType = 'wild') {
   const storyRegionId = state?.storyRegionId || 1;
   const progressIndex = Math.max(0, Number(state?.currentMap) || 0);
 
-  let delta;
+  // Keep Kanto on the old feel; later regions get smoother scaling.
+  if (storyRegionId <= 1) {
+    let delta;
+    if (isBoss) delta = -2;
+    else if (encounterType === 'trainer') delta = -1;
+    else delta = -1;
+    return Math.max(2, safeLevel + delta);
+  }
+
+  const teamLevels = Array.isArray(state?.team)
+    ? state.team.map(p => Number(p?.level) || 0).filter(l => l > 0).sort((a, b) => b - a)
+    : [];
+  const anchorSlice = teamLevels.slice(0, Math.min(3, teamLevels.length));
+  const anchorLevel = anchorSlice.length
+    ? Math.round(anchorSlice.reduce((sum, lvl) => sum + lvl, 0) / anchorSlice.length)
+    : safeLevel;
+  const lateRun = progressIndex >= 6;
+  const finalStretch = progressIndex >= 8;
+
+  let adjustedLevel = safeLevel;
+  let floorLevel = safeLevel;
+  let ceilLevel = safeLevel;
+
   if (isBoss) {
-    delta = storyRegionId >= 2
-      ? (progressIndex >= 8 ? 0 : -1)
-      : -2;
+    adjustedLevel = Math.max(2, safeLevel + (finalStretch ? 0 : -1));
+    floorLevel = anchorLevel - (lateRun ? 1 : 2);
+    ceilLevel = anchorLevel + (finalStretch ? 1 : 0);
   } else if (encounterType === 'trainer') {
-    delta = storyRegionId >= 2 ? -2 : -1;
+    adjustedLevel = Math.max(2, safeLevel + (lateRun ? -2 : -3));
+    floorLevel = anchorLevel - (lateRun ? 3 : 4);
+    ceilLevel = anchorLevel - 1;
   } else {
-    delta = storyRegionId >= 2 ? -3 : -1;
+    adjustedLevel = Math.max(2, safeLevel + (lateRun ? -3 : -4));
+    floorLevel = anchorLevel - (lateRun ? 4 : 5);
+    ceilLevel = anchorLevel - 2;
   }
 
-  let adjustedLevel = Math.max(2, safeLevel + delta);
-
-  // Keep boss previews and actual boss fights deterministic so the
-  // Easy Mode card / map tooltip always match the real battle levels.
-  if (isBoss) {
-    return adjustedLevel;
-  }
-
-  // Keep Kanto on its current feel, but let later regions scale more gently.
-  const teamLevels = Array.isArray(state?.team) ? state.team.map(p => Number(p?.level) || 0).filter(l => l > 0) : [];
-  if (storyRegionId >= 2 && teamLevels.length > 0) {
-    const strongestPlayerLevel = Math.max(...teamLevels);
-    const catchupLag = encounterType === 'trainer'
-      ? (progressIndex >= 6 ? 5 : 6)
-      : (progressIndex >= 6 ? 6 : 7);
-    const catchupFloor = Math.max(2, strongestPlayerLevel - catchupLag);
-    adjustedLevel = Math.max(adjustedLevel, catchupFloor);
-  }
-
-  return adjustedLevel;
+  adjustedLevel = Math.max(adjustedLevel, Math.max(2, floorLevel));
+  adjustedLevel = Math.min(adjustedLevel, Math.max(2, ceilLevel));
+  return Math.max(2, adjustedLevel);
 }
 
 async function resolveConfiguredTeamPreview(teamEntries, fallbackType = 'Normal') {
@@ -4047,3 +4056,4 @@ window.addEventListener('beforeunload', autosaveActiveRun);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) autosaveActiveRun();
 });
+
