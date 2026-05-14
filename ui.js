@@ -3687,11 +3687,11 @@ function renderEndlessCollectionCards(entries = [], emptyLabel = 'No recruits ye
 function renderCoinSkinPreview(entry, extraClass = '') {
   const isDefault = entry?.skinId === 'default-roguemon';
   return `
-    <div class="coin-skin-preview ${isDefault ? 'coin-skin-preview--default' : ''} ${extraClass}" style="--coin-accent:${entry?.accent || '#ffd36c'}">
+    <div class="coin-skin-preview ${isDefault ? 'coin-skin-preview--default' : ''} ${extraClass}" style="--coin-accent:${entry?.accent || '#ffd36c'}; --coin-emblem:url('${entry?.spriteUrl || ''}')">
       <div class="coin-skin-preview-ring"></div>
       <div class="coin-skin-preview-face">
         <div class="coin-skin-preview-emblem ${isDefault ? 'coin-skin-preview-emblem--logo' : ''}">
-          <img src="${entry?.spriteUrl || ''}" alt="${entry?.name || 'Coin'}">
+          <span class="coin-skin-preview-emblem-art" aria-hidden="true"></span>
         </div>
       </div>
     </div>
@@ -3724,7 +3724,7 @@ function renderSlotSymbol(symbol, isHit = false) {
 function renderCranePrizeLane(lane, variant = 'pokeball', reveal = false) {
   return `
     <div class="crane-prize lane lane-${lane} ${reveal ? 'is-revealed' : ''}">
-      <span class="crane-prize-token crane-prize-token--${variant}">
+      <span class="crane-prize-token crane-prize-token--${variant}" aria-hidden="true">
         <span class="crane-prize-core"></span>
       </span>
     </div>
@@ -3909,12 +3909,12 @@ function animateArcadePlay(modal, gameId, result) {
         <div class="arcade-animation-box arcade-animation-box--coin">
           <div class="arcade-animation-title">Coin Flip</div>
           <div class="coin-stage">
-            <div class="coin-spinner ${result.outcome}" style="--coin-accent:${skin.accent || '#ffd36c'}">
+            <div class="coin-spinner ${result.outcome} ${skin.skinId === 'default-roguemon' ? 'coin-spinner--default' : ''}" style="--coin-accent:${skin.accent || '#ffd36c'}; --coin-emblem:url('${skin.spriteUrl || ''}')">
               <div class="coin-spinner-ring"></div>
               <div class="coin-spinner-face">
                 <div class="coin-spinner-face-inner">
                   <div class="coin-spinner-emblem ${skin.skinId === 'default-roguemon' ? 'coin-spinner-emblem--logo' : ''}">
-                    <img src="${skin.spriteUrl}" alt="${skin.name}">
+                    <span class="coin-spinner-emblem-art" aria-hidden="true"></span>
                   </div>
                 </div>
               </div>
@@ -3932,11 +3932,13 @@ function animateArcadePlay(modal, gameId, result) {
           <div class="arcade-animation-title">Pokemon Slots</div>
           <div class="slot-machine-shell">
             <div class="slot-machine-header">
-              <span>Game Corner Reels</span>
+              <span>Celadon Reels</span>
               <span class="slot-machine-payline">PAYLINE</span>
             </div>
             <div class="slot-machine-window">
               <div class="slot-payline"></div>
+              <div class="slot-machine-badge slot-machine-badge--left">Poke</div>
+              <div class="slot-machine-badge slot-machine-badge--right">Jackpot</div>
               <div class="slot-reels">
                 ${slotSymbols.map((symbol, index) => `
                   <div class="slot-reel reel-${index + 1}">
@@ -3959,6 +3961,7 @@ function animateArcadePlay(modal, gameId, result) {
           <div class="arcade-animation-title">Prize Catcher</div>
           <div class="crane-machine crane-machine--result">
             <div class="crane-track"></div>
+            <div class="crane-marquee">Game Corner Crane</div>
             <div class="crane-arm crane-arm--result lane-${result.lane ?? 1}"></div>
             ${renderCranePrizeLane(0, prizeVariants[0], result.targetLane === 0)}
             ${renderCranePrizeLane(1, prizeVariants[1], result.targetLane === 1)}
