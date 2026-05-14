@@ -327,10 +327,16 @@ function applyExpeditionRosterState() {
     const oldMaxHp = Math.max(1, pokemon.maxHp || 1);
     const oldCurrent = Math.max(0, pokemon.currentHp || 0);
     const hpRatio = oldCurrent / oldMaxHp;
-    pokemon.level = Math.max(5, baseLevel - fatiguePenalty + captainBonus + roleLevelBonus);
+    const floorLevel = Math.max(5, baseLevel + captainBonus + roleLevelBonus);
+    const fatigueHpMult = 1 - (fatiguePenalty * 0.08);
+
+    // Fatigue should pressure the run without deleting earned levels between maps.
+    pokemon.level = Math.max(floorLevel, pokemon.level || 5);
+    pokemon.endlessFatiguePenalty = fatiguePenalty;
+
     const hpBuff = (pokemon.statBuffs?.hp ?? 0) + (role.id === 'bulwark' ? 1 : 0);
-    pokemon.maxHp = Math.floor(calcHp(pokemon.baseStats.hp, pokemon.level) * (1 + 0.1 * hpBuff));
-    pokemon.currentHp = Math.max(1, Math.min(pokemon.maxHp, Math.floor(pokemon.maxHp * Math.max(0.2, hpRatio || 1))));
+    pokemon.maxHp = Math.max(1, Math.floor(calcHp(pokemon.baseStats.hp, pokemon.level) * (1 + 0.1 * hpBuff) * fatigueHpMult));
+    pokemon.currentHp = Math.max(1, Math.min(pokemon.maxHp, Math.floor(pokemon.maxHp * Math.max(0.35, hpRatio || 1))));
   }
 }
 
