@@ -7944,6 +7944,21 @@ h1, h2, .pixel-font {
   border: 1px solid rgba(124, 209, 255, 0.14);
 }
 
+.slot-machine-badge {
+  position: absolute;
+  top: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(16, 30, 56, 0.96);
+  border: 1px solid rgba(124, 209, 255, 0.18);
+  color: #fff3ab;
+  font-size: 7px;
+  z-index: 2;
+}
+
+.slot-machine-badge--left { left: 12px; }
+.slot-machine-badge--right { right: 12px; }
+
 .slot-payline {
   position: absolute;
   left: 18px;
@@ -7994,12 +8009,27 @@ h1, h2, .pixel-font {
 .slot-token {
   position: relative;
   display: inline-flex;
-  width: 26px;
-  height: 26px;
+  width: 36px;
+  height: 36px;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.18);
+}
+
+.slot-token--sprite {
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,0.24), transparent 28%),
+    rgba(255,255,255,0.04);
+  border: 1px solid rgba(124, 209, 255, 0.12);
+}
+
+.slot-token-sprite {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.26));
 }
 
 .slot-token-core {
@@ -8080,10 +8110,15 @@ h1, h2, .pixel-font {
 }
 
 .slot-cell.tone-candy { color: #83ef9a; }
-.slot-cell.tone-greatball { color: #7dd7ff; }
-.slot-cell.tone-pokeball { color: #ff9f89; }
-.slot-cell.tone-masterball { color: #ffd36c; }
-.slot-cell.tone-ultraball { color: #ffb7dd; }
+.slot-cell.tone-greatball,
+.slot-cell.tone-pikachu { color: #ffd36c; }
+.slot-cell.tone-pokeball,
+.slot-cell.tone-psyduck { color: #7dd7ff; }
+.slot-cell.tone-masterball,
+.slot-cell.tone-gengar { color: #d0a6ff; }
+.slot-cell.tone-ultraball,
+.slot-cell.tone-mewtwo { color: #ffb7dd; }
+.slot-cell.tone-eevee { color: #f1b98c; }
 
 .slot-hit {
   border-color: rgba(255, 214, 115, 0.35);
@@ -8091,8 +8126,144 @@ h1, h2, .pixel-font {
   box-shadow: 0 0 12px rgba(255, 214, 115, 0.18);
 }
 
-.arcade-animation-box--crane {
+.arcade-animation-box--crane,
+.arcade-animation-box--voltorb {
   overflow: hidden;
+}
+
+.voltorb-stage {
+  position: relative;
+  width: 320px;
+  margin: 12px auto 16px;
+  padding: 26px 18px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(124, 209, 255, 0.18);
+  background: linear-gradient(180deg, rgba(18, 31, 59, 0.98), rgba(10, 18, 38, 0.96));
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.26);
+}
+
+.voltorb-stage-lights {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.voltorb-light {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffb0d0;
+  box-shadow: 0 0 10px rgba(255, 176, 208, 0.55);
+  animation: marqueePulse 1.15s ease-in-out infinite;
+}
+
+.voltorb-light-2,
+.voltorb-light-5,
+.voltorb-light-8 { animation-delay: 120ms; }
+.voltorb-light-3,
+.voltorb-light-6 { animation-delay: 240ms; }
+.voltorb-light-4,
+.voltorb-light-7 { animation-delay: 360ms; }
+
+.voltorb-control-panel {
+  margin-top: 16px;
+}
+
+.voltorb-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.voltorb-card {
+  position: relative;
+  min-height: 134px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  cursor: pointer;
+  perspective: 1000px;
+  padding: 0;
+}
+
+.voltorb-card:disabled {
+  cursor: default;
+}
+
+.voltorb-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  transition: transform 420ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  border: 1px solid rgba(124, 209, 255, 0.18);
+  background: linear-gradient(180deg, rgba(15, 27, 53, 0.98), rgba(9, 18, 37, 0.96));
+}
+
+.voltorb-card-face--front {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.voltorb-card-back-dot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.45), transparent 28%), #d84f5f;
+  border: 3px solid #f7f8ff;
+  box-shadow: 0 0 20px rgba(216, 79, 95, 0.28);
+}
+
+.voltorb-card-face--back {
+  transform: rotateY(180deg);
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voltorb-card.is-selected .voltorb-card-face--front,
+.voltorb-card.is-revealed .voltorb-card-face--front {
+  transform: rotateY(180deg);
+}
+
+.voltorb-card.is-selected .voltorb-card-face--back,
+.voltorb-card.is-revealed .voltorb-card-face--back {
+  transform: rotateY(360deg);
+}
+
+.voltorb-card.kind-voltorb .voltorb-card-face--back {
+  background: linear-gradient(180deg, rgba(55, 17, 24, 0.98), rgba(31, 9, 13, 0.96));
+  border-color: rgba(255, 119, 146, 0.36);
+}
+
+.voltorb-card.kind-safe .voltorb-card-face--back,
+.voltorb-card.kind-double .voltorb-card-face--back,
+.voltorb-card.kind-boost .voltorb-card-face--back,
+.voltorb-card.kind-jackpot .voltorb-card-face--back {
+  background: linear-gradient(180deg, rgba(18, 41, 73, 0.98), rgba(11, 24, 48, 0.96));
+}
+
+.voltorb-card.kind-jackpot .voltorb-card-face--back {
+  border-color: rgba(255, 214, 115, 0.45);
+  box-shadow: 0 0 20px rgba(255, 214, 115, 0.2);
+}
+
+.voltorb-card-sprite {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.32));
+}
+
+.voltorb-card-multiplier {
+  color: #fff4ab;
+  font-size: 18px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.35);
 }
 
 .crane-machine {

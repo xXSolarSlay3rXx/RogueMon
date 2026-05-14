@@ -3700,11 +3700,11 @@ function renderCoinSkinPreview(entry, extraClass = '') {
 
 function getSlotSymbolMeta(symbol) {
   const symbolMeta = {
-    Berry: { label: 'Rare Candy', tone: 'candy', token: 'candy' },
-    Star: { label: 'Great Ball', tone: 'greatball', token: 'greatball' },
-    Ball: { label: 'Poke Ball', tone: 'pokeball', token: 'pokeball' },
-    Seven: { label: 'Master Ball', tone: 'masterball', token: 'masterball' },
-    Crown: { label: 'Ultra Ball', tone: 'ultraball', token: 'ultraball' },
+    Berry: { label: 'Pikachu', tone: 'pikachu', token: 'sprite', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png' },
+    Star: { label: 'Eevee', tone: 'eevee', token: 'sprite', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png' },
+    Ball: { label: 'Psyduck', tone: 'psyduck', token: 'sprite', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/54.png' },
+    Seven: { label: 'Gengar', tone: 'gengar', token: 'sprite', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png' },
+    Crown: { label: 'Mewtwo', tone: 'mewtwo', token: 'sprite', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png' },
   };
   return symbolMeta[symbol] || symbolMeta.Ball;
 }
@@ -3714,19 +3714,39 @@ function renderSlotSymbol(symbol, isHit = false) {
   return `
     <div class="slot-cell tone-${meta.tone} ${isHit ? 'slot-hit' : ''}">
       <span class="slot-token slot-token--${meta.token}">
-        ${meta.token === 'candy' ? '<span class="slot-token-candy-tip"></span>' : '<span class="slot-token-core"></span>'}
+        ${meta.token === 'sprite'
+          ? `<img class="slot-token-sprite" src="${meta.spriteUrl}" alt="${meta.label}">`
+          : meta.token === 'candy'
+            ? '<span class="slot-token-candy-tip"></span>'
+            : '<span class="slot-token-core"></span>'}
       </span>
       <span class="slot-token-label">${meta.label}</span>
     </div>
   `;
 }
 
-function renderCranePrizeLane(lane, variant = 'pokeball', reveal = false) {
+function renderVoltorbFlipCard(card, index, selectable = false, selectedIndex = null, revealed = false) {
+  const isSelected = selectedIndex === index;
+  const kind = card?.kind || 'safe';
+  const label = card?.label || '1x';
   return `
-    <div class="crane-prize lane lane-${lane} ${reveal ? 'is-revealed' : ''}">
-      <span class="crane-prize-token crane-prize-token--${variant}" aria-hidden="true">
-        <span class="crane-prize-core"></span>
+    <button class="voltorb-card ${revealed ? 'is-revealed' : ''} ${isSelected ? 'is-selected' : ''} kind-${kind}" ${selectable ? `data-voltorb-pick="${index}"` : 'disabled'}>
+      <span class="voltorb-card-face voltorb-card-face--front">
+        <span class="voltorb-card-back-dot"></span>
       </span>
+      <span class="voltorb-card-face voltorb-card-face--back">
+        ${kind === 'voltorb'
+          ? `<img class="voltorb-card-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/100.png" alt="Voltorb">`
+          : `<span class="voltorb-card-multiplier">${label}</span>`}
+      </span>
+    </button>
+  `;
+}
+
+function renderVoltorbFlipPreview(cards = [], selectedIndex = null, revealed = false) {
+  return `
+    <div class="voltorb-board ${revealed ? 'is-revealed' : ''}">
+      ${cards.map((card, index) => renderVoltorbFlipCard(card, index, !revealed, selectedIndex, revealed)).join('')}
     </div>
   `;
 }
@@ -3964,29 +3984,17 @@ function animateArcadePlay(modal, gameId, result) {
         </div>
       `;
     } else {
-      const laneLabels = ['Left', 'Center', 'Right'];
-      const prizeVariants = ['pokeball', 'greatball', 'masterball'];
       inner = `
-        <div class="arcade-animation-box arcade-animation-box--crane">
-          <div class="arcade-animation-title">Prize Catcher</div>
-          <div class="crane-machine crane-machine--result">
-            <div class="crane-track"></div>
-            <div class="crane-marquee">Game Corner Crane</div>
-            <div class="crane-machine-lights">
-              ${Array.from({ length: 8 }, (_, i) => `<span class="crane-light crane-light-${i + 1}"></span>`).join('')}
+        <div class="arcade-animation-box arcade-animation-box--voltorb">
+          <div class="arcade-animation-title">Voltorb Flip</div>
+          <div class="voltorb-stage">
+            <div class="voltorb-stage-lights">
+              ${Array.from({ length: 8 }, (_, i) => `<span class="voltorb-light voltorb-light-${i + 1}"></span>`).join('')}
             </div>
-            <div class="crane-arm crane-arm--result lane-${result.lane ?? 1}"></div>
-            ${renderCranePrizeLane(0, prizeVariants[0], result.targetLane === 0)}
-            ${renderCranePrizeLane(1, prizeVariants[1], result.targetLane === 1)}
-            ${renderCranePrizeLane(2, prizeVariants[2], result.targetLane === 2)}
-            <div class="crane-caught-token ${result.outcome !== 'miss' ? 'is-caught' : ''} lane-${result.lane ?? 1}">
-              <span class="crane-prize-token crane-prize-token--${prizeVariants[result.lane ?? 1] || 'pokeball'}">
-                <span class="crane-prize-core"></span>
-              </span>
-            </div>
+            ${renderVoltorbFlipPreview(result.cards || [], result.selectedIndex, true)}
           </div>
-          <div class="arcade-animation-copy">${result.prize === 'Nothing' ? 'The claw slipped away.' : `${result.prize} secured!`}</div>
-          <div class="arcade-animation-subcopy">Dropped on ${laneLabels[result.lane ?? 1]} lane</div>
+          <div class="arcade-animation-copy">${result.outcome === 'miss' ? 'Voltorb! You lose the stake.' : `${result.prize} hit!`}</div>
+          <div class="arcade-animation-subcopy">${result.net >= 0 ? '+' : ''}${result.net} coins</div>
         </div>
       `;
     }
@@ -4125,8 +4133,7 @@ function openArcadeModal() {
 
   const close = () => modal.remove();
   let currentGame = 'coinflip';
-  let craneRound = null;
-  let craneCursor = 1;
+  let voltorbRound = null;
 
   const gameConfig = {
     coinflip: {
@@ -4147,14 +4154,14 @@ function openArcadeModal() {
       resultCopy: result => `${(result.reels || []).map(symbol => getSlotSymbolMeta(symbol).label).join(' - ')} | ${result.net >= 0 ? '+' : ''}${result.net} coins`,
       historyLabel: entry => entry.outcome === 'jackpot' ? '777' : entry.outcome === 'grand' ? 'Crown' : entry.outcome === 'triple' ? 'Triple' : entry.outcome === 'pair' ? 'Pair' : 'Miss',
     },
-    crane: {
-      title: 'Crane Game',
-      subtitle: 'Steer the claw, line up your drop, and try to grab the prize lane.',
-      chances: ['45% small prize', '22% rare figure', '5% jackpot'],
-      play: bet => startCraneRound(bet),
-      resultLabel: result => result.prize || 'Miss',
+    voltorb: {
+      title: 'Voltorb Flip',
+      subtitle: 'Pick one card. Find the multiplier and dodge the Voltorb.',
+      chances: ['1 Voltorb bomb', '1 safe card', '1 big multiplier'],
+      play: bet => startVoltorbRound(bet),
+      resultLabel: result => result.outcome === 'miss' ? 'Voltorb' : result.prize,
       resultCopy: result => `${result.net >= 0 ? '+' : ''}${result.net} coins`,
-      historyLabel: entry => entry.prize || 'Miss',
+      historyLabel: entry => entry.outcome === 'miss' ? 'Voltorb' : entry.prize || 'Win',
     },
   };
 
@@ -4164,9 +4171,8 @@ function openArcadeModal() {
       alert(result.error || 'That bet could not be played.');
       return;
     }
-    if (currentGame === 'crane') {
-      craneRound = result.round;
-      craneCursor = 1;
+    if (currentGame === 'voltorb') {
+      voltorbRound = result.round;
       render();
       refreshTitleMetaBar();
       return;
@@ -4190,22 +4196,11 @@ function openArcadeModal() {
         </div>`
       : `<div class="coinflip-result idle"><strong>${config.title}</strong><span>${config.subtitle}</span></div>`;
 
-    const craneControlMarkup = currentGame === 'crane' && craneRound
+    const voltorbControlMarkup = currentGame === 'voltorb' && voltorbRound
       ? `
-        <div class="crane-control-panel">
-          <div class="crane-machine crane-machine--interactive">
-            <div class="crane-lane-marker lane-${craneCursor}"></div>
-            <div class="crane-arm lane-${craneCursor}"></div>
-            ${renderCranePrizeLane(0, 'pokeball')}
-            ${renderCranePrizeLane(1, 'greatball')}
-            ${renderCranePrizeLane(2, 'masterball')}
-          </div>
-          <div class="crane-control-row">
-            <button class="btn-secondary crane-control-btn" data-crane-move="left">Left</button>
-            <button class="btn-secondary crane-control-btn crane-control-btn--drop" data-crane-drop="true">Drop</button>
-            <button class="btn-secondary crane-control-btn" data-crane-move="right">Right</button>
-          </div>
-          <div class="arcade-animation-copy">Line the claw up with the lane you want, then drop.</div>
+        <div class="voltorb-control-panel">
+          ${renderVoltorbFlipPreview(voltorbRound.cards || [], null, false)}
+          <div class="arcade-animation-copy">Pick one card and hope it is not Voltorb.</div>
         </div>
       `
       : '';
@@ -4238,7 +4233,7 @@ function openArcadeModal() {
           <div class="arcade-mode-row">
             <button class="arcade-mode-btn ${currentGame === 'coinflip' ? 'is-active' : ''}" data-game="coinflip">Coin Flip</button>
             <button class="arcade-mode-btn ${currentGame === 'slots' ? 'is-active' : ''}" data-game="slots">Slots</button>
-            <button class="arcade-mode-btn ${currentGame === 'crane' ? 'is-active' : ''}" data-game="crane">Crane Game</button>
+            <button class="arcade-mode-btn ${currentGame === 'voltorb' ? 'is-active' : ''}" data-game="voltorb">Voltorb Flip</button>
           </div>
 
           ${latestMarkup}
@@ -4250,13 +4245,13 @@ function openArcadeModal() {
           <div class="shop-section-title">Pick a Bet</div>
           <div class="gamble-bet-grid">
             ${[10, 25, 50, 100, 200].map(bet => `
-              <button class="gamble-bet-btn" data-bet="${bet}" ${(coins < bet || (currentGame === 'crane' && craneRound)) ? 'disabled' : ''}>
+              <button class="gamble-bet-btn" data-bet="${bet}" ${(coins < bet || (currentGame === 'voltorb' && voltorbRound)) ? 'disabled' : ''}>
                 ${bet} Coins
               </button>
             `).join('')}
           </div>
 
-          ${craneControlMarkup}
+          ${voltorbControlMarkup}
 
           <div class="shop-section-title">Recent Results</div>
           <div class="gamble-history-list">
@@ -4276,28 +4271,22 @@ function openArcadeModal() {
     modal.querySelectorAll('.arcade-mode-btn[data-game]').forEach(btn => {
       btn.addEventListener('click', () => {
         currentGame = btn.dataset.game;
-        craneRound = null;
+        voltorbRound = null;
         render();
       });
     });
     modal.querySelectorAll('.gamble-bet-btn').forEach(btn => {
       btn.addEventListener('click', () => play(Number(btn.dataset.bet)));
     });
-    modal.querySelector('[data-crane-move="left"]')?.addEventListener('click', () => {
-      craneCursor = Math.max(0, craneCursor - 1);
-      render();
-    });
-    modal.querySelector('[data-crane-move="right"]')?.addEventListener('click', () => {
-      craneCursor = Math.min(2, craneCursor + 1);
-      render();
-    });
-    modal.querySelector('[data-crane-drop="true"]')?.addEventListener('click', () => {
-      if (!craneRound) return;
-      const result = resolveCraneRound(craneRound, craneCursor);
-      craneRound = null;
-      animateArcadePlay(modal, 'crane', result).then(() => {
-        render(result);
-        refreshTitleMetaBar();
+    modal.querySelectorAll('[data-voltorb-pick]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!voltorbRound) return;
+        const result = resolveVoltorbRound(voltorbRound, Number(btn.dataset.voltorbPick));
+        voltorbRound = null;
+        animateArcadePlay(modal, 'voltorb', result).then(() => {
+          render(result);
+          refreshTitleMetaBar();
+        });
       });
     });
   };

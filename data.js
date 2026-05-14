@@ -1511,52 +1511,7 @@ function playSlotMachine(betAmount) {
   return { ok: true, ...result, coins: meta.coins };
 }
 
-function playCraneGame(betAmount) {
-  const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
-  const meta = getMetaProgress();
-  if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
-  if (meta.coins < bet) return { ok: false, error: 'You need ' + bet + ' coins for that bet.', coins: meta.coins };
-
-  meta.coins -= bet;
-  const roll = metaRandomUnit();
-  let payout = 0;
-  let outcome = 'miss';
-  let prize = 'Nothing';
-
-  if (roll < 0.45) {
-    payout = Math.floor(bet * 1.5);
-    outcome = 'small';
-    prize = 'Small Plush';
-  } else if (roll < 0.67) {
-    payout = bet * 2;
-    outcome = 'medium';
-    prize = 'Rare Figure';
-  } else if (roll < 0.78) {
-    payout = bet * 3;
-    outcome = 'large';
-    prize = 'Huge Prize';
-  } else if (roll < 0.83) {
-    payout = bet * 6;
-    outcome = 'jackpot';
-    prize = 'Master Jackpot';
-  }
-
-  meta.coins += payout;
-  const result = {
-    at: Date.now(),
-    game: 'crane',
-    bet,
-    payout,
-    outcome,
-    prize,
-    net: payout - bet,
-  };
-  meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
-  saveMetaProgress(meta);
-  return { ok: true, ...result, coins: meta.coins };
-}
-
-function startCraneRound(betAmount) {
+function startVoltorbRound(betAmount) {
   const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
   const meta = getMetaProgress();
   if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
@@ -1564,57 +1519,57 @@ function startCraneRound(betAmount) {
 
   meta.coins -= bet;
   saveMetaProgress(meta);
-
   const rewardRoll = metaRandomUnit();
-  let prizeTier = { payout: 0, outcome: 'miss', prize: 'Nothing' };
-  if (rewardRoll < 0.45) prizeTier = { payout: Math.floor(bet * 1.5), outcome: 'small', prize: 'Small Plush' };
-  else if (rewardRoll < 0.68) prizeTier = { payout: bet * 2, outcome: 'medium', prize: 'Rare Figure' };
-  else if (rewardRoll < 0.8) prizeTier = { payout: bet * 3, outcome: 'large', prize: 'Huge Prize' };
-  else if (rewardRoll < 0.86) prizeTier = { payout: bet * 6, outcome: 'jackpot', prize: 'Master Jackpot' };
+  let rewardCard = { kind: 'double', payout: bet * 2, label: '2x' };
+  if (rewardRoll < 0.12) rewardCard = { kind: 'jackpot', payout: bet * 4, label: '4x' };
+  else if (rewardRoll < 0.42) rewardCard = { kind: 'boost', payout: bet * 3, label: '3x' };
+  else if (rewardRoll < 0.72) rewardCard = { kind: 'double', payout: bet * 2, label: '2x' };
+  else rewardCard = { kind: 'safe', payout: bet, label: '1x' };
+
+  const cards = [
+    { kind: 'voltorb', payout: 0, label: 'Voltorb' },
+    rewardCard,
+    rewardCard.kind === 'safe'
+      ? { kind: 'double', payout: bet * 2, label: '2x' }
+      : { kind: 'safe', payout: bet, label: '1x' },
+  ];
+
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = metaRandomInt(0, i);
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
 
   return {
     ok: true,
     round: {
       bet,
-      targetLane: metaRandomInt(0, 2),
-      prizeTier,
+      cards,
     },
     coins: meta.coins,
   };
 }
 
-function resolveCraneRound(round, cursorLane) {
+function resolveVoltorbRound(round, selectedIndex) {
   const meta = getMetaProgress();
   if (!round || typeof round.bet !== 'number') {
-    return { ok: false, error: 'No active crane round.', coins: meta.coins };
+    return { ok: false, error: 'No active Voltorb Flip round.', coins: meta.coins };
   }
 
-  const distance = Math.abs((cursorLane ?? 1) - round.targetLane);
-  let payout = 0;
-  let outcome = 'miss';
-  let prize = 'Nothing';
-
-  if (distance === 0) {
-    payout = round.prizeTier.payout;
-    outcome = round.prizeTier.outcome;
-    prize = round.prizeTier.prize;
-  } else if (distance === 1 && round.prizeTier.payout > 0) {
-    payout = Math.floor(round.prizeTier.payout * 0.4);
-    outcome = 'graze';
-    prize = 'Glancing Grab';
-  }
-
+  const cards = Array.isArray(round.cards) ? round.cards : [];
+  const picked = cards[Math.max(0, Math.min(cards.length - 1, Number(selectedIndex) || 0))] || { kind: 'voltorb', payout: 0, label: 'Voltorb' };
+  const payout = picked.payout || 0;
+  const outcome = picked.kind === 'voltorb' ? 'miss' : picked.kind;
   meta.coins += payout;
   const result = {
     at: Date.now(),
-    game: 'crane',
+    game: 'voltorb',
     bet: round.bet,
     payout,
     outcome,
-    prize,
+    prize: picked.label,
     net: payout - round.bet,
-    lane: cursorLane,
-    targetLane: round.targetLane,
+    selectedIndex: Math.max(0, Math.min(cards.length - 1, Number(selectedIndex) || 0)),
+    cards,
   };
   meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
   saveMetaProgress(meta);
