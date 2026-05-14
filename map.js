@@ -962,6 +962,8 @@ function getNodeIcon(node) {
 
 function getNodeLabel(node) {
   if (node.visited) return 'Visited';
+  if (node.tooltipHtml) return node.tooltipHtml;
+  if (node.label) return node.label;
   if (node.type === NODE_TYPES.BOSS) {
     const mi = node.mapIndex ?? -1;
     const leaders = typeof getCurrentGymLeaders === 'function'

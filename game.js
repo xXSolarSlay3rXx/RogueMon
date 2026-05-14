@@ -3390,6 +3390,238 @@ async function showEndlessBoonScreen() {
   });
 }
 
+async function showExpeditionChoiceScreen(title, subtitle, choices = []) {
+  return new Promise(resolve => {
+    const titleEl = document.getElementById('stat-buff-title');
+    const subEl = document.getElementById('stat-buff-subtitle');
+    const choicesEl = document.getElementById('stat-buff-choices');
+    if (!titleEl || !subEl || !choicesEl) {
+      resolve();
+      return;
+    }
+
+    showScreen('stat-buff-screen');
+    titleEl.textContent = title;
+    subEl.textContent = subtitle;
+    choicesEl.innerHTML = '';
+
+    for (const choice of choices) {
+      const card = document.createElement('div');
+      card.className = 'item-card endless-boon-card';
+      card.style.cursor = 'pointer';
+      card.innerHTML = `
+        <div class="item-icon"><span class="endless-boon-glyph">${choice.icon || 'GO'}</span></div>
+        <div class="item-name">${choice.name}</div>
+        <div class="item-desc">${choice.desc}</div>
+      `;
+      card.addEventListener('click', async () => {
+        try {
+          if (typeof choice.apply === 'function') await choice.apply();
+        } finally {
+          resolve();
+        }
+      });
+      choicesEl.appendChild(card);
+    }
+  });
+}
+
+async function showExpeditionMarketScreen() {
+  const choices = getEndlessArmoryChoices(3);
+  if (!choices.length) return;
+
+  return new Promise(resolve => {
+    showScreen('item-screen');
+    renderTeamBar(state.team, document.getElementById('item-team-bar'));
+    const el = document.getElementById('item-choices');
+    if (el) {
+      el.innerHTML = '';
+      for (const item of choices) {
+        const div = document.createElement('div');
+        div.className = 'item-card endless-boon-card';
+        div.style.cursor = 'pointer';
+        div.innerHTML = `<div class="item-icon">${itemIconHtml(item, 36)}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.desc}</div>`;
+        div.addEventListener('click', () => {
+          openItemEquipModal(item, {
+            onComplete: () => {
+              renderItemBadges(state.items);
+              resolve();
+            },
+          });
+        });
+        el.appendChild(div);
+      }
+    }
+    const skipBtn = document.getElementById('btn-skip-item');
+    if (skipBtn) {
+      skipBtn.textContent = getText('skip');
+      skipBtn.onclick = () => resolve();
+    }
+  });
+}
+
+async function applyExpeditionNode(node) {
+  const kind = node?.expeditionKind;
+  if (!kind) return;
+
+  if (kind === 'camp') {
+    await showExpeditionChoiceScreen('Expedition Camp', 'Reset the squad before the next pressure point.', [
+      {
+        icon: 'REST',
+        name: 'Shared Rest',
+        desc: 'Heal every recruit by 35% and clear light fatigue pressure.',
+        apply: () => {
+          for (const pokemon of state.team) {
+            const heal = Math.max(6, Math.floor((pokemon.maxHp || 1) * 0.35));
+            pokemon.currentHp = Math.min(pokemon.maxHp, (pokemon.currentHp || 0) + heal);
+          }
+          renderTeamBar(state.team);
+        },
+      },
+      {
+        icon: 'CALM',
+        name: 'Field Kitchen',
+        desc: 'Reduce fatigue by 1 for the whole squad and recover a little HP.',
+        apply: () => {
+          endlessState.fatigue = endlessState.fatigue || {};
+          for (const pokemon of state.team) {
+            const entryId = pokemon.endlessEntryId;
+            if (entryId) endlessState.fatigue[entryId] = Math.max(0, getExpeditionFatigue(entryId) - 1);
+            const heal = Math.max(4, Math.floor((pokemon.maxHp || 1) * 0.15));
+            pokemon.currentHp = Math.min(pokemon.maxHp, (pokemon.currentHp || 0) + heal);
+          }
+          applyExpeditionRosterState();
+          renderTeamBar(state.team);
+        },
+      },
+      {
+        icon: 'CAP',
+        name: 'Captain Drill',
+        desc: 'Your captain gains +1 level and the team gets a light top-up.',
+        apply: () => {
+          const captain = state.team.find(pokemon => pokemon.endlessEntryId === endlessState.captainEntryId);
+          if (captain) {
+            captain.level += 1;
+            captain.endlessBaseLevel = (captain.endlessBaseLevel || captain.level) + 1;
+          }
+          for (const pokemon of state.team) {
+            const heal = Math.max(3, Math.floor((pokemon.maxHp || 1) * 0.12));
+            pokemon.currentHp = Math.min(pokemon.maxHp, (pokemon.currentHp || 0) + heal);
+          }
+          applyExpeditionRosterState();
+          renderTeamBar(state.team);
+        },
+      },
+    ]);
+    return;
+  }
+
+  if (kind === 'medbay') {
+    await showExpeditionChoiceScreen('Med Bay', 'Patch the squad before the next clash.', [
+      {
+        icon: 'FULL',
+        name: 'Full Reset',
+        desc: 'Fully heal the squad and reduce fatigue by 1 for everyone.',
+        apply: () => {
+          fullyRestoreEndlessTeam();
+          endlessState.fatigue = endlessState.fatigue || {};
+          for (const pokemon of state.team) {
+            const entryId = pokemon.endlessEntryId;
+            if (entryId) endlessState.fatigue[entryId] = Math.max(0, getExpeditionFatigue(entryId) - 1);
+          }
+          applyExpeditionRosterState();
+          renderTeamBar(state.team);
+        },
+      },
+      {
+        icon: 'ACE',
+        name: 'Captain Care',
+        desc: 'Give your captain a perfect reset and lift the team a little.',
+        apply: () => {
+          const captain = state.team.find(pokemon => pokemon.endlessEntryId === endlessState.captainEntryId);
+          if (captain) {
+            captain.currentHp = captain.maxHp;
+            endlessState.fatigue = endlessState.fatigue || {};
+            endlessState.fatigue[captain.endlessEntryId] = Math.max(0, getExpeditionFatigue(captain.endlessEntryId) - 2);
+          }
+          for (const pokemon of state.team) {
+            if (pokemon === captain) continue;
+            const heal = Math.max(5, Math.floor((pokemon.maxHp || 1) * 0.2));
+            pokemon.currentHp = Math.min(pokemon.maxHp, (pokemon.currentHp || 0) + heal);
+          }
+          applyExpeditionRosterState();
+          renderTeamBar(state.team);
+        },
+      },
+      {
+        icon: 'KIT',
+        name: 'Supply Patch',
+        desc: 'Full heal and gain a Berry Juice for the next boss route.',
+        apply: () => {
+          fullyRestoreEndlessTeam();
+          const berryJuice = USABLE_ITEM_POOL.find((item) => item.id === 'berry_juice');
+          if (berryJuice) state.items.push({ ...berryJuice });
+          renderTeamBar(state.team);
+          renderItemBadges(state.items);
+        },
+      },
+    ]);
+    return;
+  }
+
+  if (kind === 'market') {
+    await showExpeditionMarketScreen();
+    return;
+  }
+
+  if (kind === 'scout') {
+    await showExpeditionChoiceScreen('Scout Report', 'Convert intel into a cleaner boss setup.', [
+      {
+        icon: 'FOE-',
+        name: 'Route Notes',
+        desc: 'The next boss squad loses 1 level across the board.',
+        apply: () => {
+          endlessState.nextBossLevelDelta = (endlessState.nextBossLevelDelta || 0) - 1;
+        },
+      },
+      {
+        icon: 'HP+',
+        name: 'Trail Rations',
+        desc: 'Restore 25% HP to the whole team before the boss.',
+        apply: () => {
+          endlessState.nextBossPartyHeal = Math.max(endlessState.nextBossPartyHeal || 0, 0.25);
+          for (const pokemon of state.team) {
+            const heal = Math.max(5, Math.floor((pokemon.maxHp || 1) * 0.25));
+            pokemon.currentHp = Math.min(pokemon.maxHp, (pokemon.currentHp || 0) + heal);
+          }
+          renderTeamBar(state.team);
+        },
+      },
+      {
+        icon: 'FAT-',
+        name: 'Pace Control',
+        desc: 'Reduce fatigue by 1 on the two most worn recruits.',
+        apply: () => {
+          endlessState.fatigue = endlessState.fatigue || {};
+          state.team
+            .slice()
+            .sort((a, b) => getExpeditionFatigue(b.endlessEntryId) - getExpeditionFatigue(a.endlessEntryId))
+            .slice(0, 2)
+            .forEach(pokemon => {
+              if (pokemon?.endlessEntryId) {
+                endlessState.fatigue[pokemon.endlessEntryId] = Math.max(0, getExpeditionFatigue(pokemon.endlessEntryId) - 1);
+              }
+            });
+          applyExpeditionRosterState();
+          renderTeamBar(state.team);
+        },
+      },
+    ]);
+  }
+}
+
 function showEndlessStageSelect() {
   const unlocked = Math.min(getUnlockedStageCount(), MAX_ACCESSIBLE_STAGE);
   const list = document.getElementById('stage-select-list');
@@ -3481,19 +3713,46 @@ async function startEndlessRegion() {
 function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
   const routeTemplates = [
     [
-      [NODE_TYPES.CATCH, NODE_TYPES.ITEM],
-      [NODE_TYPES.TRAINER, NODE_TYPES.QUESTION],
-      [NODE_TYPES.MOVE_TUTOR, NODE_TYPES.POKECENTER],
+      [
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Camp</div><div class="map-tooltip-desc">Rest, trim fatigue, or empower your captain.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Black Market</div><div class="map-tooltip-desc">Take one curated item into the next clash.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Trial', tooltipHtml: '<div class="map-tooltip-title">Trial Fight</div><div class="map-tooltip-desc">A direct pressure test with normal rewards.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Scout Report</div><div class="map-tooltip-desc">Trade route intel for a cleaner boss setup.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.CATCH, label: 'Recruit', tooltipHtml: '<div class="map-tooltip-title">Wild Recruit</div><div class="map-tooltip-desc">A rare chance to improve coverage mid expedition.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Med Bay</div><div class="map-tooltip-desc">Reset injuries, heal, and steady the roster.</div>' },
+      ],
     ],
     [
-      [NODE_TYPES.TRAINER, NODE_TYPES.CATCH],
-      [NODE_TYPES.ITEM, NODE_TYPES.QUESTION],
-      [NODE_TYPES.TRADE, NODE_TYPES.POKECENTER],
+      [
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Quartermaster</div><div class="map-tooltip-desc">High-value gear for the next pressure point.</div>' },
+        { type: NODE_TYPES.TRAINER, label: 'Trial', tooltipHtml: '<div class="map-tooltip-title">Trial Fight</div><div class="map-tooltip-desc">Push forward through a live combat route.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Camp</div><div class="map-tooltip-desc">Stabilize the team before the run spikes again.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Forward Scout</div><div class="map-tooltip-desc">Read the next boss lane and shape the fight.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRADE, label: 'Exchange', tooltipHtml: '<div class="map-tooltip-title">Expedition Trade</div><div class="map-tooltip-desc">Swap a squad member for a sharper high-level option.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Med Bay</div><div class="map-tooltip-desc">Recover, clean status, and reset pressure.</div>' },
+      ],
     ],
     [
-      [NODE_TYPES.ITEM, NODE_TYPES.TRAINER],
-      [NODE_TYPES.QUESTION, NODE_TYPES.MOVE_TUTOR],
-      [NODE_TYPES.POKECENTER, NODE_TYPES.TRADE],
+      [
+        { type: NODE_TYPES.CATCH, label: 'Recruit', tooltipHtml: '<div class="map-tooltip-title">Wild Recruit</div><div class="map-tooltip-desc">Take a risky catch route for extra flexibility.</div>' },
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Camp</div><div class="map-tooltip-desc">Reset the pace before the final route branch.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Field Market</div><div class="map-tooltip-desc">Pick one of three strong run items.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Scout Report</div><div class="map-tooltip-desc">Spend this node on pure boss prep.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Med Bay</div><div class="map-tooltip-desc">The last clean reset before the boss.</div>' },
+        { type: NODE_TYPES.TRAINER, label: 'Trial', tooltipHtml: '<div class="map-tooltip-title">Last Trial</div><div class="map-tooltip-desc">One more fight before the boss gate opens.</div>' },
+      ],
     ],
   ];
   const route = routeTemplates[Math.min(mapIndexInRegion, routeTemplates.length - 1)];
@@ -3511,9 +3770,9 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
 
   const layers = [
     [makeNode('n0_0', NODE_TYPES.START, 0, 0)],
-    route[0].map((type, idx) => makeNode(`n1_${idx}`, type, 1, idx)),
-    route[1].map((type, idx) => makeNode(`n2_${idx}`, type, 2, idx)),
-    route[2].map((type, idx) => makeNode(`n3_${idx}`, type, 3, idx)),
+    route[0].map((entry, idx) => makeNode(`n1_${idx}`, entry.type, 1, idx, entry)),
+    route[1].map((entry, idx) => makeNode(`n2_${idx}`, entry.type, 2, idx, entry)),
+    route[2].map((entry, idx) => makeNode(`n3_${idx}`, entry.type, 3, idx, entry)),
     [makeNode('n4_0', NODE_TYPES.BOSS, 4, 0, { mapIndex: (regionNumber - 1) * 3 + mapIndexInRegion })],
   ];
 
@@ -3630,6 +3889,20 @@ async function onEndlessNodeClick(node) {
     await doEndlessBossNode();
     return;
   }
+  if (endlessState.mode === 'expedition' && node.expeditionKind) {
+    node.visited = true;
+    node.accessible = false;
+    for (const edge of state.map.edges) {
+      if (edge.from === node.id && state.map.nodes[edge.to]) {
+        state.map.nodes[edge.to].accessible = true;
+      }
+    }
+    await applyExpeditionNode(node);
+    saveRun();
+    saveEndlessState();
+    showEndlessMapScreen();
+    return;
+  }
   // Non-boss nodes use the standard handler. showMapScreen() auto-delegates to showEndlessMapScreen().
   await onNodeClick(node);
 }
@@ -3669,7 +3942,8 @@ async function doEndlessBossNode() {
     .filter(({ sp }) => sp != null)
     .map(({ sp, i }) => {
       const offset = trainerData.levelOffsets ? (trainerData.levelOffsets[i] ?? i) : i;
-      return createInstance(sp, trainerData.level + offset, false, Math.min(2, trainerData.moveTier));
+      const expeditionDelta = endlessState.mode === 'expedition' ? (endlessState.nextBossLevelDelta || 0) : 0;
+      return createInstance(sp, Math.max(5, trainerData.level + offset + expeditionDelta), false, Math.min(2, trainerData.moveTier));
     });
 
   if (enemyTeam.length === 0) {
@@ -3689,6 +3963,13 @@ async function doEndlessBossNode() {
         : computeTraitTiers(enemyTeam, trainerData.traitBonus ?? 0);
   const traitsConfig = buildTraitsConfig(endlessState.traitTiers, enemyTiers);
   renderBattleTraitBars(endlessState.traitTiers, enemyTiers);
+
+  if (endlessState.mode === 'expedition' && endlessState.nextBossPartyHeal > 0) {
+    for (const pokemon of state.team) {
+      const heal = Math.max(5, Math.floor((pokemon.maxHp || 1) * endlessState.nextBossPartyHeal));
+      pokemon.currentHp = Math.min(pokemon.maxHp, (pokemon.currentHp || 0) + heal);
+    }
+  }
 
   const isStageFinal = isBigBoss && endlessState.regionNumber === 3;
   const title = isStageFinal
@@ -3723,6 +4004,8 @@ async function doEndlessBossNode() {
   if (!isStageFinal) {
     await showEndlessBoonScreen();
   }
+  endlessState.nextBossLevelDelta = 0;
+  endlessState.nextBossPartyHeal = 0;
 
   if (isBigBoss) await showStatBuffScreen();
 

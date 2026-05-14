@@ -4049,8 +4049,8 @@ function openShopModal() {
   modal.className = 'shop-modal-overlay';
 
   const close = () => modal.remove();
-  const buyPack = async (packId) => {
-    const result = await openEndlessBoosterPack(packId);
+  const buyPack = async (packId, options = {}) => {
+    const result = await openEndlessBoosterPack(packId, options);
     if (!result.ok) {
       alert(result.error || 'This pack could not be opened right now.');
       return;
@@ -4064,6 +4064,7 @@ function openShopModal() {
     const meta = getMetaProgress();
     const coins = getCoinBalance();
     const collection = getEndlessCollection();
+    const rotatingOffers = typeof getRotatingShopOffers === 'function' ? getRotatingShopOffers() : [];
 
     modal.innerHTML = `
       <div class="shop-modal-box">
@@ -4081,6 +4082,14 @@ function openShopModal() {
               <strong>${coins}</strong>
             </div>
             <div class="shop-balance-chip">
+              <span class="shop-balance-label">Fragments</span>
+              <strong>${meta.boosterFragments || 0}</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Coupons</span>
+              <strong>${meta.shopCoupons || 0}</strong>
+            </div>
+            <div class="shop-balance-chip">
               <span class="shop-balance-label">Roster</span>
               <strong>${collection.length}</strong>
             </div>
@@ -4095,10 +4104,39 @@ function openShopModal() {
           </div>
 
           <div class="shop-status-copy">
-            Each pack opens 3 Pokemon for your future Endless roster. Higher tiers cost more, but the pulls get stronger and come with bigger level and stat bonuses.
+            Build your Endless roster with themed booster packs. Daily offers cut the price on selected packs, while fragments and coupons from the Game Corner help keep the loop moving.
           </div>
 
-          <div class="shop-section-title">Packs</div>
+          <div class="shop-section-title">Daily Rotation</div>
+          <div class="shop-pack-grid shop-pack-grid--offers">
+            ${rotatingOffers.map(offer => {
+              const pack = ENDLESS_BOOSTER_PACKS.find(entry => entry.id === offer.packId);
+              if (!pack) return '';
+              return `
+                <div class="shop-pack-card shop-pack-card--offer rarity-${pack.id}" style="--pack-accent:${pack.accent}">
+                  <div class="shop-pack-ribbon">${offer.ribbon}</div>
+                  <div class="shop-pack-art-wrap">
+                    ${pack.spriteUrl ? `<img class="shop-pack-art" src="${pack.spriteUrl}" alt="${pack.label}">` : ''}
+                  </div>
+                  <div class="shop-pack-rarity">${pack.id.toUpperCase()}</div>
+                  <div class="shop-pack-name">${pack.label}</div>
+                  <div class="shop-pack-cost">
+                    <span class="shop-pack-cost-old">${pack.cost}</span>
+                    <span class="shop-pack-cost-new">${offer.discountedCost} Coins</span>
+                  </div>
+                  <div class="shop-pack-copy">${offer.note}</div>
+                  <div class="shop-pack-tag-row">
+                    ${(pack.shopTags || []).map(tag => `<span class="shop-pack-tag">${tag}</span>`).join('')}
+                  </div>
+                  <button class="btn-secondary shop-pack-btn shop-pack-btn--offer" data-pack-id="${pack.id}" data-offer-key="${offer.offerKey}" data-discount="${offer.discountCoins}" ${coins < offer.discountedCost ? 'disabled' : ''}>
+                    Open Deal
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div class="shop-section-title">Core Packs</div>
           <div class="shop-pack-grid">
             ${ENDLESS_BOOSTER_PACKS.map(pack => `
               <div class="shop-pack-card rarity-${pack.id}" style="--pack-accent:${pack.accent}">
@@ -4109,10 +4147,14 @@ function openShopModal() {
                 <div class="shop-pack-name">${pack.label}</div>
                 <div class="shop-pack-cost">${pack.cost} Coins</div>
                 <div class="shop-pack-copy">${pack.description}</div>
+                <div class="shop-pack-theme">${pack.theme || ''}</div>
+                <div class="shop-pack-tag-row">
+                  ${(pack.shopTags || []).map(tag => `<span class="shop-pack-tag">${tag}</span>`).join('')}
+                </div>
                 <div class="shop-pack-stats">
                   ${pack.kind === 'coinskin'
-                    ? '<span>3 collectible Pokemon coin skins</span><span>Use them in Coin Flip and the Game Corner</span><span>Cosmetic but high style</span>'
-                    : `<span>BST ${pack.minBst}-${pack.maxBst}</span><span>+${pack.levelBonusMin} to +${pack.levelBonusMax} Lv</span><span>+${pack.statBonusMin} to +${pack.statBonusMax} Stats</span>`}
+                    ? '<span>3 collectible Pokemon coin skins</span><span>Use them in Coin Flip and the Game Corner</span><span>Always keeps the RogueMon coin selectable</span>'
+                    : `<span>BST ${pack.minBst}-${pack.maxBst}</span><span>+${pack.levelBonusMin} to +${pack.levelBonusMax} Lv</span><span>+${pack.statBonusMin} to +${pack.statBonusMax} Stats</span><span>Focus: ${(pack.focusTypes || []).slice(0, 3).join(', ')}</span>`}
                 </div>
                 <button class="btn-secondary shop-pack-btn" data-pack-id="${pack.id}" ${coins < pack.cost ? 'disabled' : ''}>
                   Open Pack
@@ -4144,7 +4186,10 @@ function openShopModal() {
     modal.querySelector('#shop-modal-close')?.addEventListener('click', close);
     modal.querySelector('#btn-open-roster')?.addEventListener('click', () => openRosterModal());
     modal.querySelectorAll('.shop-pack-btn').forEach(btn => {
-      btn.addEventListener('click', () => buyPack(btn.dataset.packId));
+      btn.addEventListener('click', () => buyPack(btn.dataset.packId, {
+        offerKey: btn.dataset.offerKey || null,
+        discountCoins: Number(btn.dataset.discount || 0),
+      }));
     });
   };
 
@@ -4306,6 +4351,14 @@ function openArcadeModal() {
               <strong>${coins}</strong>
             </div>
             <div class="shop-balance-chip">
+              <span class="shop-balance-label">Fragments</span>
+              <strong>${meta.boosterFragments || 0}</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Coupons</span>
+              <strong>${meta.shopCoupons || 0}</strong>
+            </div>
+            <div class="shop-balance-chip">
               <span class="shop-balance-label">Mode</span>
               <strong>${config.title}</strong>
             </div>
@@ -4325,6 +4378,8 @@ function openArcadeModal() {
 
           <div class="arcade-odds-row">
             ${config.chances.map(line => `<span class="arcade-odds-pill">${line}</span>`).join('')}
+            <span class="arcade-odds-pill arcade-odds-pill--meta">Fragments feed the shop</span>
+            <span class="arcade-odds-pill arcade-odds-pill--meta">Coupons juice daily deals</span>
           </div>
 
           ${coinCallMarkup}
@@ -4348,6 +4403,7 @@ function openArcadeModal() {
                 <span>${config.historyLabel(entry)}</span>
                 <span>Bet ${entry.bet}</span>
                 <span>${entry.net >= 0 ? '+' : ''}${entry.net}</span>
+                <span class="gamble-history-bonus">${entry.bonusFragments ? `+${entry.bonusFragments} Fragments` : entry.bonusCoupons ? `+${entry.bonusCoupons} Coupon` : '-'}</span>
               </div>
             `).join('') || '<div class="collection-empty">No results for this game yet.</div>' : '<div class="collection-empty">No results for this game yet.</div>'}
           </div>

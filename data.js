@@ -1100,6 +1100,9 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
     legendaryChance: 0,
     accent: '#7dd7ff',
     description: 'Reliable early picks with light stat tuning.',
+    theme: 'Flexible starters and glue pieces for stable first expeditions.',
+    focusTypes: ['Normal', 'Flying', 'Bug', 'Electric', 'Water', 'Grass'],
+    shopTags: ['Flexible', 'Starter Core', 'Low Risk'],
   },
   {
     id: 'uncommon',
@@ -1115,6 +1118,9 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
     legendaryChance: 0,
     accent: '#79f0a7',
     description: 'Stronger mid-tier pulls with steadier upgrades.',
+    theme: 'Balanced all-rounders that smooth out weak links in a roster.',
+    focusTypes: ['Fighting', 'Water', 'Grass', 'Ground', 'Psychic', 'Poison'],
+    shopTags: ['Balanced', 'Mid Game', 'Reliable'],
   },
   {
     id: 'rare',
@@ -1130,6 +1136,9 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
     legendaryChance: 0,
     accent: '#a98cff',
     description: 'Higher BST pulls for the backbone of a future run.',
+    theme: 'Aggressive ace picks for faster clears and stronger captain choices.',
+    focusTypes: ['Fire', 'Electric', 'Dragon', 'Dark', 'Flying', 'Ice'],
+    shopTags: ['Offense', 'Sweepers', 'Draft Core'],
   },
   {
     id: 'epic',
@@ -1145,6 +1154,9 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
     legendaryChance: 0.04,
     accent: '#ff8db2',
     description: 'Elite-ready pulls with chunky stat bonuses.',
+    theme: 'Heavy anchors and late-run closers worthy of a champion squad.',
+    focusTypes: ['Steel', 'Rock', 'Ground', 'Psychic', 'Dragon', 'Fairy'],
+    shopTags: ['Anchors', 'Boss Ready', 'Elite'],
   },
   {
     id: 'mythic',
@@ -1160,6 +1172,9 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
     legendaryChance: 0.12,
     accent: '#ffd36c',
     description: 'Top-shelf pulls with a real shot at legendary power.',
+    theme: 'High-variance apex pack with a shot at truly absurd power.',
+    focusTypes: ['Dragon', 'Psychic', 'Dark', 'Ghost', 'Steel', 'Fairy'],
+    shopTags: ['High Roll', 'Legend Chance', 'Prestige'],
   },
   {
     id: 'coinmint',
@@ -1176,6 +1191,9 @@ const ENDLESS_BOOSTER_PACKS = Object.freeze([
     legendaryChance: 0,
     accent: '#8ff7ff',
     description: 'Unlock 3 collectible Pokemon coin skins for the Game Corner.',
+    theme: 'Pure style. Expand your Game Corner coin collection.',
+    focusTypes: [],
+    shopTags: ['Cosmetic', 'Arcade', 'Collectible'],
   },
 ]);
 
@@ -1187,6 +1205,8 @@ const COIN_SKIN_SOURCE_IDS = Object.freeze([
 function normalizeMetaProgress(meta = {}) {
   return {
     coins: Math.max(0, Math.floor(Number(meta.coins) || 0)),
+    boosterFragments: Math.max(0, Math.floor(Number(meta.boosterFragments) || 0)),
+    shopCoupons: Math.max(0, Math.floor(Number(meta.shopCoupons) || 0)),
     endlessCollection: Array.isArray(meta.endlessCollection) ? meta.endlessCollection : [],
     openedBoosters: Math.max(0, Math.floor(Number(meta.openedBoosters) || 0)),
     gambleHistory: Array.isArray(meta.gambleHistory) ? meta.gambleHistory.slice(0, 12) : [],
@@ -1307,10 +1327,60 @@ function metaRandomInt(min, max) {
   return Math.floor(metaRandomUnit() * (max - min + 1)) + min;
 }
 
+function getDaySeedValue() {
+  const now = new Date();
+  const dayKey = `${now.getUTCFullYear()}-${now.getUTCMonth() + 1}-${now.getUTCDate()}`;
+  let hash = 2166136261;
+  for (let i = 0; i < dayKey.length; i++) {
+    hash ^= dayKey.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function daySeededUnit(offset = 0) {
+  let value = (getDaySeedValue() + Math.imul(offset + 1, 2654435761)) >>> 0;
+  value ^= value << 13;
+  value ^= value >>> 17;
+  value ^= value << 5;
+  return ((value >>> 0) % 10000) / 10000;
+}
+
+function getRotatingShopOffers() {
+  const packs = ENDLESS_BOOSTER_PACKS.filter(pack => pack.kind !== 'coinskin');
+  const offers = [];
+  const used = new Set();
+  for (let slot = 0; slot < 3 && used.size < packs.length; slot++) {
+    let index = Math.floor(daySeededUnit(slot) * packs.length);
+    while (used.has(index)) index = (index + 1) % packs.length;
+    used.add(index);
+    const pack = packs[index];
+    const discountCoins = Math.max(6, Math.floor(pack.cost * (0.15 + daySeededUnit(slot + 11) * 0.12)));
+    const ribbons = ['Daily Rotation', 'Lucky Window', 'Featured Deal'];
+    const notes = [
+      'A fresh line-up tuned for today.',
+      'A lighter entry point into a pricier pack.',
+      'Good value if this theme fits your next roster.',
+    ];
+    offers.push({
+      offerKey: `${pack.id}-${slot}`,
+      packId: pack.id,
+      label: pack.label,
+      discountCoins,
+      discountedCost: Math.max(1, pack.cost - discountCoins),
+      ribbon: ribbons[slot] || 'Offer',
+      note: notes[slot] || 'Limited-time offer.',
+    });
+  }
+  return offers;
+}
+
 async function pickBoosterSpecies(pack, blockedIds = new Set()) {
   const maxDexId = getUnlockedBoosterMaxDexId();
   const allowLegendary = pack.legendaryChance > 0 && metaRandomUnit() < pack.legendaryChance;
   let fallback = null;
+  let themeFallback = null;
+  const focusTypes = Array.isArray(pack.focusTypes) ? pack.focusTypes : [];
 
   for (let attempt = 0; attempt < 60; attempt++) {
     const speciesId = metaRandomInt(1, maxDexId);
@@ -1320,12 +1390,17 @@ async function pickBoosterSpecies(pack, blockedIds = new Set()) {
     if (!species || !species.baseStats) continue;
     const bst = species.bst || Object.values(species.baseStats).reduce((sum, value) => sum + value, 0);
     if (!fallback) fallback = species;
+    if (!themeFallback && focusTypes.length && (species.types || []).some(type => focusTypes.includes(type))) {
+      themeFallback = species;
+    }
     if (!allowLegendary && (bst < pack.minBst || bst > pack.maxBst)) continue;
     if (allowLegendary && typeof LEGENDARY_ID_SET !== 'undefined' && LEGENDARY_ID_SET.has(speciesId)) return species;
-    if (bst >= pack.minBst) return species;
+    const typeMatch = !focusTypes.length || (species.types || []).some(type => focusTypes.includes(type));
+    if (typeMatch && bst >= pack.minBst) return species;
+    if (bst >= pack.minBst && metaRandomUnit() < 0.25) return species;
   }
 
-  return fallback || fetchPokemonById(133);
+  return themeFallback || fallback || fetchPokemonById(133);
 }
 
 async function pickCoinSkinSpecies(blockedIds = new Set()) {
@@ -1370,13 +1445,15 @@ function createCoinSkinEntry(species) {
   };
 }
 
-async function openEndlessBoosterPack(packId) {
+async function openEndlessBoosterPack(packId, options = {}) {
   const pack = ENDLESS_BOOSTER_PACKS.find(entry => entry.id === packId);
   if (!pack) return { ok: false, error: 'Pack not found.' };
 
-  const payment = spendCoins(pack.cost);
+  const discountCoins = Math.max(0, Math.floor(Number(options.discountCoins) || 0));
+  const finalCost = Math.max(1, pack.cost - discountCoins);
+  const payment = spendCoins(finalCost);
   if (!payment.ok) {
-    return { ok: false, error: 'You need ' + pack.cost + ' coins for this pack.', coins: payment.total };
+    return { ok: false, error: 'You need ' + finalCost + ' coins for this pack.', coins: payment.total };
   }
 
   try {
@@ -1415,11 +1492,28 @@ async function openEndlessBoosterPack(packId) {
     meta.openedBoosters += 1;
     saveMetaProgress(meta);
 
-    return { ok: true, pack, pulls, coins: meta.coins, rewardKind: pack.kind || 'roster' };
+    return {
+      ok: true,
+      pack,
+      pulls,
+      coins: meta.coins,
+      rewardKind: pack.kind || 'roster',
+      pricePaid: finalCost,
+      discountCoins,
+      offerKey: options.offerKey || null,
+    };
   } catch (error) {
-    awardCoins(pack.cost, 'Booster refund');
+    awardCoins(finalCost, 'Booster refund');
     return { ok: false, error: 'Pack opening failed. Coins were refunded.' };
   }
+}
+
+function applyArcadeSideRewards(meta, fragments = 0, coupons = 0) {
+  const fragmentGain = Math.max(0, Math.floor(Number(fragments) || 0));
+  const couponGain = Math.max(0, Math.floor(Number(coupons) || 0));
+  meta.boosterFragments = Math.max(0, (meta.boosterFragments || 0) + fragmentGain);
+  meta.shopCoupons = Math.max(0, (meta.shopCoupons || 0) + couponGain);
+  return { fragments: fragmentGain, coupons: couponGain };
 }
 
 function playCoinFlip(betAmount, calledSide = 'heads') {
@@ -1443,6 +1537,11 @@ function playCoinFlip(betAmount, calledSide = 'heads') {
     outcome = 'double';
   }
   meta.coins += payout;
+  const sideRewards = outcome === 'jackpot'
+    ? applyArcadeSideRewards(meta, 8 + Math.floor(bet / 10), 1)
+    : outcome === 'double'
+      ? applyArcadeSideRewards(meta, 3 + Math.floor(bet / 25), 0)
+      : applyArcadeSideRewards(meta, 1, 0);
   const result = {
     at: Date.now(),
     game: 'coinflip',
@@ -1452,6 +1551,8 @@ function playCoinFlip(betAmount, calledSide = 'heads') {
     side,
     calledSide: playerCall,
     net: payout - bet,
+    bonusFragments: sideRewards.fragments,
+    bonusCoupons: sideRewards.coupons,
   };
   meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
   saveMetaProgress(meta);
@@ -1518,6 +1619,15 @@ function resolveSlotRound(round) {
   }
 
   meta.coins += payout;
+  const sideRewards = outcome === 'jackpot'
+    ? applyArcadeSideRewards(meta, 16 + Math.floor(bet / 8), 1)
+    : outcome === 'grand'
+      ? applyArcadeSideRewards(meta, 10 + Math.floor(bet / 10), 1)
+      : outcome === 'triple'
+        ? applyArcadeSideRewards(meta, 6 + Math.floor(bet / 20), 0)
+        : outcome === 'pair'
+          ? applyArcadeSideRewards(meta, 2 + Math.floor(bet / 30), 0)
+          : applyArcadeSideRewards(meta, 0, 0);
   const result = {
     at: Date.now(),
     game: 'slots',
@@ -1526,6 +1636,8 @@ function resolveSlotRound(round) {
     outcome,
     net: payout - round.bet,
     reels,
+    bonusFragments: sideRewards.fragments,
+    bonusCoupons: sideRewards.coupons,
   };
   meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
   saveMetaProgress(meta);
@@ -1583,6 +1695,15 @@ function resolveVoltorbRound(round, selectedIndex) {
   const payout = picked.payout || 0;
   const outcome = picked.kind === 'voltorb' ? 'miss' : picked.kind;
   meta.coins += payout;
+  const sideRewards = outcome === 'jackpot'
+    ? applyArcadeSideRewards(meta, 12 + Math.floor(round.bet / 10), 1)
+    : outcome === 'boost'
+      ? applyArcadeSideRewards(meta, 8 + Math.floor(round.bet / 15), 0)
+      : outcome === 'double'
+        ? applyArcadeSideRewards(meta, 4 + Math.floor(round.bet / 20), 0)
+        : outcome === 'safe'
+          ? applyArcadeSideRewards(meta, 2, 0)
+          : applyArcadeSideRewards(meta, 0, 0);
   const result = {
     at: Date.now(),
     game: 'voltorb',
@@ -1593,6 +1714,8 @@ function resolveVoltorbRound(round, selectedIndex) {
     net: payout - round.bet,
     selectedIndex: Math.max(0, Math.min(cards.length - 1, Number(selectedIndex) || 0)),
     cards,
+    bonusFragments: sideRewards.fragments,
+    bonusCoupons: sideRewards.coupons,
   };
   meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
   saveMetaProgress(meta);

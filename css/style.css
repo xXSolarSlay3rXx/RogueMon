@@ -7267,7 +7267,7 @@ h1, h2, .pixel-font {
 
 .shop-balance-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -7443,6 +7443,10 @@ h1, h2, .pixel-font {
   gap: 12px;
 }
 
+.shop-pack-grid--offers {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .shop-pack-card {
   position: relative;
   padding: 16px;
@@ -7451,6 +7455,23 @@ h1, h2, .pixel-font {
   background:
     linear-gradient(180deg, rgba(10, 20, 41, 0.96), rgba(8, 15, 31, 0.94));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 26px rgba(0, 0, 0, 0.2);
+}
+
+.shop-pack-card--offer {
+  overflow: hidden;
+}
+
+.shop-pack-ribbon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pack-accent, #7dd7ff) 26%, rgba(7, 12, 24, 0.92));
+  border: 1px solid color-mix(in srgb, var(--pack-accent, #7dd7ff) 40%, transparent);
+  color: #f5fbff;
+  font-size: 8px;
 }
 
 .shop-pack-art-wrap {
@@ -7493,6 +7514,41 @@ h1, h2, .pixel-font {
   font-size: 9px;
   line-height: 1.7;
   min-height: 52px;
+}
+
+.shop-pack-theme {
+  margin: 10px 0 8px;
+  color: #d9ebff;
+  font-size: 9px;
+  line-height: 1.7;
+  min-height: 48px;
+}
+
+.shop-pack-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 12px;
+}
+
+.shop-pack-tag {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(124, 209, 255, 0.18);
+  background: rgba(11, 22, 44, 0.85);
+  color: #9ec9ff;
+  font-size: 8px;
+}
+
+.shop-pack-cost-old {
+  margin-right: 8px;
+  color: #8ea7c7;
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+.shop-pack-cost-new {
+  color: #fff1a8;
 }
 
 .shop-pack-stats {
@@ -8722,6 +8778,12 @@ h1, h2, .pixel-font {
   font-size: 8px;
 }
 
+.arcade-odds-pill--meta {
+  border-color: rgba(255, 215, 111, 0.18);
+  background: rgba(37, 29, 10, 0.78);
+  color: #ffe8a6;
+}
+
 .gamble-bet-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -8751,13 +8813,17 @@ h1, h2, .pixel-font {
 
 .gamble-history-row {
   display: grid;
-  grid-template-columns: 1.2fr .9fr .8fr;
+  grid-template-columns: 1.2fr .9fr .8fr 1fr;
   gap: 12px;
   padding: 10px 12px;
   border-radius: 12px;
   background: rgba(9, 18, 38, 0.86);
   color: #bfdcff;
   font-size: 9px;
+}
+
+.gamble-history-bonus {
+  color: #ffe8a6;
 }
 
 .gamble-history-row.double { border-left: 3px solid #7af4aa; }
@@ -8828,7 +8894,15 @@ h1, h2, .pixel-font {
 }
 
 @media (max-width: 1100px) {
+  .shop-balance-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .shop-pack-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shop-pack-grid--offers {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -8888,6 +8962,10 @@ h1, h2, .pixel-font {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .shop-pack-grid--offers {
+    grid-template-columns: 1fr;
+  }
+
   .roster-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -8898,6 +8976,10 @@ h1, h2, .pixel-font {
 
   .shop-pack-grid {
     grid-template-columns: 1fr;
+  }
+
+  .gamble-history-row {
+    grid-template-columns: 1fr 1fr;
   }
 
   .booster-reveal-row {
