@@ -3699,8 +3699,12 @@ function renderEndlessCollectionCards(entries = [], emptyLabel = 'No recruits ye
   }
 
   return entries.map(entry => `
-    <div class="collection-card rarity-${entry.rarity || 'common'}">
+    <div class="collection-card rarity-${entry.rarity || 'common'} ${entry.rarityFxClass || ''}">
       <div class="collection-card-accent" style="--collection-accent:${entry.rarityAccent || '#7dd7ff'}"></div>
+      <div class="collection-card-flags">
+        <span class="collection-flag collection-flag--rarity">${entry.rarityLabel || entry.rarity || 'Scout'}</span>
+        <span class="collection-flag collection-flag--profile ${entry.profileClass || 'prime'}">${entry.profileLabel || 'Prime'}</span>
+      </div>
       <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
       <div class="collection-card-name">${entry.name}</div>
       <div class="collection-card-types">
@@ -3806,6 +3810,42 @@ function openRosterModal() {
   modal.className = 'shop-modal-overlay';
 
   const close = () => modal.remove();
+  let sortMode = 'power';
+  let filterMode = 'all';
+  let searchTerm = '';
+
+  const sortEntries = (entries) => {
+    const rarityRank = { mythic: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
+    const profileRank = { omega: 5, spike: 4, prime: 3, wild: 2, rough: 1 };
+    const items = entries.slice();
+    if (sortMode === 'newest') {
+      return items.sort((a, b) => (b.obtainedAt || 0) - (a.obtainedAt || 0));
+    }
+    if (sortMode === 'rarity') {
+      return items.sort((a, b) => {
+        const rarityDiff = (rarityRank[b.rarity] || 0) - (rarityRank[a.rarity] || 0);
+        if (rarityDiff !== 0) return rarityDiff;
+        return (profileRank[b.profileClass] || 0) - (profileRank[a.profileClass] || 0);
+      });
+    }
+    return items.sort((a, b) => {
+      const aScore = (a.levelBonus || 0) + (a.statBonus || 0) + ((profileRank[a.profileClass] || 0) * 0.75);
+      const bScore = (b.levelBonus || 0) + (b.statBonus || 0) + ((profileRank[b.profileClass] || 0) * 0.75);
+      if (bScore !== aScore) return bScore - aScore;
+      return (b.obtainedAt || 0) - (a.obtainedAt || 0);
+    });
+  };
+
+  const filterEntries = (entries) => entries.filter(entry => {
+    const query = searchTerm.trim().toLowerCase();
+    const nameMatch = !query || entry.name.toLowerCase().includes(query) || (entry.types || []).some(type => String(type).toLowerCase().includes(query));
+    if (!nameMatch) return false;
+    if (filterMode === 'all') return true;
+    if (filterMode === 'rareplus') return ['rare', 'epic', 'mythic'].includes(entry.rarity);
+    if (filterMode === 'highroll') return ['omega', 'spike'].includes(entry.profileClass);
+    return true;
+  });
+
   const handleSell = (entryId) => {
     const result = sellEndlessCollectionEntry(entryId);
     if (!result.ok) {
@@ -3821,6 +3861,8 @@ function openRosterModal() {
     const coins = getCoinBalance();
     const coinSkins = getUnlockedCoinSkins();
     const currentCoinSkin = getCurrentCoinSkin();
+    const filteredCollection = sortEntries(filterEntries(collection));
+    const duplicateCount = Math.max(0, collection.length - new Set(collection.map(entry => entry.speciesId)).size);
 
     modal.innerHTML = `
       <div class="shop-modal-box roster-modal-box">
@@ -3842,8 +3884,8 @@ function openRosterModal() {
               <strong>${collection.length}</strong>
             </div>
             <div class="shop-balance-chip">
-              <span class="shop-balance-label">Sell Tip</span>
-              <strong>Rarity + bonuses</strong>
+              <span class="shop-balance-label">Duplicates</span>
+              <strong>${duplicateCount}</strong>
             </div>
           </div>
 
@@ -3855,10 +3897,27 @@ function openRosterModal() {
           ` : ''}
 
           <div class="shop-section-title">Your Recruits</div>
-          <div class="roster-grid">
-            ${collection.length ? collection.map(entry => `
-              <div class="collection-card roster-card rarity-${entry.rarity || 'common'}">
+          <div class="roster-toolbar">
+            <div class="roster-toolbar-group">
+              <button class="btn-secondary roster-filter-btn ${filterMode === 'all' ? 'is-active' : ''}" data-filter-mode="all">All</button>
+              <button class="btn-secondary roster-filter-btn ${filterMode === 'rareplus' ? 'is-active' : ''}" data-filter-mode="rareplus">Rare+</button>
+              <button class="btn-secondary roster-filter-btn ${filterMode === 'highroll' ? 'is-active' : ''}" data-filter-mode="highroll">High Rolls</button>
+            </div>
+            <div class="roster-toolbar-group">
+              <button class="btn-secondary roster-sort-btn ${sortMode === 'power' ? 'is-active' : ''}" data-sort-mode="power">Strongest</button>
+              <button class="btn-secondary roster-sort-btn ${sortMode === 'newest' ? 'is-active' : ''}" data-sort-mode="newest">Newest</button>
+              <button class="btn-secondary roster-sort-btn ${sortMode === 'rarity' ? 'is-active' : ''}" data-sort-mode="rarity">Rarity</button>
+            </div>
+            <input class="roster-search" id="roster-search" type="text" placeholder="Search name or type..." value="${searchTerm.replace(/"/g, '&quot;')}">
+          </div>
+          <div class="roster-grid ${collection.length > 20 ? 'roster-grid--dense' : ''}">
+            ${filteredCollection.length ? filteredCollection.map(entry => `
+              <div class="collection-card roster-card rarity-${entry.rarity || 'common'} ${entry.rarityFxClass || ''}">
                 <div class="collection-card-accent" style="--collection-accent:${entry.rarityAccent || '#7dd7ff'}"></div>
+                <div class="collection-card-flags">
+                  <span class="collection-flag collection-flag--rarity">${entry.rarityLabel || entry.rarity || 'Scout'}</span>
+                  <span class="collection-flag collection-flag--profile ${entry.profileClass || 'prime'}">${entry.profileLabel || 'Prime'}</span>
+                </div>
                 <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
                 <div class="collection-card-name">${entry.name}</div>
                 <div class="collection-card-types">
@@ -3873,7 +3932,7 @@ function openRosterModal() {
                   <button class="btn-secondary roster-sell-btn" data-entry-id="${entry.entryId}">Sell</button>
                 </div>
               </div>
-            `).join('') : '<div class="collection-empty">Your Endless roster is empty.</div>'}
+            `).join('') : '<div class="collection-empty">No recruits match this filter yet.</div>'}
           </div>
 
           <div class="shop-section-title">Coin Skins</div>
@@ -3887,6 +3946,22 @@ function openRosterModal() {
     modal.querySelector('#roster-modal-close')?.addEventListener('click', close);
     modal.querySelectorAll('.roster-sell-btn').forEach(btn => {
       btn.addEventListener('click', () => handleSell(btn.dataset.entryId));
+    });
+    modal.querySelectorAll('.roster-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterMode = btn.dataset.filterMode || 'all';
+        render(lastSale);
+      });
+    });
+    modal.querySelectorAll('.roster-sort-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sortMode = btn.dataset.sortMode || 'power';
+        render(lastSale);
+      });
+    });
+    modal.querySelector('#roster-search')?.addEventListener('input', (event) => {
+      searchTerm = event.target.value || '';
+      render(lastSale);
     });
     modal.querySelectorAll('.coin-skin-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -3917,15 +3992,20 @@ function animateBoosterOpening(modal, result) {
         <div class="booster-reveal-row">
           ${result.pulls.map((pull, index) => result.rewardKind === 'coinskin'
             ? `
-              <div class="booster-reveal-card booster-reveal-card--coin reveal-${index + 1}">
+              <div class="booster-reveal-card booster-reveal-card--coin ${pull.rarityFxClass || ''} reveal-${index + 1}">
+                <div class="booster-reveal-badge">${pull.name} Coin</div>
                 ${renderCoinSkinPreview(pull, 'coin-skin-preview--reveal')}
-                <span>${pull.name} Coin</span>
+                <span class="booster-reveal-copy">Unlocked skin</span>
               </div>
             `
             : `
-              <div class="booster-reveal-card reveal-${index + 1}">
-                <img src="${pull.spriteUrl}" alt="${pull.name}">
+              <div class="booster-reveal-card ${pull.rarityFxClass || ''} reveal-${index + 1}">
+                <div class="booster-reveal-badge">${pull.rarityLabel || 'Pack'} • ${pull.profileLabel || 'Prime'}</div>
+                <div class="booster-reveal-silhouette">
+                  <img src="${pull.spriteUrl}" alt="${pull.name}">
+                </div>
                 <span>${pull.name}</span>
+                <small>+${pull.levelBonus || 0} Lv • +${pull.statBonus || 0} Stats</small>
               </div>
             `
           ).join('')}
@@ -3938,11 +4018,11 @@ function animateBoosterOpening(modal, result) {
     }, 20);
     setTimeout(() => {
       overlay.classList.add('is-fading');
-    }, 2200);
+    }, 3400);
     setTimeout(() => {
       overlay.remove();
       resolve();
-    }, 2800);
+    }, 4050);
   });
 }
 

@@ -1290,8 +1290,15 @@ function getEndlessEntrySellValue(entry) {
     epic: 58,
     mythic: 95,
   };
+  const profileBonus = {
+    rough: -2,
+    wild: 1,
+    prime: 4,
+    spike: 9,
+    omega: 16,
+  };
   const base = rarityBase[entry.rarity] || 10;
-  return Math.max(5, base + ((entry.levelBonus || 0) * 3) + ((entry.statBonus || 0) * 4));
+  return Math.max(5, base + ((entry.levelBonus || 0) * 3) + ((entry.statBonus || 0) * 4) + (profileBonus[entry.profileClass] || 0));
 }
 
 function sellEndlessCollectionEntry(entryId) {
@@ -1411,7 +1418,111 @@ async function pickCoinSkinSpecies(blockedIds = new Set()) {
   return fetchPokemonById(speciesId);
 }
 
-function createEndlessCollectionEntry(species, pack, statBonus, levelBonus) {
+function getBoosterPullProfile(pack) {
+  const roll = metaRandomUnit();
+  if (roll < 0.08) {
+    return {
+      id: 'omega',
+      label: 'Omega',
+      accent: '#ffd36c',
+      badgeClass: 'omega',
+      levelShift: 1,
+      statShift: 2,
+      varianceBias: 2,
+      fxClass: 'fx-omega',
+    };
+  }
+  if (roll < 0.24) {
+    return {
+      id: 'spike',
+      label: 'Spike',
+      accent: '#ff8bc2',
+      badgeClass: 'spike',
+      levelShift: 1,
+      statShift: 1,
+      varianceBias: 1,
+      fxClass: 'fx-spike',
+    };
+  }
+  if (roll < 0.58) {
+    return {
+      id: 'prime',
+      label: 'Prime',
+      accent: '#8fe7ff',
+      badgeClass: 'prime',
+      levelShift: 0,
+      statShift: 0,
+      varianceBias: 0,
+      fxClass: 'fx-prime',
+    };
+  }
+  if (roll < 0.82) {
+    return {
+      id: 'wild',
+      label: 'Wild',
+      accent: '#9ad97d',
+      badgeClass: 'wild',
+      levelShift: 0,
+      statShift: -1,
+      varianceBias: -1,
+      fxClass: 'fx-wild',
+    };
+  }
+  return {
+    id: 'rough',
+    label: 'Rough',
+    accent: '#b1b9d0',
+    badgeClass: 'rough',
+    levelShift: -1,
+    statShift: -1,
+    varianceBias: -2,
+    fxClass: 'fx-rough',
+  };
+}
+
+function createBoosterStatProfile(species, bonusPoints = 0, profile = null) {
+  const points = Math.max(0, Math.floor(Number(bonusPoints) || 0));
+  const tone = profile?.id || 'prime';
+  const spread = { hp: 0, atk: 0, def: 0, speed: 0, spdef: 0, special: 0 };
+  if (!species?.baseStats) return spread;
+
+  const statEntries = [
+    { key: 'hp', value: species.baseStats.hp || 0 },
+    { key: 'atk', value: species.baseStats.atk || 0 },
+    { key: 'def', value: species.baseStats.def || 0 },
+    { key: 'speed', value: species.baseStats.speed || 0 },
+    { key: 'spdef', value: species.baseStats.spdef || 0 },
+    { key: 'special', value: species.baseStats.special || 0 },
+  ];
+
+  let priorities;
+  if (tone === 'spike') {
+    priorities = statEntries.slice().sort((a, b) => b.value - a.value);
+  } else if (tone === 'wild') {
+    priorities = statEntries.slice().sort((a, b) => a.value - b.value);
+  } else if (tone === 'rough') {
+    priorities = statEntries.slice().sort((a, b) => (a.value + metaRandomInt(0, 15)) - (b.value + metaRandomInt(0, 15)));
+  } else if (tone === 'omega') {
+    priorities = [
+      ...statEntries.slice().sort((a, b) => b.value - a.value).slice(0, 2),
+      ...statEntries.slice().sort((a, b) => a.value - b.value).slice(0, 2),
+      ...statEntries.slice().sort((a, b) => b.value - a.value).slice(2),
+    ];
+  } else {
+    priorities = statEntries.slice().sort((a, b) => b.value - a.value);
+  }
+
+  const loopTargets = priorities.slice(0, Math.max(2, Math.min(4, priorities.length)));
+  for (let i = 0; i < points; i++) {
+    const target = loopTargets[i % loopTargets.length];
+    spread[target.key] += 1;
+    if (target.key === 'atk') spread.special += 1;
+    if (target.key === 'special') spread.atk += 1;
+  }
+  return spread;
+}
+
+function createEndlessCollectionEntry(species, pack, statBonus, levelBonus, profile = null) {
   const now = Date.now();
   return {
     entryId: 'endless_' + now + '_' + Math.floor(metaRandomUnit() * 1000000),
@@ -1428,6 +1539,12 @@ function createEndlessCollectionEntry(species, pack, statBonus, levelBonus) {
     rarityAccent: pack.accent,
     statBonus,
     levelBonus,
+    pullProfile: profile ? { ...profile } : null,
+    profileLabel: profile?.label || 'Prime',
+    profileAccent: profile?.accent || pack.accent,
+    profileClass: profile?.badgeClass || 'prime',
+    rarityFxClass: profile?.fxClass || '',
+    statProfile: createBoosterStatProfile(species, statBonus, profile),
     obtainedAt: now,
   };
 }
@@ -1475,15 +1592,22 @@ async function openEndlessBoosterPack(packId, options = {}) {
         meta.currentCoinSkin = pulls[0] || getDefaultCoinSkin();
       }
     } else {
+      const recentSpeciesIds = new Set((meta.endlessCollection || []).slice(0, 18).map(entry => entry.speciesId));
       for (let slot = 0; slot < 3; slot++) {
-        const species = await pickBoosterSpecies(pack, usedIds);
+        const species = await pickBoosterSpecies(pack, new Set([...usedIds, ...recentSpeciesIds]));
         if (!species) continue;
         usedIds.add(species.id);
+        const pullProfile = getBoosterPullProfile(pack);
+        const baseStatBonus = metaRandomInt(pack.statBonusMin, pack.statBonusMax);
+        const baseLevelBonus = metaRandomInt(pack.levelBonusMin, pack.levelBonusMax);
+        const statBonus = Math.max(0, baseStatBonus + (pullProfile.statShift || 0));
+        const levelBonus = Math.max(0, baseLevelBonus + (pullProfile.levelShift || 0));
         pulls.push(createEndlessCollectionEntry(
           species,
           pack,
-          metaRandomInt(pack.statBonusMin, pack.statBonusMax),
-          metaRandomInt(pack.levelBonusMin, pack.levelBonusMax)
+          statBonus,
+          levelBonus,
+          pullProfile
         ));
       }
       meta.endlessCollection = [...pulls, ...(meta.endlessCollection || [])].slice(0, 600);

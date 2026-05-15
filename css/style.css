@@ -9173,3 +9173,214 @@ h1, h2, .pixel-font {
   color: #d8e7ff !important;
   opacity: 0.98;
 }
+.collection-card.fx-omega,
+.booster-reveal-card.fx-omega,
+.expedition-pick-card.fx-omega {
+  box-shadow: 0 0 0 1px rgba(255, 211, 108, 0.28) inset, 0 0 24px rgba(255, 211, 108, 0.16);
+}
+
+.collection-card.fx-spike,
+.booster-reveal-card.fx-spike,
+.expedition-pick-card.fx-spike {
+  box-shadow: 0 0 0 1px rgba(255, 139, 194, 0.26) inset, 0 0 22px rgba(255, 139, 194, 0.14);
+}
+
+.collection-card-flags {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.collection-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 8px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.collection-flag--rarity {
+  background: rgba(13, 26, 49, 0.92);
+  border: 1px solid rgba(126, 212, 255, 0.18);
+  color: #cce8ff;
+}
+
+.collection-flag--profile {
+  border: 1px solid transparent;
+}
+
+.collection-flag--profile.omega {
+  background: rgba(255, 211, 108, 0.18);
+  border-color: rgba(255, 211, 108, 0.34);
+  color: #ffe69f;
+}
+
+.collection-flag--profile.spike {
+  background: rgba(255, 139, 194, 0.16);
+  border-color: rgba(255, 139, 194, 0.32);
+  color: #ffc7dd;
+}
+
+.collection-flag--profile.prime {
+  background: rgba(143, 231, 255, 0.16);
+  border-color: rgba(143, 231, 255, 0.28);
+  color: #c6f7ff;
+}
+
+.collection-flag--profile.wild {
+  background: rgba(154, 217, 125, 0.16);
+  border-color: rgba(154, 217, 125, 0.28);
+  color: #d7f0c7;
+}
+
+.collection-flag--profile.rough {
+  background: rgba(177, 185, 208, 0.14);
+  border-color: rgba(177, 185, 208, 0.24);
+  color: #d6ddec;
+}
+
+.roster-toolbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr minmax(220px, 260px);
+  gap: 10px;
+  margin: 6px 0 14px;
+  align-items: center;
+}
+
+.roster-toolbar-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.roster-filter-btn.is-active,
+.roster-sort-btn.is-active {
+  border-color: rgba(255, 211, 108, 0.34);
+  color: #fff2b0;
+  box-shadow: 0 0 0 1px rgba(255, 211, 108, 0.14) inset;
+}
+
+.roster-search {
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(126, 212, 255, 0.18);
+  background: rgba(8, 16, 34, 0.9);
+  color: #f2fbff;
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.roster-search::placeholder {
+  color: #86a9cd;
+}
+
+.roster-grid--dense {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.roster-grid--dense .collection-card {
+  padding: 10px 9px;
+}
+
+.roster-grid--dense .collection-card-sprite {
+  width: 62px;
+  height: 62px;
+}
+
+.roster-grid--dense .collection-card-meta {
+  gap: 6px;
+  font-size: 7px;
+}
+
+.booster-reveal-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(10, 20, 41, 0.96), rgba(7, 14, 31, 0.96));
+}
+
+.booster-reveal-badge {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(126, 212, 255, 0.18);
+  color: #fff0ad;
+  font-size: 8px;
+}
+
+.booster-reveal-silhouette {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 10px;
+  display: grid;
+  place-items: center;
+}
+
+.booster-reveal-silhouette::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(126, 212, 255, 0.18), transparent 68%);
+  transform: scale(0.92);
+}
+
+.booster-reveal-silhouette img {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: brightness(0) saturate(0) contrast(1.2);
+  opacity: 0.5;
+  animation: boosterSpriteReveal 3.1s ease forwards;
+}
+
+.booster-reveal-card small {
+  display: block;
+  margin-top: 6px;
+  color: #a8c8e9;
+  font-size: 8px;
+}
+
+.booster-reveal-card.reveal-1 { animation-delay: 0.18s; }
+.booster-reveal-card.reveal-2 { animation-delay: 0.48s; }
+.booster-reveal-card.reveal-3 { animation-delay: 0.78s; }
+
+@keyframes boosterSpriteReveal {
+  0%, 55% {
+    filter: brightness(0) saturate(0) contrast(1.25);
+    opacity: 0.46;
+    transform: scale(0.88);
+  }
+  70% {
+    filter: brightness(2.2) saturate(1.2);
+    opacity: 0.96;
+    transform: scale(1.08);
+  }
+  100% {
+    filter: none;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .roster-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .roster-grid--dense,
+  .roster-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

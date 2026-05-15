@@ -303,7 +303,9 @@ async function createExpeditionPokemonFromEntry(entry, stageNum = 1) {
   pokemon.endlessBaseLevel = baseLevel;
   pokemon.endlessRarity = entry.rarity;
   pokemon.endlessSourceName = entry.name;
-  pokemon.statBuffs = spreadExpeditionStatBuffs(species, entry.statBonus || 0);
+  pokemon.endlessProfileLabel = entry.profileLabel || 'Prime';
+  pokemon.endlessProfileClass = entry.profileClass || 'prime';
+  pokemon.statBuffs = entry.statProfile ? { ...entry.statProfile } : spreadExpeditionStatBuffs(species, entry.statBonus || 0);
   const hpBuff = pokemon.statBuffs?.hp ?? 0;
   if (hpBuff > 0) {
     pokemon.maxHp = Math.floor(calcHp(pokemon.baseStats.hp, pokemon.level) * (1 + 0.1 * hpBuff));
@@ -363,9 +365,14 @@ function getExpeditionReadyEntries() {
     .slice()
     .sort((a, b) => {
       const rarityRank = { mythic: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
+      const profileRank = { omega: 5, spike: 4, prime: 3, wild: 2, rough: 1 };
       const rarityDiff = (rarityRank[b.rarity] || 0) - (rarityRank[a.rarity] || 0);
       if (rarityDiff !== 0) return rarityDiff;
-      return (b.levelBonus + b.statBonus) - (a.levelBonus + a.statBonus);
+      const profileDiff = (profileRank[b.profileClass] || 0) - (profileRank[a.profileClass] || 0);
+      if (profileDiff !== 0) return profileDiff;
+      const powerDiff = (b.levelBonus + b.statBonus) - (a.levelBonus + a.statBonus);
+      if (powerDiff !== 0) return powerDiff;
+      return (b.obtainedAt || 0) - (a.obtainedAt || 0);
     });
 }
 
@@ -429,8 +436,12 @@ function openEndlessExpeditionModal() {
               const isCaptain = captainId === entry.entryId;
               const fatigue = getExpeditionFatigue(entry.entryId);
               return `
-                <div class="collection-card roster-card rarity-${entry.rarity || 'common'} expedition-pick-card ${isSelected ? 'is-selected' : ''} ${isCaptain ? 'is-captain' : ''}" data-entry-id="${entry.entryId}">
+                <div class="collection-card roster-card rarity-${entry.rarity || 'common'} ${entry.rarityFxClass || ''} expedition-pick-card ${isSelected ? 'is-selected' : ''} ${isCaptain ? 'is-captain' : ''}" data-entry-id="${entry.entryId}">
                   <div class="collection-card-accent" style="--collection-accent:${entry.rarityAccent || '#7dd7ff'}"></div>
+                  <div class="collection-card-flags">
+                    <span class="collection-flag collection-flag--rarity">${entry.rarityLabel || entry.rarity || 'Scout'}</span>
+                    <span class="collection-flag collection-flag--profile ${entry.profileClass || 'prime'}">${entry.profileLabel || 'Prime'}</span>
+                  </div>
                   <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
                   <div class="collection-card-name">${entry.name}</div>
                   <div class="collection-card-types">
@@ -3716,6 +3727,7 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
       [
         { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Camp</div><div class="map-tooltip-desc">Rest, trim fatigue, or empower your captain.</div>' },
         { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Black Market</div><div class="map-tooltip-desc">Take one curated item into the next clash.</div>' },
+        { type: NODE_TYPES.TRAINER, label: 'Skirmish', tooltipHtml: '<div class="map-tooltip-title">Skirmish Fight</div><div class="map-tooltip-desc">Open hot and build tempo before the floor tightens.</div>' },
       ],
       [
         { type: NODE_TYPES.TRAINER, label: 'Trial', tooltipHtml: '<div class="map-tooltip-title">Trial Fight</div><div class="map-tooltip-desc">A direct pressure test with normal rewards.</div>' },
@@ -3724,12 +3736,23 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
       [
         { type: NODE_TYPES.CATCH, label: 'Recruit', tooltipHtml: '<div class="map-tooltip-title">Wild Recruit</div><div class="map-tooltip-desc">A rare chance to improve coverage mid expedition.</div>' },
         { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Med Bay</div><div class="map-tooltip-desc">Reset injuries, heal, and steady the roster.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Cache', tooltipHtml: '<div class="map-tooltip-title">Supply Cache</div><div class="map-tooltip-desc">Take a controlled item spike into the late route.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Elite', tooltipHtml: '<div class="map-tooltip-title">Elite Patrol</div><div class="map-tooltip-desc">Harder enemies, cleaner rewards, more pressure.</div>' },
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Field Camp</div><div class="map-tooltip-desc">Trim fatigue before the floor shifts again.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRADE, label: 'Exchange', tooltipHtml: '<div class="map-tooltip-title">Roster Exchange</div><div class="map-tooltip-desc">Trade for a sharper body if your curve is weak.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Boss Scout</div><div class="map-tooltip-desc">Spend the node shaping the boss hall.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Forward Med Bay</div><div class="map-tooltip-desc">The last safe reset before the gate.</div>' },
       ],
     ],
     [
       [
         { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Quartermaster</div><div class="map-tooltip-desc">High-value gear for the next pressure point.</div>' },
         { type: NODE_TYPES.TRAINER, label: 'Trial', tooltipHtml: '<div class="map-tooltip-title">Trial Fight</div><div class="map-tooltip-desc">Push forward through a live combat route.</div>' },
+        { type: NODE_TYPES.CATCH, label: 'Recruit', tooltipHtml: '<div class="map-tooltip-title">Wild Recruit</div><div class="map-tooltip-desc">Open a catch lane for more flexibility.</div>' },
       ],
       [
         { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Camp</div><div class="map-tooltip-desc">Stabilize the team before the run spikes again.</div>' },
@@ -3738,12 +3761,23 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
       [
         { type: NODE_TYPES.TRADE, label: 'Exchange', tooltipHtml: '<div class="map-tooltip-title">Expedition Trade</div><div class="map-tooltip-desc">Swap a squad member for a sharper high-level option.</div>' },
         { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Med Bay</div><div class="map-tooltip-desc">Recover, clean status, and reset pressure.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Relic', tooltipHtml: '<div class="map-tooltip-title">Relic Locker</div><div class="map-tooltip-desc">A curated gear room for stronger route planning.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Elite', tooltipHtml: '<div class="map-tooltip-title">Elite Route</div><div class="map-tooltip-desc">A hotter lane with stronger reward tempo.</div>' },
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Rest Camp</div><div class="map-tooltip-desc">Shift the pace before the final fork.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.CATCH, label: 'Draft', tooltipHtml: '<div class="map-tooltip-title">Recruit Draft</div><div class="map-tooltip-desc">Fish for a higher-upside catch before the boss.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Pressure Scout</div><div class="map-tooltip-desc">Spend the node for a cleaner boss setup.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Recovery Bay</div><div class="map-tooltip-desc">A safe reset if the route already hit hard.</div>' },
       ],
     ],
     [
       [
         { type: NODE_TYPES.CATCH, label: 'Recruit', tooltipHtml: '<div class="map-tooltip-title">Wild Recruit</div><div class="map-tooltip-desc">Take a risky catch route for extra flexibility.</div>' },
         { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Camp</div><div class="map-tooltip-desc">Reset the pace before the final route branch.</div>' },
+        { type: NODE_TYPES.TRAINER, label: 'Trial', tooltipHtml: '<div class="map-tooltip-title">Trial Fight</div><div class="map-tooltip-desc">Push the route now to save trouble later.</div>' },
       ],
       [
         { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Field Market</div><div class="map-tooltip-desc">Pick one of three strong run items.</div>' },
@@ -3752,10 +3786,70 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
       [
         { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Med Bay</div><div class="map-tooltip-desc">The last clean reset before the boss.</div>' },
         { type: NODE_TYPES.TRAINER, label: 'Trial', tooltipHtml: '<div class="map-tooltip-title">Last Trial</div><div class="map-tooltip-desc">One more fight before the boss gate opens.</div>' },
+        { type: NODE_TYPES.TRADE, label: 'Exchange', tooltipHtml: '<div class="map-tooltip-title">Late Exchange</div><div class="map-tooltip-desc">Risk a trade to sharpen your final six.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Command Tent</div><div class="map-tooltip-desc">Trim fatigue and set the captain&apos;s pace.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Cache', tooltipHtml: '<div class="map-tooltip-title">Relic Cache</div><div class="map-tooltip-desc">Take a final item edge into the boss hall.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Gatekeeper', tooltipHtml: '<div class="map-tooltip-title">Gatekeeper</div><div class="map-tooltip-desc">A punishing test before the boss opens up.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Boss Scout</div><div class="map-tooltip-desc">Spend this node to bend the boss floor.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Final Med', tooltipHtml: '<div class="map-tooltip-title">Final Med Bay</div><div class="map-tooltip-desc">Last full reset before the showdown.</div>' },
+      ],
+    ],
+    [
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Skirmish', tooltipHtml: '<div class="map-tooltip-title">Skirmish Fight</div><div class="map-tooltip-desc">Open hot and earn room to breathe later.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Quartermaster</div><div class="map-tooltip-desc">Turn this lane into a stronger item route.</div>' },
+        { type: NODE_TYPES.TRADE, label: 'Exchange', tooltipHtml: '<div class="map-tooltip-title">Roster Exchange</div><div class="map-tooltip-desc">Swing for a sharper body before pressure rises.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Camp</div><div class="map-tooltip-desc">Catch your breath and rebalance fatigue.</div>' },
+        { type: NODE_TYPES.CATCH, label: 'Draft', tooltipHtml: '<div class="map-tooltip-title">Draft Node</div><div class="map-tooltip-desc">A live chance to raise your ceiling with a new catch.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Route Scout</div><div class="map-tooltip-desc">Spend this branch on boss prep and route intel.</div>' },
+        { type: NODE_TYPES.TRAINER, label: 'Elite', tooltipHtml: '<div class="map-tooltip-title">Elite Fight</div><div class="map-tooltip-desc">A harder route that rewards aggression.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Recovery Bay</div><div class="map-tooltip-desc">Reset the squad if this floor already got wild.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Relic', tooltipHtml: '<div class="map-tooltip-title">Relic Bay</div><div class="map-tooltip-desc">Commit to a stronger item line here.</div>' },
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Command Camp</div><div class="map-tooltip-desc">Tighten your captain&apos;s line before the end stretch.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.CATCH, label: 'Recruit', tooltipHtml: '<div class="map-tooltip-title">Wild Recruit</div><div class="map-tooltip-desc">A late-roll catch route with higher upside.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Final Scout</div><div class="map-tooltip-desc">Spend the node to shape the boss floor.</div>' },
+        { type: NODE_TYPES.TRAINER, label: 'Gatekeeper', tooltipHtml: '<div class="map-tooltip-title">Gatekeeper</div><div class="map-tooltip-desc">Fight through one more hard lane before the boss.</div>' },
+      ],
+    ],
+    [
+      [
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Cache', tooltipHtml: '<div class="map-tooltip-title">Supply Cache</div><div class="map-tooltip-desc">Start with gear and play the rest of the floor around it.</div>' },
+        { type: NODE_TYPES.CATCH, label: 'Recruit', tooltipHtml: '<div class="map-tooltip-title">Recruit Route</div><div class="map-tooltip-desc">Open with a catch lane for more flexibility.</div>' },
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Camp</div><div class="map-tooltip-desc">A clean reset if you want to play the long floor.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRADE, label: 'Exchange', tooltipHtml: '<div class="map-tooltip-title">Field Exchange</div><div class="map-tooltip-desc">Trade into a fresh body to cover a weak lane.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Scout Report</div><div class="map-tooltip-desc">Lean into a safer boss setup instead of raw tempo.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Skirmish', tooltipHtml: '<div class="map-tooltip-title">Skirmish Fight</div><div class="map-tooltip-desc">A lighter battle node to build momentum.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Med Bay</div><div class="map-tooltip-desc">Stabilize your HP before the second half.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Market</div><div class="map-tooltip-desc">Another controlled item line for the endgame.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Field Camp</div><div class="map-tooltip-desc">Cool the roster and rebalance fatigue before the push.</div>' },
+        { type: NODE_TYPES.TRAINER, label: 'Elite', tooltipHtml: '<div class="map-tooltip-title">Elite Fight</div><div class="map-tooltip-desc">A harder lane if you want the floor to pay back.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.CATCH, label: 'Draft', tooltipHtml: '<div class="map-tooltip-title">Draft Node</div><div class="map-tooltip-desc">One last chance to high-roll a recruit before the boss.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Pressure Scout</div><div class="map-tooltip-desc">Shape the boss and tighten the line of play.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Final Med', tooltipHtml: '<div class="map-tooltip-title">Final Med Bay</div><div class="map-tooltip-desc">A final reset if the squad is hanging by a thread.</div>' },
       ],
     ],
   ];
-  const route = routeTemplates[Math.min(mapIndexInRegion, routeTemplates.length - 1)];
+  const route = routeTemplates[(regionNumber + mapIndexInRegion) % routeTemplates.length];
 
   const makeNode = (id, type, layer, col, extra = {}) => ({
     id,
@@ -3773,7 +3867,9 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
     route[0].map((entry, idx) => makeNode(`n1_${idx}`, entry.type, 1, idx, entry)),
     route[1].map((entry, idx) => makeNode(`n2_${idx}`, entry.type, 2, idx, entry)),
     route[2].map((entry, idx) => makeNode(`n3_${idx}`, entry.type, 3, idx, entry)),
-    [makeNode('n4_0', NODE_TYPES.BOSS, 4, 0, { mapIndex: (regionNumber - 1) * 3 + mapIndexInRegion })],
+    route[3].map((entry, idx) => makeNode(`n4_${idx}`, entry.type, 4, idx, entry)),
+    route[4].map((entry, idx) => makeNode(`n5_${idx}`, entry.type, 5, idx, entry)),
+    [makeNode('n6_0', NODE_TYPES.BOSS, 6, 0, { mapIndex: (regionNumber - 1) * 3 + mapIndexInRegion })],
   ];
 
   const connectLayers = (fromLayer, toLayer) => {
