@@ -488,7 +488,7 @@ function renderTraitPreview(pokemon, currentTeam) {
     const desc = traitEntry?.description ?? null;
 
     let tierLabel = newTier > 0 ? ` T${newTier}` : '';
-    if (tierUp) tierLabel += ' ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â²';
+    if (tierUp) tierLabel += ' ^';
     const newBadge = isNew ? `<span class="trait-preview-new-tag">NEW</span>` : '';
 
     return `<div class="trait-preview-row${tierUp ? ' trait-preview-row-up' : ''}">
@@ -2948,7 +2948,7 @@ async function animateBattleVisually(detailedLog, pTeamInit, eTeamInit) {
 
       const sideLabel = event.side === 'player' ? '' : '(enemy) ';
       addLogEntry(
-        `${sideLabel}${event.attackerName} used ${event.moveName} ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ${event.targetName} took ${event.damage} dmg.${effText}`,
+        `${sideLabel}${event.attackerName} used ${event.moveName} - ${event.targetName} took ${event.damage} dmg.${effText}`,
         event.side === 'player' ? 'log-player' : 'log-enemy'
       );
 
@@ -3038,7 +3038,7 @@ async function animateBattleVisually(detailedLog, pTeamInit, eTeamInit) {
       const sideId = event.side === 'player' ? 'player-side' : 'enemy-side';
       const el = document.querySelector(`#${sideId} .battle-pokemon[data-idx="${event.idx}"]`);
       if (el) {
-        const icon  = event.status === 'poison' ? 'ÃƒÂ¢Ã‹Å“Ã‚Â ' : 'ÃƒÂ¢Ã‚ÂÃ¢â‚¬Å¾';
+        const icon  = event.status === 'poison' ? 'PSN' : 'FRZ';
         const color = event.status === 'poison' ? '#a040a0' : '#7ecff0';
         showStatusBadge(el, icon, color, event.status);
       }
@@ -3231,7 +3231,7 @@ function renderEndlessRegionPanel(region, currentMapIndex) {
       `<span class="type-badge type-${t.trim().toLowerCase()}" style="font-size:6px;padding:1px 3px;margin-right:1px;">${t.trim()}</span>`
     ).join('');
 
-    const statusIcon = isDone ? 'ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“ ' : isCurrent ? 'ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¶ ' : '';
+    const statusIcon = isDone ? '[Done] ' : isCurrent ? '[Now] ' : '';
     const rowClass = isDone ? 'region-stage-row done'
       : isCurrent ? 'region-stage-row current'
       : isBigBoss ? 'region-stage-row boss'
@@ -3240,7 +3240,7 @@ function renderEndlessRegionPanel(region, currentMapIndex) {
 
     return `<div class="${rowClass}" data-species="${speciesAttr}" style="cursor:default;">
       <span style="display:inline-flex;gap:1px;align-items:center;">${typeBadges}</span>
-      <span class="region-stage-name">${statusIcon}${isBigBoss ? 'ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ ' : ''}${name}</span>
+      <span class="region-stage-name">${statusIcon}${isBigBoss ? '[Boss] ' : ''}${name}</span>
       <span class="region-stage-level">Lv${trainer.level}</span>
     </div>`;
   }).join('');

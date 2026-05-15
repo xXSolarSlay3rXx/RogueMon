@@ -9146,3 +9146,30 @@ h1, h2, .pixel-font {
   background: rgba(10, 16, 30, 0.82) !important;
   border-color: rgba(139, 232, 255, 0.18) !important;
 }
+#stat-buff-screen {
+  background:
+    radial-gradient(circle at top, rgba(255, 214, 110, 0.1), transparent 34%),
+    linear-gradient(180deg, rgba(10, 8, 18, 0.92), rgba(14, 12, 26, 0.96)) !important;
+}
+#stat-buff-screen #stat-buff-title,
+#stat-buff-screen h2 {
+  color: #ffd97f !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+#stat-buff-screen #stat-buff-subtitle {
+  color: #d8e8ff !important;
+  opacity: 0.94;
+}
+#stat-buff-screen #stat-buff-choices {
+  gap: 18px;
+}
+#stat-buff-screen #stat-buff-choices .item-card.endless-boon-card .item-name {
+  font-size: 12px !important;
+  color: #f6fbff !important;
+}
+#stat-buff-screen #stat-buff-choices .item-card.endless-boon-card .item-desc {
+  font-size: 10px !important;
+  line-height: 1.6;
+  color: #d8e7ff !important;
+  opacity: 0.98;
+}
