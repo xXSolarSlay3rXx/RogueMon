@@ -2983,6 +2983,16 @@ h1, h2, .pixel-font {
     backdrop-filter: none;
   }
 
+  #map-screen[data-run-mode="endless-expedition"] .map-layout {
+    grid-template-columns: minmax(250px, 320px) minmax(430px, 520px) minmax(140px, 196px);
+  }
+
+  #map-container[data-run-mode="endless-expedition"] {
+    height: min(812px, calc(100vh - 20px));
+    border-radius: 30px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.68), 8px 8px 0 rgba(0,0,0,0.58);
+  }
+
   #map-container::before {
     content: '';
     position: absolute;
@@ -6635,6 +6645,10 @@ h1, h2, .pixel-font {
     backdrop-filter: none;
   }
 
+  #map-container[data-run-mode="endless-expedition"] {
+    height: min(72svh, 760px);
+  }
+
   #map-container::before {
     content: '';
     position: absolute;
@@ -7663,7 +7677,7 @@ h1, h2, .pixel-font {
 
 .roster-card-footer {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
   margin-top: 10px;
@@ -7672,14 +7686,64 @@ h1, h2, .pixel-font {
 .roster-card-value {
   color: #fff0a8;
   font-size: 8px;
+  padding-top: 6px;
 }
 
 .roster-sell-btn {
   padding: 8px 12px;
 }
 
+.roster-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.roster-shard-btn,
+.roster-merge-btn {
+  padding: 8px 12px;
+}
+
 .roster-sale-banner {
   margin-top: 16px;
+}
+
+.trophy-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.trophy-chip {
+  display: grid;
+  gap: 4px;
+  padding: 12px 12px 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(11, 24, 48, 0.96), rgba(8, 17, 36, 0.96));
+  border: 1px solid rgba(126, 212, 255, 0.16);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+.trophy-chip--final {
+  border-color: rgba(255, 211, 108, 0.32);
+  box-shadow: 0 0 18px rgba(255, 211, 108, 0.12), 0 0 0 1px rgba(255, 211, 108, 0.14) inset;
+}
+
+.trophy-chip-stage {
+  color: #fff0a8;
+  font-size: 7px;
+}
+
+.trophy-chip strong {
+  color: #eef7ff;
+  font-size: 8px;
+}
+
+.trophy-chip small {
+  color: #89add1;
+  font-size: 7px;
 }
 
 .gamble-modal-box {
@@ -9121,6 +9185,20 @@ h1, h2, .pixel-font {
   .expedition-toolbar {
     flex-direction: column;
   }
+
+  #stat-buff-screen #stat-buff-choices {
+    grid-template-columns: 1fr;
+    max-width: min(92vw, 420px);
+  }
+
+  #stat-buff-screen #stat-buff-choices .expedition-choice-card:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  .expedition-choice-card {
+    min-height: 188px;
+    padding: 18px 18px 16px;
+  }
 }
 
 /* ---- Final endless boon theme override ---- */
@@ -9172,6 +9250,111 @@ h1, h2, .pixel-font {
   line-height: 1.6;
   color: #d8e7ff !important;
   opacity: 0.98;
+}
+
+#stat-buff-screen #stat-buff-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  align-items: stretch;
+  justify-items: center;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+#stat-buff-screen #stat-buff-choices .expedition-choice-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.expedition-choice-card {
+  width: min(100%, 420px);
+  min-height: 204px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 22px 22px 20px;
+  text-align: center;
+  border-radius: 24px;
+  border: 1px solid rgba(126, 212, 255, 0.24);
+  background:
+    radial-gradient(circle at top, rgba(142, 238, 255, 0.2), transparent 34%),
+    linear-gradient(180deg, rgba(8, 15, 28, 0.98), rgba(12, 20, 38, 0.98));
+  box-shadow:
+    0 0 0 1px rgba(7, 12, 24, 0.95),
+    0 20px 42px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  color: #eff6ff;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.expedition-choice-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(126, 212, 255, 0.68);
+  box-shadow:
+    0 0 0 1px rgba(7, 12, 24, 0.95),
+    0 24px 48px rgba(0, 0, 0, 0.42),
+    0 0 28px rgba(126, 212, 255, 0.18);
+}
+
+.expedition-choice-card__icon {
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: rgba(11, 18, 33, 0.92);
+  border: 1px solid rgba(126, 212, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 0 18px rgba(126, 212, 255, 0.12);
+}
+
+.expedition-choice-card__name {
+  font-size: 14px;
+  color: #f7fbff;
+}
+
+.expedition-choice-card__desc {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #d8e6ff;
+  max-width: 30ch;
+}
+
+.expedition-choice-card--camp {
+  border-color: rgba(124, 239, 193, 0.26);
+  background:
+    radial-gradient(circle at top, rgba(124, 239, 193, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(8, 15, 28, 0.98), rgba(12, 20, 38, 0.98));
+}
+
+.expedition-choice-card--camp .expedition-choice-card__icon {
+  border-color: rgba(124, 239, 193, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 0 18px rgba(124, 239, 193, 0.12);
+}
+
+.expedition-choice-card--medbay {
+  border-color: rgba(255, 188, 111, 0.28);
+  background:
+    radial-gradient(circle at top, rgba(255, 188, 111, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(8, 15, 28, 0.98), rgba(12, 20, 38, 0.98));
+}
+
+.expedition-choice-card--scout {
+  border-color: rgba(190, 150, 255, 0.28);
+  background:
+    radial-gradient(circle at top, rgba(190, 150, 255, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(8, 15, 28, 0.98), rgba(12, 20, 38, 0.98));
+}
+
+.expedition-choice-card--market {
+  border-color: rgba(255, 214, 110, 0.28);
+  background:
+    radial-gradient(circle at top, rgba(255, 214, 110, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(8, 15, 28, 0.98), rgba(12, 20, 38, 0.98));
 }
 .collection-card.fx-omega,
 .booster-reveal-card.fx-omega,
@@ -9244,6 +9427,28 @@ h1, h2, .pixel-font {
   color: #d6ddec;
 }
 
+.collection-flag--shiny {
+  background: linear-gradient(180deg, rgba(255, 237, 158, 0.26), rgba(255, 207, 84, 0.18));
+  border: 1px solid rgba(255, 221, 112, 0.4);
+  color: #fff3b4;
+}
+
+.collection-flag--mutation {
+  border: 1px solid transparent;
+}
+
+.collection-flag--mutation.alpha {
+  background: rgba(255, 126, 126, 0.18);
+  border-color: rgba(255, 126, 126, 0.3);
+  color: #ffd2d2;
+}
+
+.collection-flag--mutation.lucky {
+  background: rgba(129, 230, 165, 0.16);
+  border-color: rgba(129, 230, 165, 0.28);
+  color: #d8ffe4;
+}
+
 .roster-toolbar {
   display: grid;
   grid-template-columns: 1fr 1fr minmax(220px, 260px);
@@ -9303,6 +9508,15 @@ h1, h2, .pixel-font {
   position: relative;
   overflow: hidden;
   background: linear-gradient(180deg, rgba(10, 20, 41, 0.96), rgba(7, 14, 31, 0.96));
+}
+
+.booster-reveal-tag-row {
+  min-height: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: -2px 0 8px;
 }
 
 .booster-reveal-badge {

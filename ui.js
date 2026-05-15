@@ -3704,6 +3704,8 @@ function renderEndlessCollectionCards(entries = [], emptyLabel = 'No recruits ye
       <div class="collection-card-flags">
         <span class="collection-flag collection-flag--rarity">${entry.rarityLabel || entry.rarity || 'Scout'}</span>
         <span class="collection-flag collection-flag--profile ${entry.profileClass || 'prime'}">${entry.profileLabel || 'Prime'}</span>
+        ${entry.isShiny ? `<span class="collection-flag collection-flag--shiny">Shiny</span>` : ''}
+        ${entry.mutationLabel ? `<span class="collection-flag collection-flag--mutation ${entry.mutationClass || ''}">${entry.mutationLabel}</span>` : ''}
       </div>
       <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
       <div class="collection-card-name">${entry.name}</div>
@@ -3843,6 +3845,7 @@ function openRosterModal() {
     if (filterMode === 'all') return true;
     if (filterMode === 'rareplus') return ['rare', 'epic', 'mythic'].includes(entry.rarity);
     if (filterMode === 'highroll') return ['omega', 'spike'].includes(entry.profileClass);
+    if (filterMode === 'special') return !!entry.isShiny || !!entry.mutationLabel;
     return true;
   });
 
@@ -3852,17 +3855,56 @@ function openRosterModal() {
       alert(result.error || 'That recruit could not be sold.');
       return;
     }
-    render(result);
+    render({
+      tone: 'sell',
+      title: `Sold ${result.sold.name}`,
+      detail: `+${result.amount} coins`,
+    });
     if (typeof refreshTitleMetaBar === 'function') refreshTitleMetaBar();
   };
 
-  const render = (lastSale = null) => {
+  const handleShard = (entryId) => {
+    const result = shardEndlessCollectionEntry(entryId);
+    if (!result.ok) {
+      alert(result.error || 'That recruit could not be converted.');
+      return;
+    }
+    render({
+      tone: 'shard',
+      title: `Converted ${result.salvaged.name}`,
+      detail: `+${result.amount} fragments`,
+    });
+    if (typeof refreshTitleMetaBar === 'function') refreshTitleMetaBar();
+  };
+
+  const handleMerge = (entryId) => {
+    const result = mergeDuplicateEndlessEntry(entryId);
+    if (!result.ok) {
+      alert(result.error || 'Those recruits could not be merged.');
+      return;
+    }
+    render({
+      tone: 'merge',
+      title: `Merged into ${result.into.name}`,
+      detail: '+2 fragments and stronger stat rolls',
+    });
+    if (typeof refreshTitleMetaBar === 'function') refreshTitleMetaBar();
+  };
+
+  const render = (lastAction = null) => {
     const collection = getEndlessCollection();
     const coins = getCoinBalance();
     const coinSkins = getUnlockedCoinSkins();
     const currentCoinSkin = getCurrentCoinSkin();
+    const trophies = getEndlessBossTrophies();
     const filteredCollection = sortEntries(filterEntries(collection));
     const duplicateCount = Math.max(0, collection.length - new Set(collection.map(entry => entry.speciesId)).size);
+    const speciesCounts = {};
+    const duplicateSpecies = new Set();
+    collection.forEach(entry => {
+      speciesCounts[entry.speciesId] = (speciesCounts[entry.speciesId] || 0) + 1;
+      if (speciesCounts[entry.speciesId] > 1) duplicateSpecies.add(entry.speciesId);
+    });
 
     modal.innerHTML = `
       <div class="shop-modal-box roster-modal-box">
@@ -3887,12 +3929,16 @@ function openRosterModal() {
               <span class="shop-balance-label">Duplicates</span>
               <strong>${duplicateCount}</strong>
             </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Boss Trophies</span>
+              <strong>${trophies.length}</strong>
+            </div>
           </div>
 
-          ${lastSale ? `
-            <div class="coinflip-result double roster-sale-banner">
-              <strong>Sold ${lastSale.sold.name}</strong>
-              <span>+${lastSale.amount} coins</span>
+          ${lastAction ? `
+            <div class="coinflip-result ${lastAction.tone === 'shard' ? 'jackpot' : 'double'} roster-sale-banner">
+              <strong>${lastAction.title}</strong>
+              <span>${lastAction.detail}</span>
             </div>
           ` : ''}
 
@@ -3902,6 +3948,7 @@ function openRosterModal() {
               <button class="btn-secondary roster-filter-btn ${filterMode === 'all' ? 'is-active' : ''}" data-filter-mode="all">All</button>
               <button class="btn-secondary roster-filter-btn ${filterMode === 'rareplus' ? 'is-active' : ''}" data-filter-mode="rareplus">Rare+</button>
               <button class="btn-secondary roster-filter-btn ${filterMode === 'highroll' ? 'is-active' : ''}" data-filter-mode="highroll">High Rolls</button>
+              <button class="btn-secondary roster-filter-btn ${filterMode === 'special' ? 'is-active' : ''}" data-filter-mode="special">Special</button>
             </div>
             <div class="roster-toolbar-group">
               <button class="btn-secondary roster-sort-btn ${sortMode === 'power' ? 'is-active' : ''}" data-sort-mode="power">Strongest</button>
@@ -3917,6 +3964,8 @@ function openRosterModal() {
                 <div class="collection-card-flags">
                   <span class="collection-flag collection-flag--rarity">${entry.rarityLabel || entry.rarity || 'Scout'}</span>
                   <span class="collection-flag collection-flag--profile ${entry.profileClass || 'prime'}">${entry.profileLabel || 'Prime'}</span>
+                  ${entry.isShiny ? `<span class="collection-flag collection-flag--shiny">Shiny</span>` : ''}
+                  ${entry.mutationLabel ? `<span class="collection-flag collection-flag--mutation ${entry.mutationClass || ''}">${entry.mutationLabel}</span>` : ''}
                 </div>
                 <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
                 <div class="collection-card-name">${entry.name}</div>
@@ -3929,10 +3978,25 @@ function openRosterModal() {
                 </div>
                 <div class="roster-card-footer">
                   <span class="roster-card-value">${getEndlessEntrySellValue(entry)} Coins</span>
-                  <button class="btn-secondary roster-sell-btn" data-entry-id="${entry.entryId}">Sell</button>
+                  <div class="roster-card-actions">
+                    <button class="btn-secondary roster-sell-btn" data-entry-id="${entry.entryId}">Sell</button>
+                    <button class="btn-secondary roster-shard-btn" data-entry-id="${entry.entryId}">Shard</button>
+                    ${duplicateSpecies.has(entry.speciesId) ? `<button class="btn-secondary roster-merge-btn" data-entry-id="${entry.entryId}">Merge</button>` : ''}
+                  </div>
                 </div>
               </div>
             `).join('') : '<div class="collection-empty">No recruits match this filter yet.</div>'}
+          </div>
+
+          <div class="shop-section-title">Boss Trophies</div>
+          <div class="trophy-strip">
+            ${trophies.length ? trophies.slice(0, 10).map(trophy => `
+              <div class="trophy-chip ${trophy.final ? 'trophy-chip--final' : ''}">
+                <span class="trophy-chip-stage">S${trophy.stage}</span>
+                <strong>${trophy.bossName}</strong>
+                <small>${trophy.region}</small>
+              </div>
+            `).join('') : '<div class="collection-empty">No expedition boss trophies yet.</div>'}
           </div>
 
           <div class="shop-section-title">Coin Skins</div>
@@ -3947,21 +4011,27 @@ function openRosterModal() {
     modal.querySelectorAll('.roster-sell-btn').forEach(btn => {
       btn.addEventListener('click', () => handleSell(btn.dataset.entryId));
     });
+    modal.querySelectorAll('.roster-shard-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleShard(btn.dataset.entryId));
+    });
+    modal.querySelectorAll('.roster-merge-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleMerge(btn.dataset.entryId));
+    });
     modal.querySelectorAll('.roster-filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         filterMode = btn.dataset.filterMode || 'all';
-        render(lastSale);
+        render(lastAction);
       });
     });
     modal.querySelectorAll('.roster-sort-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         sortMode = btn.dataset.sortMode || 'power';
-        render(lastSale);
+        render(lastAction);
       });
     });
     modal.querySelector('#roster-search')?.addEventListener('input', (event) => {
       searchTerm = event.target.value || '';
-      render(lastSale);
+      render(lastAction);
     });
     modal.querySelectorAll('.coin-skin-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -5566,5 +5636,6 @@ function openHallOfFameModal() {
 
   document.body.appendChild(modal);
 }
+
 
 

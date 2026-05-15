@@ -1212,6 +1212,7 @@ function normalizeMetaProgress(meta = {}) {
     gambleHistory: Array.isArray(meta.gambleHistory) ? meta.gambleHistory.slice(0, 12) : [],
     unlockedCoinSkins: Array.isArray(meta.unlockedCoinSkins) ? meta.unlockedCoinSkins : [],
     currentCoinSkin: meta.currentCoinSkin && typeof meta.currentCoinSkin === 'object' ? meta.currentCoinSkin : null,
+    endlessBossTrophies: Array.isArray(meta.endlessBossTrophies) ? meta.endlessBossTrophies.slice(0, 64) : [],
   };
 }
 
@@ -1248,6 +1249,17 @@ function spendCoins(amount) {
 
 function getEndlessCollection() {
   return getMetaProgress().endlessCollection || [];
+}
+
+function getEndlessBossTrophies() {
+  return getMetaProgress().endlessBossTrophies || [];
+}
+
+function awardEndlessBossTrophy(trophy) {
+  const meta = getMetaProgress();
+  meta.endlessBossTrophies = [trophy, ...(meta.endlessBossTrophies || [])].slice(0, 64);
+  saveMetaProgress(meta);
+  return trophy;
 }
 
 function getDefaultCoinSkin() {
@@ -1298,7 +1310,28 @@ function getEndlessEntrySellValue(entry) {
     omega: 16,
   };
   const base = rarityBase[entry.rarity] || 10;
-  return Math.max(5, base + ((entry.levelBonus || 0) * 3) + ((entry.statBonus || 0) * 4) + (profileBonus[entry.profileClass] || 0));
+  const mutationBonus = entry.mutation ? 10 : 0;
+  const shinyBonus = entry.isShiny ? 14 : 0;
+  return Math.max(5, base + ((entry.levelBonus || 0) * 3) + ((entry.statBonus || 0) * 4) + (profileBonus[entry.profileClass] || 0) + mutationBonus + shinyBonus);
+}
+
+function getEndlessEntryShardValue(entry) {
+  if (!entry) return 0;
+  const rarityBase = {
+    common: 2,
+    uncommon: 4,
+    rare: 7,
+    epic: 11,
+    mythic: 16,
+  };
+  const profileBonus = {
+    rough: 0,
+    wild: 1,
+    prime: 2,
+    spike: 3,
+    omega: 5,
+  };
+  return Math.max(1, (rarityBase[entry.rarity] || 2) + (profileBonus[entry.profileClass] || 0) + (entry.isShiny ? 4 : 0) + (entry.mutation ? 3 : 0));
 }
 
 function sellEndlessCollectionEntry(entryId) {
@@ -1312,6 +1345,50 @@ function sellEndlessCollectionEntry(entryId) {
   meta.coins += value;
   saveMetaProgress(meta);
   return { ok: true, sold: entry, amount: value, coins: meta.coins };
+}
+
+function shardEndlessCollectionEntry(entryId) {
+  const meta = getMetaProgress();
+  const index = (meta.endlessCollection || []).findIndex(entry => entry.entryId === entryId);
+  if (index === -1) {
+    return { ok: false, error: 'That roster entry no longer exists.', fragments: meta.boosterFragments || 0 };
+  }
+  const [entry] = meta.endlessCollection.splice(index, 1);
+  const amount = getEndlessEntryShardValue(entry);
+  meta.boosterFragments = Math.max(0, (meta.boosterFragments || 0) + amount);
+  saveMetaProgress(meta);
+  return { ok: true, salvaged: entry, amount, fragments: meta.boosterFragments };
+}
+
+function mergeDuplicateEndlessEntry(entryId) {
+  const meta = getMetaProgress();
+  const collection = meta.endlessCollection || [];
+  const sourceIndex = collection.findIndex(entry => entry.entryId === entryId);
+  if (sourceIndex === -1) {
+    return { ok: false, error: 'That roster entry no longer exists.' };
+  }
+  const source = collection[sourceIndex];
+  const targetIndex = collection.findIndex((entry, idx) => idx !== sourceIndex && entry.speciesId === source.speciesId);
+  if (targetIndex === -1) {
+    return { ok: false, error: 'You need a duplicate of the same species to merge.' };
+  }
+  const target = collection[targetIndex];
+  target.levelBonus = Math.min(12, (target.levelBonus || 0) + Math.max(1, Math.ceil((source.levelBonus || 0) * 0.5)));
+  target.statBonus = Math.min(12, (target.statBonus || 0) + Math.max(1, Math.ceil((source.statBonus || 0) * 0.5)));
+  if (source.isShiny && !target.isShiny) {
+    target.isShiny = true;
+    target.spriteUrl = target.shinySpriteUrl || target.spriteUrl;
+  }
+  if (source.mutation && !target.mutation) {
+    target.mutation = { ...source.mutation };
+    target.mutationLabel = source.mutationLabel;
+    target.mutationClass = source.mutationClass;
+    target.rarityFxClass = source.rarityFxClass || target.rarityFxClass;
+  }
+  collection.splice(sourceIndex, 1);
+  meta.boosterFragments = Math.max(0, (meta.boosterFragments || 0) + 2);
+  saveMetaProgress(meta);
+  return { ok: true, merged: source, into: target, fragments: meta.boosterFragments };
 }
 
 function getUnlockedBoosterMaxDexId() {
@@ -1480,6 +1557,33 @@ function getBoosterPullProfile(pack) {
   };
 }
 
+function getBoosterMutation() {
+  const roll = metaRandomUnit();
+  if (roll < 0.07) {
+    return {
+      id: 'lucky',
+      label: 'Lucky',
+      badgeClass: 'lucky',
+      accent: '#9fffd3',
+      levelShift: 1,
+      statShift: 1,
+      fxClass: 'fx-lucky',
+    };
+  }
+  if (roll < 0.12) {
+    return {
+      id: 'alpha',
+      label: 'Alpha',
+      badgeClass: 'alpha',
+      accent: '#ffb36d',
+      levelShift: 0,
+      statShift: 2,
+      fxClass: 'fx-alpha',
+    };
+  }
+  return null;
+}
+
 function createBoosterStatProfile(species, bonusPoints = 0, profile = null) {
   const points = Math.max(0, Math.floor(Number(bonusPoints) || 0));
   const tone = profile?.id || 'prime';
@@ -1522,7 +1626,7 @@ function createBoosterStatProfile(species, bonusPoints = 0, profile = null) {
   return spread;
 }
 
-function createEndlessCollectionEntry(species, pack, statBonus, levelBonus, profile = null) {
+function createEndlessCollectionEntry(species, pack, statBonus, levelBonus, profile = null, mutation = null, isShiny = false) {
   const now = Date.now();
   return {
     entryId: 'endless_' + now + '_' + Math.floor(metaRandomUnit() * 1000000),
@@ -1530,7 +1634,7 @@ function createEndlessCollectionEntry(species, pack, statBonus, levelBonus, prof
     name: species.name,
     defaultName: species.defaultName || species.name,
     localizedNames: species.localizedNames || { en: species.name, de: species.name },
-    spriteUrl: species.spriteUrl,
+    spriteUrl: isShiny ? (species.shinySpriteUrl || species.spriteUrl) : species.spriteUrl,
     shinySpriteUrl: species.shinySpriteUrl,
     types: species.types || [],
     bst: species.bst || Object.values(species.baseStats || {}).reduce((sum, value) => sum + value, 0),
@@ -1545,6 +1649,10 @@ function createEndlessCollectionEntry(species, pack, statBonus, levelBonus, prof
     profileClass: profile?.badgeClass || 'prime',
     rarityFxClass: profile?.fxClass || '',
     statProfile: createBoosterStatProfile(species, statBonus, profile),
+    mutation,
+    mutationLabel: mutation?.label || '',
+    mutationClass: mutation?.badgeClass || '',
+    isShiny,
     obtainedAt: now,
   };
 }
@@ -1598,16 +1706,21 @@ async function openEndlessBoosterPack(packId, options = {}) {
         if (!species) continue;
         usedIds.add(species.id);
         const pullProfile = getBoosterPullProfile(pack);
+        const mutation = getBoosterMutation();
         const baseStatBonus = metaRandomInt(pack.statBonusMin, pack.statBonusMax);
         const baseLevelBonus = metaRandomInt(pack.levelBonusMin, pack.levelBonusMax);
-        const statBonus = Math.max(0, baseStatBonus + (pullProfile.statShift || 0));
-        const levelBonus = Math.max(0, baseLevelBonus + (pullProfile.levelShift || 0));
+        const statBonus = Math.max(0, baseStatBonus + (pullProfile.statShift || 0) + (mutation?.statShift || 0));
+        const levelBonus = Math.max(0, baseLevelBonus + (pullProfile.levelShift || 0) + (mutation?.levelShift || 0));
+        const shinyChance = pack.id === 'mythic' ? 0.09 : pack.id === 'epic' ? 0.05 : pack.id === 'rare' ? 0.03 : 0.015;
+        const isShiny = metaRandomUnit() < shinyChance;
         pulls.push(createEndlessCollectionEntry(
           species,
           pack,
           statBonus,
           levelBonus,
-          pullProfile
+          pullProfile,
+          mutation,
+          isShiny
         ));
       }
       meta.endlessCollection = [...pulls, ...(meta.endlessCollection || [])].slice(0, 600);

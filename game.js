@@ -298,13 +298,15 @@ async function createExpeditionPokemonFromEntry(entry, stageNum = 1) {
   const species = await fetchPokemonById(entry.speciesId);
   if (!species) return null;
   const baseLevel = Math.max(5, 8 + stageNum + (entry.levelBonus || 0));
-  const pokemon = createInstance(species, baseLevel, false, 2);
+  const pokemon = createInstance(species, baseLevel, !!entry.isShiny, 2);
   pokemon.endlessEntryId = entry.entryId;
   pokemon.endlessBaseLevel = baseLevel;
   pokemon.endlessRarity = entry.rarity;
   pokemon.endlessSourceName = entry.name;
   pokemon.endlessProfileLabel = entry.profileLabel || 'Prime';
   pokemon.endlessProfileClass = entry.profileClass || 'prime';
+  pokemon.endlessMutationLabel = entry.mutationLabel || '';
+  pokemon.endlessMutationClass = entry.mutationClass || '';
   pokemon.statBuffs = entry.statProfile ? { ...entry.statProfile } : spreadExpeditionStatBuffs(species, entry.statBonus || 0);
   const hpBuff = pokemon.statBuffs?.hp ?? 0;
   if (hpBuff > 0) {
@@ -1471,6 +1473,8 @@ function showMapScreen() {
   if (regionPanel) regionPanel.style.display = 'none';
   document.querySelectorAll('.map-badges-label').forEach(el => el.style.display = '');
   showScreen('map-screen');
+  const mapScreen = document.getElementById('map-screen');
+  if (mapScreen) mapScreen.dataset.runMode = 'story';
   const mapInfo = document.getElementById('map-info');
   const region = getCurrentStoryRegion();
   const leaders = getCurrentGymLeaders();
@@ -1492,6 +1496,7 @@ function showMapScreen() {
 
   const mapContainer = document.getElementById('map-container');
   if (mapContainer) {
+    mapContainer.dataset.runMode = 'story';
     ensureStoryMapIsRenderable();
     state.map.mapIndex = state.currentMap;
     applyStoryRegionMapBackground(mapContainer);
@@ -3350,15 +3355,18 @@ async function showEndlessBoonScreen() {
             el.innerHTML = '';
             for (const item of choices) {
               const div = document.createElement('div');
-              div.className = 'item-card endless-boon-card';
+              div.className = 'expedition-choice-card expedition-choice-card--market';
               div.style.cursor = 'pointer';
-              div.innerHTML = `<div class="item-icon">${itemIconHtml(item, 36)}</div>
-                <div class="item-name">${item.name}</div>
-                <div class="item-desc">${item.desc}</div>`;
+              div.innerHTML = `<div class="expedition-choice-card__icon">${itemIconHtml(item, 36)}</div>
+                <div class="expedition-choice-card__name">${item.name}</div>
+                <div class="expedition-choice-card__desc">${item.desc}</div>`;
               div.addEventListener('click', () => {
                 openItemEquipModal(item, {
                   onComplete: () => {
                     renderItemBadges(state.items);
+                    if (typeof showMapNotification === 'function') {
+                      showMapNotification(`${item.name} added to this expedition run.`);
+                    }
                     resolve();
                   },
                 });
@@ -3387,12 +3395,12 @@ async function showEndlessBoonScreen() {
 
     for (const boon of boons) {
       const card = document.createElement('div');
-      card.className = 'item-card endless-boon-card';
+      card.className = 'expedition-choice-card expedition-choice-card--boon';
       card.style.cursor = 'pointer';
       card.innerHTML = `
-        <div class="item-icon">${boon.icon}</div>
-        <div class="item-name">${boon.name}</div>
-        <div class="item-desc">${boon.desc}</div>`;
+        <div class="expedition-choice-card__icon">${boon.icon}</div>
+        <div class="expedition-choice-card__name">${boon.name}</div>
+        <div class="expedition-choice-card__desc">${boon.desc}</div>`;
       card.addEventListener('click', () => {
         Promise.resolve(boon.apply()).catch(() => resolve());
       });
@@ -3418,16 +3426,19 @@ async function showExpeditionChoiceScreen(title, subtitle, choices = []) {
 
     for (const choice of choices) {
       const card = document.createElement('div');
-      card.className = 'item-card endless-boon-card';
+      card.className = `expedition-choice-card expedition-choice-card--${choice.kind || 'utility'}`;
       card.style.cursor = 'pointer';
       card.innerHTML = `
-        <div class="item-icon"><span class="endless-boon-glyph">${choice.icon || 'GO'}</span></div>
-        <div class="item-name">${choice.name}</div>
-        <div class="item-desc">${choice.desc}</div>
+        <div class="expedition-choice-card__icon"><span class="endless-boon-glyph">${choice.icon || 'GO'}</span></div>
+        <div class="expedition-choice-card__name">${choice.name}</div>
+        <div class="expedition-choice-card__desc">${choice.desc}</div>
       `;
       card.addEventListener('click', async () => {
         try {
           if (typeof choice.apply === 'function') await choice.apply();
+          if (choice.feedback && typeof showMapNotification === 'function') {
+            showMapNotification(choice.feedback);
+          }
         } finally {
           resolve();
         }
@@ -3449,15 +3460,18 @@ async function showExpeditionMarketScreen() {
       el.innerHTML = '';
       for (const item of choices) {
         const div = document.createElement('div');
-        div.className = 'item-card endless-boon-card';
+        div.className = 'expedition-choice-card expedition-choice-card--market';
         div.style.cursor = 'pointer';
-        div.innerHTML = `<div class="item-icon">${itemIconHtml(item, 36)}</div>
-          <div class="item-name">${item.name}</div>
-          <div class="item-desc">${item.desc}</div>`;
+        div.innerHTML = `<div class="expedition-choice-card__icon">${itemIconHtml(item, 36)}</div>
+          <div class="expedition-choice-card__name">${item.name}</div>
+          <div class="expedition-choice-card__desc">${item.desc}</div>`;
         div.addEventListener('click', () => {
           openItemEquipModal(item, {
             onComplete: () => {
               renderItemBadges(state.items);
+              if (typeof showMapNotification === 'function') {
+                showMapNotification(`${item.name} stocked for the next stretch.`);
+              }
               resolve();
             },
           });
@@ -3481,8 +3495,10 @@ async function applyExpeditionNode(node) {
     await showExpeditionChoiceScreen('Expedition Camp', 'Reset the squad before the next pressure point.', [
       {
         icon: 'REST',
+        kind: 'camp',
         name: 'Shared Rest',
         desc: 'Heal every recruit by 35% and clear light fatigue pressure.',
+        feedback: 'The squad settled down and recovered.',
         apply: () => {
           for (const pokemon of state.team) {
             const heal = Math.max(6, Math.floor((pokemon.maxHp || 1) * 0.35));
@@ -3493,8 +3509,10 @@ async function applyExpeditionNode(node) {
       },
       {
         icon: 'CALM',
+        kind: 'camp',
         name: 'Field Kitchen',
         desc: 'Reduce fatigue by 1 for the whole squad and recover a little HP.',
+        feedback: 'Field Kitchen lowered fatigue across the squad.',
         apply: () => {
           endlessState.fatigue = endlessState.fatigue || {};
           for (const pokemon of state.team) {
@@ -3509,8 +3527,10 @@ async function applyExpeditionNode(node) {
       },
       {
         icon: 'CAP',
+        kind: 'camp',
         name: 'Captain Drill',
         desc: 'Your captain gains +1 level and the team gets a light top-up.',
+        feedback: 'Captain Drill sharpened the lead slot.',
         apply: () => {
           const captain = state.team.find(pokemon => pokemon.endlessEntryId === endlessState.captainEntryId);
           if (captain) {
@@ -3533,8 +3553,10 @@ async function applyExpeditionNode(node) {
     await showExpeditionChoiceScreen('Med Bay', 'Patch the squad before the next clash.', [
       {
         icon: 'FULL',
+        kind: 'medbay',
         name: 'Full Reset',
         desc: 'Fully heal the squad and reduce fatigue by 1 for everyone.',
+        feedback: 'Med Bay fully restored the expedition team.',
         apply: () => {
           fullyRestoreEndlessTeam();
           endlessState.fatigue = endlessState.fatigue || {};
@@ -3548,8 +3570,10 @@ async function applyExpeditionNode(node) {
       },
       {
         icon: 'ACE',
+        kind: 'medbay',
         name: 'Captain Care',
         desc: 'Give your captain a perfect reset and lift the team a little.',
+        feedback: 'Captain Care stabilized your anchor before the next clash.',
         apply: () => {
           const captain = state.team.find(pokemon => pokemon.endlessEntryId === endlessState.captainEntryId);
           if (captain) {
@@ -3568,8 +3592,10 @@ async function applyExpeditionNode(node) {
       },
       {
         icon: 'KIT',
+        kind: 'medbay',
         name: 'Supply Patch',
         desc: 'Full heal and gain a Berry Juice for the next boss route.',
+        feedback: 'The team recovered and secured emergency supplies.',
         apply: () => {
           fullyRestoreEndlessTeam();
           const berryJuice = USABLE_ITEM_POOL.find((item) => item.id === 'berry_juice');
@@ -3591,16 +3617,20 @@ async function applyExpeditionNode(node) {
     await showExpeditionChoiceScreen('Scout Report', 'Convert intel into a cleaner boss setup.', [
       {
         icon: 'FOE-',
+        kind: 'scout',
         name: 'Route Notes',
         desc: 'The next boss squad loses 1 level across the board.',
+        feedback: 'Scout intel softened the next boss lineup.',
         apply: () => {
           endlessState.nextBossLevelDelta = (endlessState.nextBossLevelDelta || 0) - 1;
         },
       },
       {
         icon: 'HP+',
+        kind: 'scout',
         name: 'Trail Rations',
         desc: 'Restore 25% HP to the whole team before the boss.',
+        feedback: 'Trail Rations are ready for the boss room.',
         apply: () => {
           endlessState.nextBossPartyHeal = Math.max(endlessState.nextBossPartyHeal || 0, 0.25);
           for (const pokemon of state.team) {
@@ -3612,8 +3642,10 @@ async function applyExpeditionNode(node) {
       },
       {
         icon: 'FAT-',
+        kind: 'scout',
         name: 'Pace Control',
         desc: 'Reduce fatigue by 1 on the two most worn recruits.',
+        feedback: 'Pace Control eased your most worn recruits.',
         apply: () => {
           endlessState.fatigue = endlessState.fatigue || {};
           state.team
@@ -3850,6 +3882,42 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
     ],
   ];
   const route = routeTemplates[(regionNumber + mapIndexInRegion) % routeTemplates.length];
+  const extensionTemplates = [
+    [
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Pressure', tooltipHtml: '<div class="map-tooltip-title">Pressure Fight</div><div class="map-tooltip-desc">A harder branch that speeds up rewards if you hold.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Relic', tooltipHtml: '<div class="map-tooltip-title">Relic Locker</div><div class="map-tooltip-desc">Take one sharpened item line into the late floor.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.CATCH, label: 'Draft', tooltipHtml: '<div class="map-tooltip-title">Late Draft</div><div class="map-tooltip-desc">A final chance to add a higher-upside recruit.</div>' },
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Final Camp</div><div class="map-tooltip-desc">Trim fatigue and line up the team for the gate.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Boss Read</div><div class="map-tooltip-desc">Spend the node shaping the last fight of the floor.</div>' },
+      ],
+    ],
+    [
+      [
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Forward Med Bay</div><div class="map-tooltip-desc">A cleaner reset if the floor already bit into the squad.</div>' },
+        { type: NODE_TYPES.TRADE, label: 'Exchange', tooltipHtml: '<div class="map-tooltip-title">Late Exchange</div><div class="map-tooltip-desc">Risk a swap to sharpen one more slot.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Gate', tooltipHtml: '<div class="map-tooltip-title">Gate Trial</div><div class="map-tooltip-desc">A final proving fight before the boss corridor.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Cache', tooltipHtml: '<div class="map-tooltip-title">Last Cache</div><div class="map-tooltip-desc">One more controlled gear spike before the end.</div>' },
+        { type: NODE_TYPES.QUESTION, expeditionKind: 'camp', label: 'Camp', tooltipHtml: '<div class="map-tooltip-title">Quiet Camp</div><div class="map-tooltip-desc">Settle the captain and cool the squad for the boss.</div>' },
+      ],
+    ],
+    [
+      [
+        { type: NODE_TYPES.CATCH, label: 'Recruit', tooltipHtml: '<div class="map-tooltip-title">Hidden Recruit</div><div class="map-tooltip-desc">A narrow branch with a risky but useful catch lane.</div>' },
+        { type: NODE_TYPES.MOVE_TUTOR, expeditionKind: 'scout', label: 'Scout', tooltipHtml: '<div class="map-tooltip-title">Floor Scout</div><div class="map-tooltip-desc">Convert one more node into better boss prep.</div>' },
+      ],
+      [
+        { type: NODE_TYPES.TRAINER, label: 'Elite', tooltipHtml: '<div class="map-tooltip-title">Elite Hold</div><div class="map-tooltip-desc">A hotter route with sharper resistance and sharper payback.</div>' },
+        { type: NODE_TYPES.POKECENTER, expeditionKind: 'medbay', label: 'Med Bay', tooltipHtml: '<div class="map-tooltip-title">Recovery Wing</div><div class="map-tooltip-desc">Patch up before the last climb.</div>' },
+        { type: NODE_TYPES.ITEM, expeditionKind: 'market', label: 'Market', tooltipHtml: '<div class="map-tooltip-title">Black Market</div><div class="map-tooltip-desc">Take one final premium item choice into the boss lane.</div>' },
+      ],
+    ],
+  ];
+  const extension = extensionTemplates[(regionNumber * 2 + mapIndexInRegion) % extensionTemplates.length];
 
   const makeNode = (id, type, layer, col, extra = {}) => ({
     id,
@@ -3869,7 +3937,9 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
     route[2].map((entry, idx) => makeNode(`n3_${idx}`, entry.type, 3, idx, entry)),
     route[3].map((entry, idx) => makeNode(`n4_${idx}`, entry.type, 4, idx, entry)),
     route[4].map((entry, idx) => makeNode(`n5_${idx}`, entry.type, 5, idx, entry)),
-    [makeNode('n6_0', NODE_TYPES.BOSS, 6, 0, { mapIndex: (regionNumber - 1) * 3 + mapIndexInRegion })],
+    extension[0].map((entry, idx) => makeNode(`n6_${idx}`, entry.type, 6, idx, entry)),
+    extension[1].map((entry, idx) => makeNode(`n7_${idx}`, entry.type, 7, idx, entry)),
+    [makeNode('n8_0', NODE_TYPES.BOSS, 8, 0, { mapIndex: (regionNumber - 1) * 3 + mapIndexInRegion })],
   ];
 
   const connectLayers = (fromLayer, toLayer) => {
@@ -3895,6 +3965,18 @@ function buildEndlessExpeditionMap(regionNumber = 1, mapIndexInRegion = 0) {
   const nodes = {};
   for (const layer of layers) {
     for (const node of layer) nodes[node.id] = node;
+  }
+  const legendarySeed = ((endlessState?.stageNumber || 1) * 37) + (regionNumber * 19) + (mapIndexInRegion * 11);
+  const allowLegendaryRoute = regionNumber >= 2 && legendarySeed % 5 === 0;
+  if (allowLegendaryRoute) {
+  const candidate = [...layers[4], ...layers[5], ...layers[6], ...layers[7]]
+      .find(node => node.type === NODE_TYPES.CATCH || node.label === 'Draft' || node.label === 'Recruit');
+    if (candidate) {
+      candidate.type = NODE_TYPES.LEGENDARY;
+      candidate.label = 'Legend';
+      candidate.tooltipHtml = '<div class="map-tooltip-title">Legend Route</div><div class="map-tooltip-desc">A rare legendary path. Harder to see, harder to ignore.</div>';
+      candidate.legendaryRoute = true;
+    }
   }
   nodes['n0_0'].visited = true;
   for (const edge of edges) {
@@ -3925,13 +4007,18 @@ function startEndlessMap() {
   state.endlessLevelRange = getEndlessLevelRange(endlessState.stageNumber, endlessState.regionNumber, endlessState.mapIndexInRegion);
   applyExpeditionRosterState();
 
-  // Pick map background based on trainer type; finalBoss for stage final boss
-  const _btTrainer    = endlessState.currentRegion?.trainers[endlessState.mapIndexInRegion];
-  const _btType       = (_btTrainer?.archetype?.type || '').split('/')[0].toLowerCase() || 'normal';
   const _isFinalBoss  = endlessState.mapIndexInRegion === 2 && endlessState.regionNumber === 3;
+  const expeditionRegionId = Math.max(1, Math.min(6, endlessState.stageNumber || 1));
+  const expeditionRegion = typeof getStoryRegionConfig === 'function'
+    ? getStoryRegionConfig(expeditionRegionId)
+    : null;
+  const regionBgPool = expeditionRegion?.mapBackgroundImages || [];
+  const regionBgIndex = regionBgPool.length
+    ? (endlessState.mapIndexInRegion + endlessState.regionNumber - 1) % regionBgPool.length
+    : 0;
   endlessState.currentMapBg = _isFinalBoss
     ? 'ui/mapsBattleTower/finalBoss.png'
-    : `ui/mapsBattleTower/${_btType}.png`;
+    : (regionBgPool[regionBgIndex] || 'ui/mapsBattleTower/grass.png');
 
   saveEndlessState();
   saveRun();
@@ -3940,6 +4027,8 @@ function startEndlessMap() {
 
 function showEndlessMapScreen() {
   showScreen('map-screen');
+  const mapScreen = document.getElementById('map-screen');
+  if (mapScreen) mapScreen.dataset.runMode = endlessState.mode === 'expedition' ? 'endless-expedition' : 'endless';
   const region = endlessState.currentRegion;
   const mapNum = endlessState.mapIndexInRegion + 1;
   const isBoss = endlessState.mapIndexInRegion === 2;
@@ -3965,6 +4054,7 @@ function showEndlessMapScreen() {
 
   const mapContainer = document.getElementById('map-container');
   const bg = endlessState.currentMapBg || 'ui/mapsNormalMode/map1.png';
+  mapContainer.dataset.runMode = endlessState.mode === 'expedition' ? 'endless-expedition' : 'endless';
   mapContainer.style.backgroundImage = `url('${bg}')`;
   renderMap(state.map, mapContainer, onEndlessNodeClick);
   syncMobileMapPanel();
@@ -4094,6 +4184,18 @@ async function doEndlessBossNode() {
     clearSavedRun();
     showGameOver();
     return;
+  }
+
+  if (isBigBoss && typeof awardEndlessBossTrophy === 'function') {
+    awardEndlessBossTrophy({
+      id: `trophy_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+      stage: endlessState.stageNumber,
+      region: endlessState.regionNumber,
+      bossName: trainerData.archetype.name,
+      captainId: endlessState.captainEntryId || null,
+      at: Date.now(),
+      final: !!isStageFinal,
+    });
   }
 
   await applyEndlessBugTrait();
