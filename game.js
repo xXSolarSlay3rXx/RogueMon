@@ -2234,7 +2234,11 @@ function showSwapScreen(newPoke, node) {
             : diff < 0
               ? `<span style="color:#f44;font-size:7px;">${diff}</span>`
               : '';
-          const tierDots = (t) => 'ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â'.repeat(t) + 'ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¹'.repeat(3 - t);
+          const tierDots = (t) => Array.from({ length: 3 }, (_, i) => (
+            `<span style="display:inline-block;width:7px;height:7px;border-radius:999px;margin-right:2px;vertical-align:middle;` +
+            `background:${i < t ? '#9fe870' : 'rgba(255,255,255,0.12)'};` +
+            `box-shadow:${i < t ? '0 0 6px rgba(159,232,112,0.35)' : 'inset 0 0 0 1px rgba(255,255,255,0.08)'};"></span>`
+          )).join('');
           return `<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">
             <span class="type-badge type-${type.toLowerCase()}" style="font-size:5px;padding:1px 3px;min-width:36px;text-align:center;">${type}</span>
             <span style="font-size:7px;color:var(--text-dim);">${tierDots(n.tier)}</span>
@@ -4537,4 +4541,5 @@ window.addEventListener('beforeunload', autosaveActiveRun);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) autosaveActiveRun();
 });
+
 
