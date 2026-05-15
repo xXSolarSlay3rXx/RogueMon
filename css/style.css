@@ -4929,6 +4929,32 @@ h1, h2, .pixel-font {
   border: 1px solid rgba(139, 232, 255, 0.14) !important;
   border-radius: 14px !important;
 }
+
+#stat-buff-screen .stat-buff-poke-wrap .poke-card,
+#stat-buff-screen #stat-buff-choices > .poke-card,
+#stat-buff-screen .stat-buff-poke-wrap .poke-move {
+  background:
+    radial-gradient(circle at top, rgba(139, 232, 255, 0.12), transparent 34%) !important,
+    linear-gradient(180deg, rgba(8, 14, 28, 0.98), rgba(14, 22, 40, 0.98)) !important;
+  border: 1px solid rgba(139, 232, 255, 0.24) !important;
+  box-shadow:
+    0 0 0 1px rgba(7, 13, 26, 0.95),
+    0 18px 36px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+  color: #edf5ff !important;
+}
+
+#stat-buff-screen .stat-buff-poke-wrap .poke-name,
+#stat-buff-screen .stat-buff-poke-wrap .move-name,
+#stat-buff-screen .stat-buff-poke-wrap .poke-level,
+#stat-buff-screen .stat-buff-poke-wrap .poke-stats,
+#stat-buff-screen .stat-buff-poke-wrap .stat-lbl,
+#stat-buff-screen .stat-buff-poke-wrap .stat-val,
+#stat-buff-screen .stat-buff-poke-wrap .move-power-badge,
+#stat-buff-screen .stat-buff-poke-wrap .hp-text {
+  color: #d8e6ff !important;
+  -webkit-text-stroke: 0 !important;
+}
 .move-power-badge     { background: rgba(0,0,0,0.07); color: #504c3c; }
 .move-desc            { color: #504c3c; }
 .poke-move            { border-color: #c8c4b8; }

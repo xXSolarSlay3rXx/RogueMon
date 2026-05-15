@@ -4243,7 +4243,7 @@ async function showStatBuffScreen() {
         wrap.innerHTML = renderPokemonCard(p, false, false);
         const label = document.createElement('div');
         label.style.cssText = 'font-size:8px;text-align:center;margin-top:2px;color:' + (capped ? '#888' : '#c8a0ff') + ';';
-        label.textContent = maxPts > 0 ? `${totalPts}/${maxPts} pts` : 'ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â';
+        label.textContent = maxPts > 0 ? `${totalPts}/${maxPts} pts` : 'Locked';
         wrap.appendChild(label);
         const card = wrap.querySelector('.poke-card');
         if (capped || maxPts === 0) {
@@ -4271,7 +4271,7 @@ async function showStatBuffScreen() {
       const atCap = totalPts >= maxPts;
       subEl.textContent = atCap
         ? `Fully buffed (${totalPts}/${maxPts} pts)`
-        : `Choose a stat to boost (+10%) ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ${totalPts}/${maxPts} pts used`;
+        : `Choose a stat to boost (+10%) - ${totalPts}/${maxPts} pts used`;
       choicesEl.innerHTML = '';
 
       const isSpecialAttacker = (pokemon.baseStats?.special ?? 0) >= (pokemon.baseStats?.atk ?? 0);
@@ -4313,7 +4313,7 @@ async function showStatBuffScreen() {
       const back = document.createElement('button');
       back.className = 'btn-secondary';
       back.style.cssText = 'margin-top:12px;width:100%;';
-      back.textContent = 'ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Back';
+      back.textContent = 'Back';
       back.addEventListener('click', showPhase1);
       choicesEl.appendChild(back);
     }
