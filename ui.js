@@ -286,6 +286,10 @@ function refreshTitleMetaBar() {
 
   bar.innerHTML = `
     <div class="title-meta-panel">
+      <div class="title-meta-panel-head">
+        <span>Beta Lab</span>
+        <small>Shop, roster and Game Corner are being rebuilt</small>
+      </div>
       <button class="title-meta-chip title-meta-chip--coins" data-meta-action="arcade">
         <span class="title-meta-chip-label">Coins</span>
         <span class="title-meta-chip-value">${coins}</span>
@@ -4220,8 +4224,8 @@ function openShopModal() {
       <div class="shop-modal-box">
         <div class="shop-modal-header">
           <div>
-            <h2>Booster Shop Beta</h2>
-            <p>Beta feature - spend story coins on Endless recruits while we keep tuning the mode.</p>
+            <h2>Booster Shop - Rework Beta</h2>
+            <p>This system is experimental. Your coins and roster are kept, but the shop loop is still being rebuilt.</p>
           </div>
           <button class="ach-modal-close" id="shop-modal-close">&times;</button>
         </div>
@@ -4253,8 +4257,13 @@ function openShopModal() {
             <button class="btn-secondary shop-toolbar-btn" id="btn-open-roster">Open Roster</button>
           </div>
 
+          <div class="beta-rework-banner">
+            <strong>Rework note</strong>
+            <span>The normal adventure stays the main focus. Booster pulls are collectible for the future Endless redesign.</span>
+          </div>
+
           <div class="shop-status-copy">
-            Build your Endless roster with themed booster packs. Daily offers cut the price on selected packs, while fragments and coupons from the Game Corner help keep the loop moving.
+            Build a test roster with themed booster packs. Daily offers, fragments and coupons are placeholders while the final Endless economy is being shaped.
           </div>
 
           <div class="shop-section-title">Daily Rotation</div>
@@ -4489,12 +4498,17 @@ function openArcadeModal() {
       <div class="shop-modal-box gamble-modal-box">
         <div class="shop-modal-header">
           <div>
-            <h2>Game Corner Beta</h2>
-            <p>Beta feature - try the side games while we keep refining the main adventure first.</p>
+            <h2>Game Corner - Rework Beta</h2>
+            <p>Experimental side games. Coins are real, but the presentation and balancing are still under review.</p>
           </div>
           <button class="ach-modal-close" id="coin-flip-close">&times;</button>
         </div>
-        <div class="shop-modal-body">
+          <div class="shop-modal-body">
+          <div class="beta-rework-banner">
+            <strong>Rework note</strong>
+            <span>These games are staying optional while the main adventure gets priority.</span>
+          </div>
+
           <div class="shop-balance-row">
             <div class="shop-balance-chip">
               <span class="shop-balance-label">Coins</span>
