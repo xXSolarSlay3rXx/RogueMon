@@ -3765,6 +3765,81 @@ function renderSlotSymbol(symbol, isHit = false) {
   `;
 }
 
+function renderSlotSpinStrip(finalSymbol = 'Ball', index = 0) {
+  const cycle = ['Berry', 'Star', 'Ball', 'Seven', 'Crown', 'Berry', 'Ball', 'Star', finalSymbol];
+  return `
+    <div class="slot-strip slot-strip--loop slot-strip--loop-${index + 1}">
+      ${cycle.map((entry, rowIndex) => renderSlotSymbol(entry, rowIndex === cycle.length - 1)).join('')}
+    </div>
+  `;
+}
+
+function renderArcadeIdlePanel(gameId, config, coinCall = 'heads') {
+  if (gameId === 'slots') {
+    return `
+      <div class="coinflip-result idle arcade-game-preview arcade-game-preview--slots">
+        <div class="arcade-preview-copy">
+          <strong>${config.title}</strong>
+          <span>${config.subtitle}</span>
+        </div>
+        <div class="arcade-preview-machine">
+          <div class="arcade-preview-reels">
+            ${['Berry', 'Seven', 'Crown'].map((symbol, index) => `
+              <div class="arcade-preview-reel">
+                ${renderSlotSpinStrip(symbol, index)}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (gameId === 'voltorb') {
+    return `
+      <div class="coinflip-result idle arcade-game-preview arcade-game-preview--voltorb">
+        <div class="arcade-preview-copy">
+          <strong>${config.title}</strong>
+          <span>${config.subtitle}</span>
+        </div>
+        <div class="arcade-preview-voltorb-board">
+          ${Array.from({ length: 5 }, (_, index) => `
+            <span class="arcade-preview-card arcade-preview-card-${index + 1}">
+              <span class="voltorb-card-back-dot"></span>
+            </span>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  const skin = typeof getCurrentCoinSkin === 'function' ? getCurrentCoinSkin() : null;
+  return `
+    <div class="coinflip-result idle arcade-game-preview arcade-game-preview--coin">
+      <div class="arcade-preview-copy">
+        <strong>${config.title}</strong>
+        <span>${config.subtitle}</span>
+      </div>
+      <div class="arcade-preview-coin-wrap">
+        <div class="arcade-preview-call">Calling ${coinCall === 'tails' ? 'Tails' : 'Heads'}</div>
+        <div class="coin-spinner coin-spinner--idle ${skin?.skinId === 'default-roguemon' ? 'coin-spinner--default' : ''}" style="--coin-accent:${skin?.accent || '#ffd36c'}; --coin-emblem:url('${skin?.spriteUrl || ''}')">
+          <div class="coin-spinner-ring"></div>
+          <div class="coin-spinner-face">
+            <div class="coin-spinner-side coin-spinner-side--top">Heads</div>
+            <div class="coin-spinner-side coin-spinner-side--bottom">Tails</div>
+            <div class="coin-spinner-face-inner">
+              <div class="coin-spinner-emblem ${skin?.skinId === 'default-roguemon' ? 'coin-spinner-emblem--logo' : ''}">
+                <span class="coin-spinner-emblem-art" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="coin-shadow"></div>
+      </div>
+    </div>
+  `;
+}
+
 function renderVoltorbFlipCard(card, index, selectable = false, selectedIndex = null, revealed = false) {
   const isSelected = selectedIndex === index;
   const kind = card?.kind || 'safe';
@@ -4104,21 +4179,27 @@ function animateArcadePlay(modal, gameId, result) {
   return new Promise(resolve => {
     if (!modal) return resolve();
     const overlay = document.createElement('div');
-    overlay.className = 'shop-reveal-overlay arcade-reveal-overlay';
+    overlay.className = `shop-reveal-overlay arcade-reveal-overlay arcade-reveal-overlay--${gameId} outcome-${result.outcome || 'idle'}`;
 
     let inner = '';
     if (gameId === 'coinflip') {
       const skin = getCurrentCoinSkin();
       const landedSide = result.side === 'heads' ? 'Heads' : 'Tails';
+      const calledSide = result.calledSide === 'tails' ? 'Tails' : 'Heads';
+      const netCopy = `${result.net >= 0 ? '+' : ''}${result.net} coins`;
       inner = `
         <div class="arcade-animation-box arcade-animation-box--coin">
           <div class="arcade-animation-title">Coin Flip</div>
+          <div class="arcade-animation-subcopy">You called ${calledSide}</div>
           <div class="coin-stage">
             <div class="coin-side-legend">
-              <span class="coin-side-pill ${result.side === 'heads' ? 'is-active' : ''}">Heads</span>
-              <span class="coin-side-pill ${result.side === 'tails' ? 'is-active' : ''}">Tails</span>
+              <span class="coin-side-pill ${result.calledSide === 'heads' ? 'is-called' : ''} ${result.side === 'heads' ? 'is-active' : ''}">Heads</span>
+              <span class="coin-side-pill ${result.calledSide === 'tails' ? 'is-called' : ''} ${result.side === 'tails' ? 'is-active' : ''}">Tails</span>
             </div>
-            <div class="coin-spinner ${result.outcome} ${skin.skinId === 'default-roguemon' ? 'coin-spinner--default' : ''}" style="--coin-accent:${skin.accent || '#ffd36c'}; --coin-emblem:url('${skin.spriteUrl || ''}')">
+            <div class="coin-spark-field">
+              ${Array.from({ length: 12 }, (_, i) => `<span class="coin-spark coin-spark-${i + 1}"></span>`).join('')}
+            </div>
+            <div class="coin-spinner ${result.outcome} coin-spinner--${result.side} ${skin.skinId === 'default-roguemon' ? 'coin-spinner--default' : ''}" style="--coin-accent:${skin.accent || '#ffd36c'}; --coin-emblem:url('${skin.spriteUrl || ''}')">
               <div class="coin-spinner-ring"></div>
               <div class="coin-spinner-face">
                 <div class="coin-spinner-side coin-spinner-side--top">Heads</div>
@@ -4132,18 +4213,31 @@ function animateArcadePlay(modal, gameId, result) {
             </div>
             <div class="coin-shadow"></div>
           </div>
-          <div class="arcade-animation-copy">${result.outcome === 'loss' ? `${landedSide}. The house takes it.` : result.outcome === 'jackpot' ? `${landedSide}! Triple payout!` : `${landedSide}! Double up.`}</div>
+          <div class="arcade-result-burst ${result.outcome}">
+            <strong>${result.outcome === 'loss' ? 'Miss' : result.outcome === 'jackpot' ? 'Triple Payout!' : 'Double Up!'}</strong>
+            <span>${landedSide} landed. ${netCopy}</span>
+          </div>
           <div class="arcade-animation-subcopy">Active coin skin: ${skin.name}</div>
         </div>
       `;
     } else if (gameId === 'slots') {
       const slotSymbols = result.reels || [];
+      const resultCopy = result.outcome === 'loss'
+        ? 'No line this time.'
+        : result.outcome === 'jackpot'
+          ? '777 Jackpot!'
+          : result.outcome === 'grand'
+            ? 'Royal Crown Hit!'
+            : result.outcome === 'triple'
+              ? 'Triple Match!'
+              : 'Pair Payout!';
       inner = `
         <div class="arcade-animation-box arcade-animation-box--slots">
           <div class="arcade-animation-title">Pokemon Slots</div>
+          <div class="arcade-animation-subcopy">Reels locking...</div>
           <div class="slot-machine-shell">
             <div class="slot-machine-lights">
-              ${Array.from({ length: 10 }, (_, i) => `<span class="slot-light slot-light-${i + 1}"></span>`).join('')}
+              ${Array.from({ length: 14 }, (_, i) => `<span class="slot-light slot-light-${i + 1}"></span>`).join('')}
             </div>
             <div class="slot-machine-header">
               <span>Celadon Reels</span>
@@ -4155,30 +4249,36 @@ function animateArcadePlay(modal, gameId, result) {
               <div class="slot-machine-badge slot-machine-badge--right">Jackpot</div>
               <div class="slot-reels">
                 ${slotSymbols.map((symbol, index) => `
-                  <div class="slot-reel reel-${index + 1}">
+                  <div class="slot-reel reel-${index + 1} ${result.outcome !== 'loss' ? 'slot-reel--winner' : ''}">
                     <div class="slot-strip">
-                      ${['Berry', 'Star', 'Ball', 'Seven', 'Crown', symbol].map((entry, rowIndex) => renderSlotSymbol(entry, rowIndex === 5)).join('')}
+                      ${['Berry', 'Star', 'Ball', 'Seven', 'Crown', 'Berry', 'Star', symbol].map((entry, rowIndex) => renderSlotSymbol(entry, rowIndex === 7)).join('')}
                     </div>
                   </div>
                 `).join('')}
               </div>
             </div>
           </div>
-          <div class="arcade-animation-copy">${result.outcome === 'loss' ? 'No line this time.' : result.outcome === 'jackpot' ? '777 jackpot!' : result.outcome === 'grand' ? 'Royal crown hit!' : result.outcome === 'triple' ? 'Triple match!' : 'Pair payout!'}</div>
+          <div class="arcade-result-burst ${result.outcome}">
+            <strong>${resultCopy}</strong>
+            <span>${result.net >= 0 ? '+' : ''}${result.net} coins</span>
+          </div>
         </div>
       `;
     } else {
       inner = `
         <div class="arcade-animation-box arcade-animation-box--voltorb">
           <div class="arcade-animation-title">Voltorb Flip</div>
+          <div class="arcade-animation-subcopy">Card revealed...</div>
           <div class="voltorb-stage">
             <div class="voltorb-stage-lights">
-              ${Array.from({ length: 8 }, (_, i) => `<span class="voltorb-light voltorb-light-${i + 1}"></span>`).join('')}
+              ${Array.from({ length: 12 }, (_, i) => `<span class="voltorb-light voltorb-light-${i + 1}"></span>`).join('')}
             </div>
             ${renderVoltorbFlipPreview(result.cards || [], result.selectedIndex, true)}
           </div>
-          <div class="arcade-animation-copy">${result.outcome === 'miss' ? 'Voltorb! You lose the stake.' : `${result.prize} hit!`}</div>
-          <div class="arcade-animation-subcopy">${result.net >= 0 ? '+' : ''}${result.net} coins</div>
+          <div class="arcade-result-burst ${result.outcome}">
+            <strong>${result.outcome === 'miss' ? 'Voltorb!' : `${result.prize} Hit!`}</strong>
+            <span>${result.net >= 0 ? '+' : ''}${result.net} coins</span>
+          </div>
         </div>
       `;
     }
@@ -4186,11 +4286,11 @@ function animateArcadePlay(modal, gameId, result) {
     overlay.innerHTML = inner;
     modal.appendChild(overlay);
     setTimeout(() => overlay.classList.add('is-visible'), 20);
-    setTimeout(() => overlay.classList.add('is-fading'), 1800);
+    setTimeout(() => overlay.classList.add('is-fading'), 3450);
     setTimeout(() => {
       overlay.remove();
       resolve();
-    }, 2350);
+    }, 3950);
   });
 }
 
@@ -4438,7 +4538,7 @@ function openArcadeModal() {
           <strong>${config.resultLabel(latestResult)}</strong>
           <span>${config.resultCopy(latestResult)}</span>
         </div>`
-      : `<div class="coinflip-result idle"><strong>${config.title}</strong><span>${config.subtitle}</span></div>`;
+      : renderArcadeIdlePanel(currentGame, config, coinCall);
 
     const coinCallMarkup = currentGame === 'coinflip'
       ? `
@@ -4468,9 +4568,7 @@ function openArcadeModal() {
                     <div class="slot-live-window">
                       ${index < slotStopIndex
                         ? renderSlotSymbol(symbol, true)
-                        : `<div class="slot-live-mystery">
-                            <img class="slot-live-mystery-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${[25,133,54,94,150][index % 5]}.png" alt="mystery">
-                          </div>`}
+                        : renderSlotSpinStrip(symbol, index)}
                     </div>
                   </div>
                 `).join('')}
