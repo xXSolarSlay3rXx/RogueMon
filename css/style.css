@@ -6431,7 +6431,7 @@ h1, h2, .pixel-font {
 
 /* ── Mobile catch / item screens: 3-in-a-row ──────────────────────────────── */
 @media (max-width: 768px) {
-  html, body {
+html, body {
     overflow-x: hidden;
   }
 
@@ -7189,6 +7189,12 @@ h1, h2, .pixel-font {
   }
 }
 
+body,
+.screen,
+.shop-modal-box {
+  overflow-anchor: none;
+}
+
 .title-meta-bar {
   display: flex;
   justify-content: center;
@@ -7822,12 +7828,40 @@ h1, h2, .pixel-font {
 }
 
 .gamble-modal-box {
-  width: min(980px, 94vw);
+  width: min(840px, 94vw);
   border-color: rgba(255, 214, 115, 0.24);
   background:
     radial-gradient(circle at 50% 0%, rgba(255, 214, 115, 0.1), transparent 30%),
     radial-gradient(circle at 0% 45%, rgba(139, 232, 255, 0.09), transparent 34%),
     linear-gradient(180deg, rgba(6, 13, 29, 0.99), rgba(3, 8, 20, 0.99));
+}
+
+.gamble-modal-box .shop-modal-header {
+  padding: 18px 22px 14px;
+}
+
+.gamble-modal-box .shop-modal-header h2 {
+  font-size: 17px;
+}
+
+.gamble-modal-box .shop-modal-header p {
+  font-size: 9px;
+  opacity: 0.86;
+}
+
+.arcade-body {
+  display: grid;
+  gap: 14px;
+}
+
+.arcade-balance-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.arcade-balance-row .shop-balance-chip {
+  min-height: 66px;
+  padding: 12px 14px;
 }
 
 .coinflip-result {
@@ -7850,7 +7884,7 @@ h1, h2, .pixel-font {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  min-height: 180px;
+  min-height: 148px;
   overflow: hidden;
   position: relative;
 }
@@ -7875,7 +7909,7 @@ h1, h2, .pixel-font {
 
 .arcade-preview-copy strong {
   color: #fff4ab;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .arcade-preview-copy span {
@@ -7889,7 +7923,7 @@ h1, h2, .pixel-font {
   display: grid;
   justify-items: center;
   gap: 8px;
-  width: 190px;
+  width: 156px;
 }
 
 .arcade-preview-call {
@@ -7902,17 +7936,17 @@ h1, h2, .pixel-font {
 }
 
 .coin-spinner--idle {
-  width: 104px;
-  height: 104px;
+  width: 92px;
+  height: 92px;
   animation: coinIdleFlip 2.8s ease-in-out infinite;
 }
 
 .arcade-preview-machine {
   position: relative;
   z-index: 1;
-  width: 310px;
-  padding: 14px;
-  border-radius: 18px;
+  width: 260px;
+  padding: 10px;
+  border-radius: 14px;
   border: 1px solid rgba(255, 214, 115, 0.22);
   background: linear-gradient(180deg, rgba(20, 36, 68, 0.98), rgba(7, 14, 31, 0.98));
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 14px 28px rgba(0,0,0,0.28);
@@ -7922,12 +7956,12 @@ h1, h2, .pixel-font {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  max-height: 116px;
+  max-height: 92px;
   overflow: hidden;
 }
 
 .arcade-preview-reel {
-  height: 112px;
+  height: 90px;
   overflow: hidden;
   border-radius: 14px;
   border: 1px solid rgba(139,232,255,0.16);
@@ -7938,16 +7972,16 @@ h1, h2, .pixel-font {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(5, 58px);
-  gap: 10px;
+  grid-template-columns: repeat(5, 46px);
+  gap: 8px;
 }
 
 .arcade-preview-card {
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 76px;
-  border-radius: 14px;
+  width: 46px;
+  height: 62px;
+  border-radius: 12px;
   border: 1px solid rgba(139,232,255,0.2);
   background: linear-gradient(180deg, rgba(15, 27, 53, 0.98), rgba(9, 18, 37, 0.96));
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
@@ -8341,6 +8375,59 @@ h1, h2, .pixel-font {
   overflow: hidden;
 }
 
+.slot-machine-shell--live {
+  max-width: 620px;
+  margin: 10px auto 0;
+  padding: 10px 44px 12px;
+  border-radius: 15px;
+}
+
+.slot-machine-shell--live .slot-machine-lights {
+  left: 52px;
+  right: 52px;
+}
+
+.slot-machine-shell--live::before,
+.slot-machine-shell--live::after {
+  top: 34px;
+  bottom: 20px;
+  width: 6px;
+}
+
+.slot-machine-shell--live .slot-machine-header {
+  padding: 4px 0 6px;
+  margin-bottom: 4px;
+}
+
+.slot-machine-shell--live .slot-machine-window {
+  padding: 8px;
+}
+
+.slot-machine-shell--live .slot-reels {
+  max-width: 330px;
+  gap: 8px;
+  margin: 4px auto 6px;
+}
+
+.slot-machine-shell--live .slot-cell {
+  min-height: 44px;
+  padding: 6px 4px;
+}
+
+.slot-machine-shell--live .slot-token {
+  width: 30px;
+  height: 30px;
+}
+
+.slot-machine-shell--live .slot-token-sprite {
+  width: 29px;
+  height: 29px;
+}
+
+.slot-machine-shell--live .slot-token-label {
+  font-size: 7px;
+}
+
 .slot-machine-lights {
   position: absolute;
   top: 8px;
@@ -8610,22 +8697,23 @@ h1, h2, .pixel-font {
 }
 
 .slot-control-panel {
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 .slot-machine-shell--live .slot-machine-window {
-  padding-top: 18px;
+  padding: 8px;
 }
 
 .slot-reel--live {
-  height: 118px;
+  height: 94px;
+  padding: 6px;
 }
 
 .slot-live-window {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 88px;
+  min-height: 76px;
   overflow: hidden;
 }
 
@@ -8657,7 +8745,7 @@ h1, h2, .pixel-font {
 
 .voltorb-stage {
   position: relative;
-  width: min(420px, 90vw);
+  width: min(360px, 90vw);
   margin: 12px auto 16px;
   padding: 26px 18px 18px;
   border-radius: 18px;
@@ -8704,7 +8792,7 @@ h1, h2, .pixel-font {
 
 .voltorb-card {
   position: relative;
-  min-height: 142px;
+  min-height: 116px;
   border: 0;
   border-radius: 16px;
   background: transparent;
@@ -8781,8 +8869,8 @@ h1, h2, .pixel-font {
 }
 
 .voltorb-card-sprite {
-  width: 64px;
-  height: 64px;
+  width: 54px;
+  height: 54px;
   object-fit: contain;
   image-rendering: pixelated;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.32));
@@ -8790,7 +8878,7 @@ h1, h2, .pixel-font {
 
 .voltorb-card-multiplier {
   color: #fff4ab;
-  font-size: 18px;
+  font-size: 15px;
   text-shadow: 0 2px 8px rgba(0,0,0,0.35);
 }
 
@@ -9171,19 +9259,20 @@ h1, h2, .pixel-font {
 }
 
 .arcade-odds-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 0;
 }
 
 .arcade-odds-pill {
-  padding: 7px 10px;
-  border-radius: 999px;
+  padding: 8px 10px;
+  border-radius: 10px;
   border: 1px solid rgba(124, 209, 255, 0.16);
   background: rgba(9, 18, 38, 0.84);
   color: #a9d0f7;
   font-size: 8px;
+  text-align: center;
 }
 
 .arcade-odds-pill--meta {
@@ -9195,14 +9284,14 @@ h1, h2, .pixel-font {
 .gamble-bet-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .gamble-bet-btn {
-  padding: 14px 10px;
-  border: 1px solid rgba(124, 209, 255, 0.18);
-  border-radius: 14px;
-  background: rgba(11, 21, 43, 0.9);
+  padding: 13px 8px;
+  border: 1px solid rgba(255, 214, 115, 0.18);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(18, 31, 56, 0.96), rgba(8, 16, 34, 0.96));
   color: #fff7cf;
   font-family: 'Press Start 2P', monospace;
   font-size: 9px;

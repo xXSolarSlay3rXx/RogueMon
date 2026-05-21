@@ -4511,13 +4511,13 @@ function openArcadeModal() {
     if (currentGame === 'slots') {
       slotRound = result.round;
       slotStopIndex = 0;
-      render();
+      render(null, true);
       refreshTitleMetaBar();
       return;
     }
     if (currentGame === 'voltorb') {
       voltorbRound = result.round;
-      render();
+      render(null, true);
       refreshTitleMetaBar();
       return;
     }
@@ -4527,7 +4527,8 @@ function openArcadeModal() {
     });
   };
 
-  const render = (latestResult = null) => {
+  const render = (latestResult = null, keepScroll = false) => {
+    const previousScroll = keepScroll ? (modal.querySelector('.shop-modal-box')?.scrollTop || 0) : 0;
     const meta = getMetaProgress();
     const coins = getCoinBalance();
     const history = meta.gambleHistory || [];
@@ -4594,39 +4595,26 @@ function openArcadeModal() {
 
     modal.innerHTML = `
       <div class="shop-modal-box gamble-modal-box">
-        <div class="shop-modal-header">
+        <div class="shop-modal-header arcade-header">
           <div>
-            <h2>Game Corner - Rework Beta</h2>
-            <p>Experimental side games. Coins are real, but the presentation and balancing are still under review.</p>
+            <h2>Game Corner</h2>
+            <p>Pick a game, choose a bet, then play. This area is still beta.</p>
           </div>
           <button class="ach-modal-close" id="coin-flip-close">&times;</button>
         </div>
-          <div class="shop-modal-body">
-          <div class="beta-rework-banner">
-            <strong>Rework note</strong>
-            <span>These games are staying optional while the main adventure gets priority.</span>
-          </div>
-
-          <div class="shop-balance-row">
+        <div class="shop-modal-body arcade-body">
+          <div class="shop-balance-row arcade-balance-row">
             <div class="shop-balance-chip">
               <span class="shop-balance-label">Coins</span>
               <strong>${coins}</strong>
             </div>
             <div class="shop-balance-chip">
-              <span class="shop-balance-label">Fragments</span>
-              <strong>${meta.boosterFragments || 0}</strong>
-            </div>
-            <div class="shop-balance-chip">
-              <span class="shop-balance-label">Coupons</span>
-              <strong>${meta.shopCoupons || 0}</strong>
-            </div>
-            <div class="shop-balance-chip">
-              <span class="shop-balance-label">Mode</span>
+              <span class="shop-balance-label">Game</span>
               <strong>${config.title}</strong>
             </div>
             <div class="shop-balance-chip">
-              <span class="shop-balance-label">Mood</span>
-              <strong>High Risk</strong>
+              <span class="shop-balance-label">Last Result</span>
+              <strong>${latestResult ? config.resultLabel(latestResult) : '-'}</strong>
             </div>
           </div>
 
@@ -4640,8 +4628,6 @@ function openArcadeModal() {
 
           <div class="arcade-odds-row">
             ${config.chances.map(line => `<span class="arcade-odds-pill">${line}</span>`).join('')}
-            <span class="arcade-odds-pill arcade-odds-pill--meta">Fragments feed the shop</span>
-            <span class="arcade-odds-pill arcade-odds-pill--meta">Coupons juice daily deals</span>
           </div>
 
           ${coinCallMarkup}
@@ -4686,7 +4672,7 @@ function openArcadeModal() {
     modal.querySelectorAll('[data-coin-call]').forEach(btn => {
       btn.addEventListener('click', () => {
         coinCall = btn.dataset.coinCall === 'tails' ? 'tails' : 'heads';
-        render(latestResult);
+        render(latestResult, true);
       });
     });
     modal.querySelectorAll('.gamble-bet-btn').forEach(btn => {
@@ -4705,7 +4691,7 @@ function openArcadeModal() {
         });
         return;
       }
-      render(latestResult);
+      render(latestResult, true);
     });
     modal.querySelectorAll('[data-voltorb-pick]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -4718,6 +4704,13 @@ function openArcadeModal() {
         });
       });
     });
+
+    if (keepScroll) {
+      requestAnimationFrame(() => {
+        const box = modal.querySelector('.shop-modal-box');
+        if (box) box.scrollTop = previousScroll;
+      });
+    }
   };
 
   render();
