@@ -8182,9 +8182,7 @@ body,
     radial-gradient(circle at 50% 45%, rgba(255,255,255,0.08), transparent 60%),
     linear-gradient(180deg, color-mix(in srgb, var(--coin-accent, #ffd46e) 78%, #fff0af), color-mix(in srgb, var(--coin-accent, #ffd46e) 50%, #a86b20));
   box-shadow: 0 0 24px rgba(255, 199, 93, 0.35);
-  animation:
-    coinFlight 2.55s cubic-bezier(.18,.78,.16,1) 1,
-    coinSpin 2.55s cubic-bezier(.18,.78,.16,1) 1;
+  animation: coinFlipHeads 2.55s cubic-bezier(.18,.78,.16,1) 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8192,9 +8190,7 @@ body,
 }
 
 .coin-spinner--tails {
-  animation:
-    coinFlight 2.55s cubic-bezier(.18,.78,.16,1) 1,
-    coinSpinTails 2.55s cubic-bezier(.18,.78,.16,1) 1;
+  animation: coinFlipTails 2.55s cubic-bezier(.18,.78,.16,1) 1;
 }
 
 .coin-side-legend {
@@ -9342,31 +9338,22 @@ body,
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes coinSpin {
-  0% { rotate: y 0deg; }
-  18% { rotate: y 360deg; }
-  36% { rotate: y 900deg; }
-  58% { rotate: y 1440deg; }
-  78% { rotate: y 1890deg; }
-  100% { rotate: y 2160deg; }
+@keyframes coinFlipHeads {
+  0% { transform: translateY(36px) scale(0.72) rotateY(0deg); }
+  18% { transform: translateY(-44px) scale(1.08) rotateY(360deg); }
+  36% { transform: translateY(8px) scale(0.92) rotateY(900deg); }
+  58% { transform: translateY(-18px) scale(1.02) rotateY(1440deg); }
+  78% { transform: translateY(4px) scale(0.98) rotateY(1890deg); }
+  100% { transform: translateY(0) scale(1) rotateY(2160deg); }
 }
 
-@keyframes coinSpinTails {
-  0% { rotate: y 0deg; }
-  18% { rotate: y 360deg; }
-  36% { rotate: y 900deg; }
-  58% { rotate: y 1440deg; }
-  78% { rotate: y 2070deg; }
-  100% { rotate: y 2340deg; }
-}
-
-@keyframes coinFlight {
-  0% { transform: translateY(36px) scale(0.72); }
-  22% { transform: translateY(-44px) scale(1.08); }
-  46% { transform: translateY(8px) scale(0.92); }
-  64% { transform: translateY(-18px) scale(1.02); }
-  82% { transform: translateY(4px) scale(0.98); }
-  100% { transform: translateY(0) scale(1); }
+@keyframes coinFlipTails {
+  0% { transform: translateY(36px) scale(0.72) rotateY(0deg); }
+  18% { transform: translateY(-44px) scale(1.08) rotateY(360deg); }
+  36% { transform: translateY(8px) scale(0.92) rotateY(900deg); }
+  58% { transform: translateY(-18px) scale(1.02) rotateY(1440deg); }
+  78% { transform: translateY(4px) scale(0.98) rotateY(2070deg); }
+  100% { transform: translateY(0) scale(1) rotateY(2340deg); }
 }
 
 @keyframes coinSpark {
