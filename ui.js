@@ -3894,10 +3894,41 @@ function openRosterModal() {
   let sortMode = 'power';
   let filterMode = 'all';
   let searchTerm = '';
+  let stackMode = true;
+  let manageMode = false;
+  let selectedEntryId = null;
+
+  const rarityRank = { mythic: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
+  const profileRank = { omega: 5, spike: 4, prime: 3, wild: 2, rough: 1 };
+  const statLabels = { hp: 'HP', atk: 'ATK', def: 'DEF', speed: 'SPD', special: 'SP.A', spdef: 'SP.D' };
+
+  const getEntryGeneration = entry => {
+    const id = Number(entry?.speciesId) || 0;
+    if (id <= 151) return 1;
+    if (id <= 251) return 2;
+    if (id <= 386) return 3;
+    if (id <= 493) return 4;
+    if (id <= 649) return 5;
+    if (id <= 721) return 6;
+    if (id <= 809) return 7;
+    if (id <= 905) return 8;
+    return 9;
+  };
+
+  const getPowerScore = entry => {
+    if (!entry) return 0;
+    return Math.round(
+      (entry.bst || 0) +
+      ((entry.levelBonus || 0) * 14) +
+      ((entry.statBonus || 0) * 18) +
+      ((rarityRank[entry.rarity] || 0) * 26) +
+      ((profileRank[entry.profileClass] || 0) * 10) +
+      (entry.isShiny ? 20 : 0) +
+      (entry.mutation ? 18 : 0)
+    );
+  };
 
   const sortEntries = (entries) => {
-    const rarityRank = { mythic: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
-    const profileRank = { omega: 5, spike: 4, prime: 3, wild: 2, rough: 1 };
     const items = entries.slice();
     if (sortMode === 'newest') {
       return items.sort((a, b) => (b.obtainedAt || 0) - (a.obtainedAt || 0));
@@ -3909,9 +3940,24 @@ function openRosterModal() {
         return (profileRank[b.profileClass] || 0) - (profileRank[a.profileClass] || 0);
       });
     }
+    if (sortMode === 'generation') {
+      return items.sort((a, b) => {
+        const genDiff = getEntryGeneration(a) - getEntryGeneration(b);
+        if (genDiff !== 0) return genDiff;
+        return (a.speciesId || 0) - (b.speciesId || 0);
+      });
+    }
+    if (sortMode === 'type') {
+      return items.sort((a, b) => {
+        const typeA = String((a.types || [])[0] || '');
+        const typeB = String((b.types || [])[0] || '');
+        if (typeA !== typeB) return typeA.localeCompare(typeB);
+        return String(a.name || '').localeCompare(String(b.name || ''));
+      });
+    }
     return items.sort((a, b) => {
-      const aScore = (a.levelBonus || 0) + (a.statBonus || 0) + ((profileRank[a.profileClass] || 0) * 0.75);
-      const bScore = (b.levelBonus || 0) + (b.statBonus || 0) + ((profileRank[b.profileClass] || 0) * 0.75);
+      const aScore = getPowerScore(a);
+      const bScore = getPowerScore(b);
       if (bScore !== aScore) return bScore - aScore;
       return (b.obtainedAt || 0) - (a.obtainedAt || 0);
     });
@@ -3922,13 +3968,156 @@ function openRosterModal() {
     const nameMatch = !query || entry.name.toLowerCase().includes(query) || (entry.types || []).some(type => String(type).toLowerCase().includes(query));
     if (!nameMatch) return false;
     if (filterMode === 'all') return true;
+    if (filterMode === 'favorites') return !!entry.favorite;
+    if (filterMode === 'shiny') return !!entry.isShiny;
+    if (filterMode === 'legendary') return entry.rarity === 'mythic' || (entry.bst || 0) >= 600;
+    if (filterMode === 'duplicates') return false;
     if (filterMode === 'rareplus') return ['rare', 'epic', 'mythic'].includes(entry.rarity);
     if (filterMode === 'highroll') return ['omega', 'spike'].includes(entry.profileClass);
     if (filterMode === 'special') return !!entry.isShiny || !!entry.mutationLabel;
     return true;
   });
 
+  const buildSpeciesCounts = collection => {
+    const counts = {};
+    collection.forEach(entry => {
+      counts[entry.speciesId] = (counts[entry.speciesId] || 0) + 1;
+    });
+    return counts;
+  };
+
+  const buildGroups = entries => {
+    const bySpecies = {};
+    entries.forEach(entry => {
+      if (!bySpecies[entry.speciesId]) bySpecies[entry.speciesId] = [];
+      bySpecies[entry.speciesId].push(entry);
+    });
+    const groups = Object.values(bySpecies).map(items => {
+      const sorted = sortEntries(items);
+      return { speciesId: sorted[0]?.speciesId, lead: sorted[0], entries: sorted, count: sorted.length };
+    });
+    const orderedLeads = sortEntries(groups.map(group => group.lead));
+    const rank = new Map(orderedLeads.map((entry, index) => [entry.entryId, index]));
+    return groups.sort((a, b) => (rank.get(a.lead.entryId) || 0) - (rank.get(b.lead.entryId) || 0));
+  };
+
+  const renderEntryFlags = entry => `
+    <div class="collection-card-flags">
+      <span class="collection-flag collection-flag--rarity">${entry.rarityLabel || entry.rarity || 'Scout'}</span>
+      <span class="collection-flag collection-flag--profile ${entry.profileClass || 'prime'}">${entry.profileLabel || 'Prime'}</span>
+      ${entry.isShiny ? `<span class="collection-flag collection-flag--shiny">Shiny</span>` : ''}
+      ${entry.mutationLabel ? `<span class="collection-flag collection-flag--mutation ${entry.mutationClass || ''}">${entry.mutationLabel}</span>` : ''}
+    </div>
+  `;
+
+  const renderMiniStatBars = entry => {
+    const profile = entry.statProfile || {};
+    const stats = ['hp', 'atk', 'def', 'speed', 'special', 'spdef'];
+    return `
+      <div class="roster-mini-stats">
+        ${stats.map(key => {
+          const value = Math.max(0, Number(profile[key]) || 0);
+          const pct = Math.min(100, value * 12);
+          return `
+            <div class="roster-mini-stat">
+              <span>${statLabels[key]}</span>
+              <i><b style="width:${pct}%"></b></i>
+              <strong>+${value}</strong>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  };
+
+  const renderRosterCard = (entry, group = null) => {
+    const isSelected = selectedEntryId === entry.entryId;
+    const count = group?.count || 1;
+    return `
+      <div class="collection-card roster-card roster-box-card rarity-${entry.rarity || 'common'} ${entry.rarityFxClass || ''} ${isSelected ? 'is-selected' : ''} ${entry.favorite ? 'is-favorite' : ''}" data-detail-entry="${entry.entryId}" role="button" tabindex="0">
+        <div class="collection-card-accent" style="--collection-accent:${entry.rarityAccent || '#7dd7ff'}"></div>
+        <button class="roster-fav-btn ${entry.favorite ? 'is-active' : ''}" data-favorite-entry="${entry.entryId}" type="button">${entry.favorite ? 'Fav' : 'Mark'}</button>
+        ${count > 1 ? `<span class="roster-stack-count">x${count}</span>` : ''}
+        <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
+        <div class="collection-card-name">${entry.name}</div>
+        <div class="collection-card-types">
+          ${(entry.types || []).map(type => `<span class="type-badge type-${String(type).toLowerCase()}">${type}</span>`).join('')}
+        </div>
+        <div class="roster-card-score">
+          <span>Power</span>
+          <strong>${getPowerScore(entry)}</strong>
+        </div>
+        ${renderEntryFlags(entry)}
+      </div>
+    `;
+  };
+
+  const renderDetailPanel = (entry, speciesEntries = []) => {
+    if (!entry) {
+      return `
+        <aside class="roster-detail-panel roster-detail-panel--empty">
+          <strong>No recruit selected</strong>
+          <span>Choose a Pokemon from the box to inspect stats, rarity and actions.</span>
+        </aside>
+      `;
+    }
+    const variants = speciesEntries.length ? speciesEntries : [entry];
+    return `
+      <aside class="roster-detail-panel rarity-${entry.rarity || 'common'}">
+        <div class="roster-detail-top">
+          <div>
+            <span class="roster-detail-kicker">Generation ${getEntryGeneration(entry)} recruit</span>
+            <h3>${entry.name}</h3>
+          </div>
+          <button class="roster-fav-btn roster-fav-btn--detail ${entry.favorite ? 'is-active' : ''}" data-favorite-entry="${entry.entryId}" type="button">${entry.favorite ? 'Favorite' : 'Add Favorite'}</button>
+        </div>
+        <div class="roster-detail-hero">
+          <img src="${entry.spriteUrl}" alt="${entry.name}">
+          <div>
+            <div class="roster-detail-power">${getPowerScore(entry)}</div>
+            <span>Power Score</span>
+          </div>
+        </div>
+        <div class="collection-card-types roster-detail-types">
+          ${(entry.types || []).map(type => `<span class="type-badge type-${String(type).toLowerCase()}">${type}</span>`).join('')}
+        </div>
+        ${renderEntryFlags(entry)}
+        <div class="roster-detail-info">
+          <span>Rarity <strong>${entry.rarityLabel || entry.rarity || 'Scout'}</strong></span>
+          <span>Roll <strong>${entry.profileLabel || 'Prime'}</strong></span>
+          <span>Level Bonus <strong>+${entry.levelBonus || 0}</strong></span>
+          <span>Stat Bonus <strong>+${entry.statBonus || 0}</strong></span>
+          <span>Sell Value <strong>${getEndlessEntrySellValue(entry)} Coins</strong></span>
+          <span>Shard Value <strong>${getEndlessEntryShardValue(entry)} Fragments</strong></span>
+        </div>
+        ${renderMiniStatBars(entry)}
+        <div class="roster-detail-actions ${manageMode ? 'is-manage' : ''}">
+          ${entry.favorite ? `<button class="btn-secondary" disabled>Unfavorite to sell</button>` : `<button class="btn-secondary roster-sell-btn" data-entry-id="${entry.entryId}" type="button">Sell</button>`}
+          ${entry.favorite ? `<button class="btn-secondary" disabled>Protected</button>` : `<button class="btn-secondary roster-shard-btn" data-entry-id="${entry.entryId}" type="button">Shard</button>`}
+          ${variants.length > 1 ? `<button class="btn-secondary roster-merge-btn" data-entry-id="${entry.entryId}" type="button">Merge Duplicate</button>` : ''}
+        </div>
+        ${variants.length > 1 ? `
+          <div class="roster-variant-list">
+            <div class="roster-detail-kicker">Variants in this stack</div>
+            ${variants.map(variant => `
+              <button class="roster-variant-row ${variant.entryId === entry.entryId ? 'is-active' : ''}" data-detail-entry="${variant.entryId}" type="button">
+                <img src="${variant.spriteUrl}" alt="${variant.name}">
+                <span>${variant.profileLabel || 'Prime'} ${variant.isShiny ? 'Shiny' : ''}</span>
+                <strong>${getPowerScore(variant)}</strong>
+              </button>
+            `).join('')}
+          </div>
+        ` : ''}
+      </aside>
+    `;
+  };
+
   const handleSell = (entryId) => {
+    const entry = getEndlessCollection().find(item => item.entryId === entryId);
+    if (entry?.favorite) {
+      alert('Remove Favorite first so you do not sell this recruit by accident.');
+      return;
+    }
     const result = sellEndlessCollectionEntry(entryId);
     if (!result.ok) {
       alert(result.error || 'That recruit could not be sold.');
@@ -3943,6 +4132,11 @@ function openRosterModal() {
   };
 
   const handleShard = (entryId) => {
+    const entry = getEndlessCollection().find(item => item.entryId === entryId);
+    if (entry?.favorite) {
+      alert('Remove Favorite first so you do not convert this recruit by accident.');
+      return;
+    }
     const result = shardEndlessCollectionEntry(entryId);
     if (!result.ok) {
       alert(result.error || 'That recruit could not be converted.');
@@ -3976,21 +4170,29 @@ function openRosterModal() {
     const coinSkins = getUnlockedCoinSkins();
     const currentCoinSkin = getCurrentCoinSkin();
     const trophies = getEndlessBossTrophies();
-    const filteredCollection = sortEntries(filterEntries(collection));
-    const duplicateCount = Math.max(0, collection.length - new Set(collection.map(entry => entry.speciesId)).size);
-    const speciesCounts = {};
-    const duplicateSpecies = new Set();
-    collection.forEach(entry => {
-      speciesCounts[entry.speciesId] = (speciesCounts[entry.speciesId] || 0) + 1;
-      if (speciesCounts[entry.speciesId] > 1) duplicateSpecies.add(entry.speciesId);
-    });
+    const speciesCounts = buildSpeciesCounts(collection);
+    const duplicateSpecies = new Set(Object.keys(speciesCounts).filter(speciesId => speciesCounts[speciesId] > 1).map(Number));
+    const duplicateCount = Math.max(0, collection.length - Object.keys(speciesCounts).length);
+    const baseFiltered = filterMode === 'duplicates'
+      ? collection.filter(entry => duplicateSpecies.has(entry.speciesId))
+      : filterEntries(collection);
+    const filteredCollection = sortEntries(baseFiltered);
+    if (!selectedEntryId || !collection.some(entry => entry.entryId === selectedEntryId)) {
+      selectedEntryId = filteredCollection[0]?.entryId || collection[0]?.entryId || null;
+    }
+    const selectedEntry = collection.find(entry => entry.entryId === selectedEntryId) || null;
+    const selectedSpeciesEntries = selectedEntry ? sortEntries(collection.filter(entry => entry.speciesId === selectedEntry.speciesId)) : [];
+    const groupedCollection = buildGroups(filteredCollection);
+    const visibleCards = stackMode ? groupedCollection : filteredCollection;
+    const favoriteCount = collection.filter(entry => entry.favorite).length;
+    const shinyCount = collection.filter(entry => entry.isShiny).length;
 
     modal.innerHTML = `
       <div class="shop-modal-box roster-modal-box">
         <div class="shop-modal-header">
           <div>
             <h2>Endless Roster</h2>
-            <p>These recruits are waiting for the new Endless mode. Sell extras for more story coins whenever you want.</p>
+            <p>A cleaner Box view for booster recruits. Stack duplicates, mark favorites and manage extras without losing track.</p>
           </div>
           <button class="ach-modal-close" id="roster-modal-close">&times;</button>
         </div>
@@ -4009,6 +4211,14 @@ function openRosterModal() {
               <strong>${duplicateCount}</strong>
             </div>
             <div class="shop-balance-chip">
+              <span class="shop-balance-label">Favorites</span>
+              <strong>${favoriteCount}</strong>
+            </div>
+            <div class="shop-balance-chip">
+              <span class="shop-balance-label">Shiny</span>
+              <strong>${shinyCount}</strong>
+            </div>
+            <div class="shop-balance-chip">
               <span class="shop-balance-label">Boss Trophies</span>
               <strong>${trophies.length}</strong>
             </div>
@@ -4025,46 +4235,30 @@ function openRosterModal() {
           <div class="roster-toolbar">
             <div class="roster-toolbar-group">
               <button class="btn-secondary roster-filter-btn ${filterMode === 'all' ? 'is-active' : ''}" data-filter-mode="all">All</button>
+              <button class="btn-secondary roster-filter-btn ${filterMode === 'favorites' ? 'is-active' : ''}" data-filter-mode="favorites">Favorites</button>
+              <button class="btn-secondary roster-filter-btn ${filterMode === 'shiny' ? 'is-active' : ''}" data-filter-mode="shiny">Shiny</button>
+              <button class="btn-secondary roster-filter-btn ${filterMode === 'legendary' ? 'is-active' : ''}" data-filter-mode="legendary">Legendary</button>
+              <button class="btn-secondary roster-filter-btn ${filterMode === 'duplicates' ? 'is-active' : ''}" data-filter-mode="duplicates">Duplicates</button>
               <button class="btn-secondary roster-filter-btn ${filterMode === 'rareplus' ? 'is-active' : ''}" data-filter-mode="rareplus">Rare+</button>
-              <button class="btn-secondary roster-filter-btn ${filterMode === 'highroll' ? 'is-active' : ''}" data-filter-mode="highroll">High Rolls</button>
-              <button class="btn-secondary roster-filter-btn ${filterMode === 'special' ? 'is-active' : ''}" data-filter-mode="special">Special</button>
             </div>
             <div class="roster-toolbar-group">
               <button class="btn-secondary roster-sort-btn ${sortMode === 'power' ? 'is-active' : ''}" data-sort-mode="power">Strongest</button>
-              <button class="btn-secondary roster-sort-btn ${sortMode === 'newest' ? 'is-active' : ''}" data-sort-mode="newest">Newest</button>
               <button class="btn-secondary roster-sort-btn ${sortMode === 'rarity' ? 'is-active' : ''}" data-sort-mode="rarity">Rarity</button>
+              <button class="btn-secondary roster-sort-btn ${sortMode === 'generation' ? 'is-active' : ''}" data-sort-mode="generation">Gen</button>
+              <button class="btn-secondary roster-sort-btn ${sortMode === 'type' ? 'is-active' : ''}" data-sort-mode="type">Type</button>
+              <button class="btn-secondary roster-sort-btn ${sortMode === 'newest' ? 'is-active' : ''}" data-sort-mode="newest">Newest</button>
             </div>
             <input class="roster-search" id="roster-search" type="text" placeholder="Search name or type..." value="${searchTerm.replace(/"/g, '&quot;')}">
+            <div class="roster-toolbar-group roster-toolbar-group--toggles">
+              <button class="btn-secondary roster-toggle-btn ${stackMode ? 'is-active' : ''}" data-roster-toggle="stack" type="button">Stack Duplicates</button>
+              <button class="btn-secondary roster-toggle-btn ${manageMode ? 'is-active' : ''}" data-roster-toggle="manage" type="button">Manage</button>
+            </div>
           </div>
-          <div class="roster-grid ${collection.length > 20 ? 'roster-grid--dense' : ''}">
-            ${filteredCollection.length ? filteredCollection.map(entry => `
-              <div class="collection-card roster-card rarity-${entry.rarity || 'common'} ${entry.rarityFxClass || ''}">
-                <div class="collection-card-accent" style="--collection-accent:${entry.rarityAccent || '#7dd7ff'}"></div>
-                <div class="collection-card-flags">
-                  <span class="collection-flag collection-flag--rarity">${entry.rarityLabel || entry.rarity || 'Scout'}</span>
-                  <span class="collection-flag collection-flag--profile ${entry.profileClass || 'prime'}">${entry.profileLabel || 'Prime'}</span>
-                  ${entry.isShiny ? `<span class="collection-flag collection-flag--shiny">Shiny</span>` : ''}
-                  ${entry.mutationLabel ? `<span class="collection-flag collection-flag--mutation ${entry.mutationClass || ''}">${entry.mutationLabel}</span>` : ''}
-                </div>
-                <img class="collection-card-sprite" src="${entry.spriteUrl}" alt="${entry.name}">
-                <div class="collection-card-name">${entry.name}</div>
-                <div class="collection-card-types">
-                  ${(entry.types || []).map(type => `<span class="type-badge type-${String(type).toLowerCase()}">${type}</span>`).join('')}
-                </div>
-                <div class="collection-card-meta">
-                  <span>+${entry.levelBonus || 0} Lv</span>
-                  <span>+${entry.statBonus || 0} Stats</span>
-                </div>
-                <div class="roster-card-footer">
-                  <span class="roster-card-value">${getEndlessEntrySellValue(entry)} Coins</span>
-                  <div class="roster-card-actions">
-                    <button class="btn-secondary roster-sell-btn" data-entry-id="${entry.entryId}">Sell</button>
-                    <button class="btn-secondary roster-shard-btn" data-entry-id="${entry.entryId}">Shard</button>
-                    ${duplicateSpecies.has(entry.speciesId) ? `<button class="btn-secondary roster-merge-btn" data-entry-id="${entry.entryId}">Merge</button>` : ''}
-                  </div>
-                </div>
-              </div>
-            `).join('') : '<div class="collection-empty">No recruits match this filter yet.</div>'}
+          <div class="roster-box-layout">
+            <div class="roster-grid roster-grid--box ${collection.length > 20 ? 'roster-grid--dense' : ''}">
+              ${visibleCards.length ? visibleCards.map(item => stackMode ? renderRosterCard(item.lead, item) : renderRosterCard(item)).join('') : '<div class="collection-empty">No recruits match this filter yet.</div>'}
+            </div>
+            ${renderDetailPanel(selectedEntry, selectedSpeciesEntries)}
           </div>
 
           <div class="shop-section-title">Boss Trophies</div>
@@ -4087,6 +4281,22 @@ function openRosterModal() {
     `;
 
     modal.querySelector('#roster-modal-close')?.addEventListener('click', close);
+    modal.querySelectorAll('[data-detail-entry]').forEach(btn => {
+      btn.addEventListener('click', event => {
+        if (event.target.closest('[data-favorite-entry], .roster-sell-btn, .roster-shard-btn, .roster-merge-btn')) return;
+        selectedEntryId = btn.dataset.detailEntry;
+        render(lastAction);
+      });
+    });
+    modal.querySelectorAll('[data-favorite-entry]').forEach(btn => {
+      btn.addEventListener('click', event => {
+        event.stopPropagation();
+        if (typeof toggleEndlessCollectionFavorite === 'function') {
+          toggleEndlessCollectionFavorite(btn.dataset.favoriteEntry);
+          render(lastAction);
+        }
+      });
+    });
     modal.querySelectorAll('.roster-sell-btn').forEach(btn => {
       btn.addEventListener('click', () => handleSell(btn.dataset.entryId));
     });
@@ -4111,6 +4321,13 @@ function openRosterModal() {
     modal.querySelector('#roster-search')?.addEventListener('input', (event) => {
       searchTerm = event.target.value || '';
       render(lastAction);
+    });
+    modal.querySelectorAll('[data-roster-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.rosterToggle === 'stack') stackMode = !stackMode;
+        if (btn.dataset.rosterToggle === 'manage') manageMode = !manageMode;
+        render(lastAction);
+      });
     });
     modal.querySelectorAll('.coin-skin-btn').forEach(btn => {
       btn.addEventListener('click', () => {

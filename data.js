@@ -1251,6 +1251,15 @@ function getEndlessCollection() {
   return getMetaProgress().endlessCollection || [];
 }
 
+function toggleEndlessCollectionFavorite(entryId) {
+  const meta = getMetaProgress();
+  const entry = (meta.endlessCollection || []).find(item => item.entryId === entryId);
+  if (!entry) return { ok: false, error: 'That roster entry no longer exists.' };
+  entry.favorite = !entry.favorite;
+  saveMetaProgress(meta);
+  return { ok: true, entry, favorite: entry.favorite };
+}
+
 function getEndlessBossTrophies() {
   return getMetaProgress().endlessBossTrophies || [];
 }
