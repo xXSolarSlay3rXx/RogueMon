@@ -1968,6 +1968,86 @@ function resolveVoltorbRound(round, selectedIndex) {
   return { ok: true, ...result, coins: meta.coins };
 }
 
+// ---- Lucky Wheel ----
+
+const LUCKY_WHEEL_SEGMENTS = [
+  { id: 'pikachu',  multiplier: 1.5, kind: 'win' },
+  { id: 'eevee',   multiplier: 2.0, kind: 'win' },
+  { id: 'magikarp',multiplier: 0,   kind: 'loss' },
+  { id: 'snorlax', multiplier: 2.5, kind: 'win' },
+  { id: 'gengar',  multiplier: 3.0, kind: 'win' },
+  { id: 'voltorb', multiplier: 0,   kind: 'loss' },
+  { id: 'mewtwo',  multiplier: 5.0, kind: 'jackpot' },
+  { id: 'psyduck', multiplier: 1.5, kind: 'win' },
+];
+
+const LUCKY_WHEEL_LABELS = ['Pikachu', 'Eevee', 'Magikarp', 'Snorlax', 'Gengar', 'Voltorb', 'Mewtwo', 'Psyduck'];
+
+function startLuckyWheelRound(betAmount) {
+  const bet = Math.max(0, Math.floor(Number(betAmount) || 0));
+  const meta = getMetaProgress();
+  if (bet <= 0) return { ok: false, error: 'Pick a valid bet.', coins: meta.coins };
+  if (meta.coins < bet) return { ok: false, error: 'You need ' + bet + ' coins for that bet.', coins: meta.coins };
+
+  meta.coins -= bet;
+  saveMetaProgress(meta);
+
+  const roll = metaRandomUnit();
+  // Weights: Pikachu 18%, Eevee 16%, Magikarp 18%, Snorlax 12%, Gengar 11%, Voltorb 10%, Mewtwo 7%, Psyduck 8%
+  const cumWeights = [0.18, 0.34, 0.52, 0.64, 0.75, 0.85, 0.92, 1.00];
+  let segmentIndex = cumWeights.findIndex(w => roll < w);
+  if (segmentIndex < 0) segmentIndex = 7;
+
+  const segment = LUCKY_WHEEL_SEGMENTS[segmentIndex];
+  const payout = Math.floor(bet * segment.multiplier);
+
+  return {
+    ok: true,
+    round: { bet, segmentIndex, payout },
+    coins: meta.coins,
+  };
+}
+
+function resolveLuckyWheelRound(round) {
+  const meta = getMetaProgress();
+  if (!round || typeof round.bet !== 'number') {
+    return { ok: false, error: 'No active Lucky Wheel round.', coins: meta.coins };
+  }
+
+  const segment = LUCKY_WHEEL_SEGMENTS[round.segmentIndex] || LUCKY_WHEEL_SEGMENTS[2];
+  const payout = round.payout || 0;
+  const outcome = segment.kind;
+
+  meta.coins += payout;
+
+  const sideRewards = outcome === 'jackpot'
+    ? applyArcadeSideRewards(meta, 15 + Math.floor(round.bet / 10), 1)
+    : segment.multiplier >= 3
+      ? applyArcadeSideRewards(meta, 8 + Math.floor(round.bet / 15), 0)
+      : segment.multiplier >= 2
+        ? applyArcadeSideRewards(meta, 4 + Math.floor(round.bet / 20), 0)
+        : outcome !== 'loss'
+          ? applyArcadeSideRewards(meta, 2, 0)
+          : applyArcadeSideRewards(meta, 0, 0);
+
+  const result = {
+    at: Date.now(),
+    game: 'wheel',
+    bet: round.bet,
+    payout,
+    outcome,
+    prize: LUCKY_WHEEL_LABELS[round.segmentIndex] || segment.id,
+    segmentIndex: round.segmentIndex,
+    net: payout - round.bet,
+    bonusFragments: sideRewards.fragments,
+    bonusCoupons: sideRewards.coupons,
+  };
+
+  meta.gambleHistory = [result, ...(meta.gambleHistory || [])].slice(0, 8);
+  saveMetaProgress(meta);
+  return { ok: true, ...result, coins: meta.coins };
+}
+
 // BST ranges per map
 const MAP_BST_RANGES = [
   { min: 200, max: 310 },   // Map 1

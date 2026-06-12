@@ -3749,6 +3749,60 @@ function getSlotSymbolMeta(symbol) {
   return symbolMeta[symbol] || symbolMeta.Ball;
 }
 
+// ---- Lucky Wheel UI ----
+
+const LUCKY_WHEEL_SEGMENTS_META = [
+  { id: 'pikachu',  label: 'Pikachu',  mult: '1.5x', color: '#c8930a', lightColor: '#f7c930', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',  kind: 'win' },
+  { id: 'eevee',   label: 'Eevee',    mult: '2x',   color: '#7a4e28', lightColor: '#c08050', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png', kind: 'win' },
+  { id: 'magikarp',label: 'Magikarp', mult: '✕',    color: '#7a0e1a', lightColor: '#cc3040', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/129.png', kind: 'loss' },
+  { id: 'snorlax', label: 'Snorlax',  mult: '2.5x', color: '#1a4888', lightColor: '#4a88d8', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png', kind: 'win' },
+  { id: 'gengar',  label: 'Gengar',   mult: '3x',   color: '#3a1060', lightColor: '#8040c0', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png',  kind: 'win' },
+  { id: 'voltorb', label: 'Voltorb',  mult: '✕',    color: '#7a0e1a', lightColor: '#cc3040', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/100.png', kind: 'loss' },
+  { id: 'mewtwo',  label: 'Mewtwo',   mult: '5x',   color: '#0e2a70', lightColor: '#3a78c8', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png', kind: 'jackpot' },
+  { id: 'psyduck', label: 'Psyduck',  mult: '1.5x', color: '#886000', lightColor: '#d89020', spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/54.png',  kind: 'win' },
+];
+
+function buildWheelConicGradient() {
+  const n = LUCKY_WHEEL_SEGMENTS_META.length;
+  const deg = 360 / n;
+  return `conic-gradient(from 0deg, ${LUCKY_WHEEL_SEGMENTS_META.map((seg, i) => `${seg.lightColor} ${i * deg}deg ${(i + 1) * deg}deg`).join(', ')})`;
+}
+
+function renderLuckyWheelDisc(discId = 'wheel-disc') {
+  const n = LUCKY_WHEEL_SEGMENTS_META.length;
+  const dividers = Array.from({ length: n }, (_, i) =>
+    `<div class="wheel-divider" style="--div-i:${i}"></div>`
+  ).join('');
+  return `
+    <div class="wheel-disc" id="${discId}" style="background:${buildWheelConicGradient()}">
+      ${dividers}
+      <div class="wheel-hub">
+        <img class="wheel-hub-logo" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+      </div>
+    </div>
+  `;
+}
+
+function renderWheelLights(count = 12) {
+  return Array.from({ length: count }, (_, i) =>
+    `<span class="wheel-ring-light wheel-ring-light-${i + 1}" style="--light-i:${i}"></span>`
+  ).join('');
+}
+
+function renderWheelLegend(highlightIndex = null) {
+  return `
+    <div class="wheel-legend">
+      ${LUCKY_WHEEL_SEGMENTS_META.map((seg, i) => `
+        <div class="wheel-legend-row ${highlightIndex === i ? 'is-winner' : ''}">
+          <span class="wheel-legend-dot" style="background:${seg.lightColor}"></span>
+          <span class="wheel-legend-name">${seg.label}</span>
+          <span class="wheel-legend-mult ${seg.kind}">${seg.mult}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
 function renderSlotSymbol(symbol, isHit = false) {
   const meta = getSlotSymbolMeta(symbol);
   return `
@@ -3795,19 +3849,20 @@ function renderArcadeIdlePanel(gameId, config, coinCall = 'heads') {
     `;
   }
 
-  if (gameId === 'voltorb') {
+  if (gameId === 'wheel') {
     return `
-      <div class="coinflip-result idle arcade-game-preview arcade-game-preview--voltorb">
+      <div class="coinflip-result idle arcade-game-preview arcade-game-preview--wheel">
         <div class="arcade-preview-copy">
           <strong>${config.title}</strong>
           <span>${config.subtitle}</span>
         </div>
-        <div class="arcade-preview-voltorb-board">
-          ${Array.from({ length: 5 }, (_, index) => `
-            <span class="arcade-preview-card arcade-preview-card-${index + 1}">
-              <span class="voltorb-card-back-dot"></span>
-            </span>
-          `).join('')}
+        <div class="wheel-preview-wrap">
+          <div class="wheel-stage-mini">
+            <div class="wheel-pointer-mini"></div>
+            ${renderLuckyWheelDisc('wheel-preview-disc')}
+            <div class="wheel-ring-lights-mini">${renderWheelLights(8)}</div>
+          </div>
+          ${renderWheelLegend()}
         </div>
       </div>
     `;
@@ -4482,18 +4537,18 @@ function animateArcadePlay(modal, gameId, result) {
         </div>
       `;
     } else {
+      const seg = LUCKY_WHEEL_SEGMENTS_META[result.segmentIndex] || LUCKY_WHEEL_SEGMENTS_META[0];
       inner = `
-        <div class="arcade-animation-box arcade-animation-box--voltorb">
-          <div class="arcade-animation-title">Voltorb Flip</div>
-          <div class="arcade-animation-subcopy">Card revealed...</div>
-          <div class="voltorb-stage">
-            <div class="voltorb-stage-lights">
-              ${Array.from({ length: 12 }, (_, i) => `<span class="voltorb-light voltorb-light-${i + 1}"></span>`).join('')}
-            </div>
-            ${renderVoltorbFlipPreview(result.cards || [], result.selectedIndex, true)}
+        <div class="arcade-animation-box arcade-animation-box--wheel">
+          <div class="arcade-animation-title">Lucky Wheel</div>
+          <div class="arcade-animation-subcopy">Spinning...</div>
+          <div class="wheel-anim-stage">
+            <div class="wheel-ring-lights">${renderWheelLights(12)}</div>
+            <div class="wheel-pointer-anim"></div>
+            ${renderLuckyWheelDisc('wheel-anim-disc')}
           </div>
-          <div class="arcade-result-burst ${result.outcome}">
-            <strong>${result.outcome === 'miss' ? 'Voltorb!' : `${result.prize} Hit!`}</strong>
+          <div class="arcade-result-burst ${seg.kind}">
+            <strong>${seg.kind === 'loss' ? seg.label + ' — No Win' : seg.kind === 'jackpot' ? 'JACKPOT — ' + seg.label + '!' : seg.label + ' — ' + seg.mult}</strong>
             <span>${result.net >= 0 ? '+' : ''}${result.net} coins</span>
           </div>
         </div>
@@ -4503,11 +4558,36 @@ function animateArcadePlay(modal, gameId, result) {
     overlay.innerHTML = inner;
     modal.appendChild(overlay);
     setTimeout(() => overlay.classList.add('is-visible'), 20);
-    setTimeout(() => overlay.classList.add('is-fading'), 3450);
+
+    if (gameId === 'wheel') {
+      setTimeout(() => {
+        const disc = overlay.querySelector('#wheel-anim-disc');
+        if (!disc) return;
+        const segIdx = typeof result.segmentIndex === 'number' ? result.segmentIndex : 0;
+        // Rotation formula: spin 7 full rotations + land on segment center
+        const targetRot = 337.5 - segIdx * 45 + 7 * 360;
+        disc.style.transition = 'transform 3200ms cubic-bezier(0.12, 0.52, 0.18, 1)';
+        disc.style.transform = `rotate(${targetRot}deg)`;
+        // Show winning sprite in hub after wheel stops
+        setTimeout(() => {
+          const hub = disc.querySelector('.wheel-hub');
+          const seg = LUCKY_WHEEL_SEGMENTS_META[segIdx];
+          if (hub && seg) {
+            hub.innerHTML = `<img class="wheel-hub-sprite" src="${seg.spriteUrl}" alt="${seg.label}">`;
+          }
+          const stage = overlay.querySelector('.wheel-anim-stage');
+          if (stage) stage.classList.add('is-revealed');
+        }, 3250);
+      }, 60);
+    }
+
+    const overlayFade   = gameId === 'wheel' ? 5400 : 3450;
+    const overlayRemove = gameId === 'wheel' ? 6000 : 3950;
+    setTimeout(() => overlay.classList.add('is-fading'), overlayFade);
     setTimeout(() => {
       overlay.remove();
       resolve();
-    }, 3950);
+    }, overlayRemove);
   });
 }
 
@@ -4684,7 +4764,6 @@ function openArcadeModal() {
 
   const close = () => modal.remove();
   let currentGame = 'coinflip';
-  let voltorbRound = null;
   let slotRound = null;
   let slotStopIndex = 0;
   let coinCall = 'heads';
@@ -4708,14 +4787,28 @@ function openArcadeModal() {
       resultCopy: result => `${(result.reels || []).map(symbol => getSlotSymbolMeta(symbol).label).join(' - ')} | ${result.net >= 0 ? '+' : ''}${result.net} coins`,
       historyLabel: entry => entry.outcome === 'jackpot' ? '777' : entry.outcome === 'grand' ? 'Crown' : entry.outcome === 'triple' ? 'Triple' : entry.outcome === 'pair' ? 'Pair' : 'Miss',
     },
-    voltorb: {
-      title: 'Voltorb Flip',
-      subtitle: 'Pick one card. Find the multiplier and dodge the Voltorb.',
-      chances: ['1 Voltorb bomb', '1 safe card', '1 big multiplier'],
-      play: bet => startVoltorbRound(bet),
-      resultLabel: result => result.outcome === 'miss' ? 'Voltorb' : result.prize,
-      resultCopy: result => `${result.net >= 0 ? '+' : ''}${result.net} coins`,
-      historyLabel: entry => entry.outcome === 'miss' ? 'Voltorb' : entry.prize || 'Win',
+    wheel: {
+      title: 'Lucky Wheel',
+      subtitle: 'Spin the wheel and land on a Pokemon to win. Mewtwo is the jackpot.',
+      chances: ['Pikachu / Psyduck 1.5x', 'Snorlax 2.5x / Gengar 3x', 'Mewtwo 5x Jackpot'],
+      play: bet => {
+        const r = startLuckyWheelRound(bet);
+        if (!r.ok) return r;
+        return resolveLuckyWheelRound(r.round);
+      },
+      resultLabel: result => {
+        if (result.outcome === 'loss') return (result.prize || 'Miss') + ' — No Win';
+        if (result.outcome === 'jackpot') return 'JACKPOT!';
+        const seg = LUCKY_WHEEL_SEGMENTS_META[result.segmentIndex];
+        return seg ? seg.label + ' ' + seg.mult : result.prize || 'Win';
+      },
+      resultCopy: result => `Landed on ${result.prize || '?'} | ${result.net >= 0 ? '+' : ''}${result.net} coins`,
+      historyLabel: entry => {
+        if (entry.outcome === 'loss') return entry.prize || 'Miss';
+        if (entry.outcome === 'jackpot') return 'Jackpot!';
+        const seg = LUCKY_WHEEL_SEGMENTS_META[entry.segmentIndex];
+        return seg ? seg.label : entry.prize || 'Win';
+      },
     },
   };
 
@@ -4728,12 +4821,6 @@ function openArcadeModal() {
     if (currentGame === 'slots') {
       slotRound = result.round;
       slotStopIndex = 0;
-      render(null, true);
-      refreshTitleMetaBar();
-      return;
-    }
-    if (currentGame === 'voltorb') {
-      voltorbRound = result.round;
       render(null, true);
       refreshTitleMetaBar();
       return;
@@ -4801,21 +4888,12 @@ function openArcadeModal() {
       `
       : '';
 
-    const voltorbControlMarkup = currentGame === 'voltorb' && voltorbRound
-      ? `
-        <div class="voltorb-control-panel">
-          ${renderVoltorbFlipPreview(voltorbRound.cards || [], null, false)}
-          <div class="arcade-animation-copy">Five cards, one Voltorb. Pick carefully.</div>
-        </div>
-      `
-      : '';
-
     modal.innerHTML = `
       <div class="shop-modal-box gamble-modal-box">
         <div class="shop-modal-header arcade-header">
           <div>
             <h2>Game Corner</h2>
-            <p>Pick a game, choose a bet, then play. This area is still beta.</p>
+            <p>Pick a game, choose a bet, then play.</p>
           </div>
           <button class="ach-modal-close" id="coin-flip-close">&times;</button>
         </div>
@@ -4838,7 +4916,7 @@ function openArcadeModal() {
           <div class="arcade-mode-row">
             <button class="arcade-mode-btn ${currentGame === 'coinflip' ? 'is-active' : ''}" data-game="coinflip">Coin Flip</button>
             <button class="arcade-mode-btn ${currentGame === 'slots' ? 'is-active' : ''}" data-game="slots">Slots</button>
-            <button class="arcade-mode-btn ${currentGame === 'voltorb' ? 'is-active' : ''}" data-game="voltorb">Voltorb Flip</button>
+            <button class="arcade-mode-btn ${currentGame === 'wheel' ? 'is-active' : ''}" data-game="wheel">Lucky Wheel</button>
           </div>
 
           ${latestMarkup}
@@ -4852,14 +4930,13 @@ function openArcadeModal() {
           <div class="shop-section-title">Pick a Bet</div>
           <div class="gamble-bet-grid">
             ${[10, 25, 50, 100, 200].map(bet => `
-              <button class="gamble-bet-btn" data-bet="${bet}" ${(coins < bet || (currentGame === 'voltorb' && voltorbRound)) ? 'disabled' : ''}>
+              <button class="gamble-bet-btn" data-bet="${bet}" ${coins < bet ? 'disabled' : ''}>
                 ${bet} Coins
               </button>
             `).join('')}
           </div>
 
           ${slotControlMarkup}
-          ${voltorbControlMarkup}
 
           <div class="shop-section-title">Recent Results</div>
           <div class="gamble-history-list">
@@ -4880,7 +4957,6 @@ function openArcadeModal() {
     modal.querySelectorAll('.arcade-mode-btn[data-game]').forEach(btn => {
       btn.addEventListener('click', () => {
         currentGame = btn.dataset.game;
-        voltorbRound = null;
         slotRound = null;
         slotStopIndex = 0;
         render();
@@ -4910,18 +4986,6 @@ function openArcadeModal() {
       }
       render(latestResult, true);
     });
-    modal.querySelectorAll('[data-voltorb-pick]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (!voltorbRound) return;
-        const result = resolveVoltorbRound(voltorbRound, Number(btn.dataset.voltorbPick));
-        voltorbRound = null;
-        animateArcadePlay(modal, 'voltorb', result).then(() => {
-          render(result);
-          refreshTitleMetaBar();
-        });
-      });
-    });
-
     if (keepScroll) {
       requestAnimationFrame(() => {
         const box = modal.querySelector('.shop-modal-box');
